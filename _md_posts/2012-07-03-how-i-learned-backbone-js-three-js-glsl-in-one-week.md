@@ -1,0 +1,330 @@
+---
+title: 'How I learned Backbone.js, Three.js &#038; GLSL in one week'
+author: Gaetan
+layout: post
+permalink: /2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week/
+dsq_thread_id:
+  - 749974269
+categories:
+  - game development
+tags:
+  - 7dfps
+  - featured
+  - GLSL
+  - ThreeJS
+  - WebGL
+---
+# 
+
+![][1]
+
+ [1]: http://blog.greweb.fr/wp-content/uploads/2012/07/dta1.png "dta"
+
+Last week was the [7dfps challenge][2], an open challenge where participants had to make a FPS in only one week.
+
+ [2]: http://7dfps.org/
+
+Such contest are very very interesting for those who want to experiment with things. Challenging yourself is IMO the best way to learn new things. You may also know the famous [“Ludum Dare” contest][3].
+
+ [3]: http://www.ludumdare.com/
+
+I learned to use Backbone.js and Three.js (a famous library on top of WebGL) in only one week, so you have no excuse to not be able to do the same ![:)][4]  
+[-> You can make games!  “If Lawnmower Man f\**\*|\*d Tron on the bonnet of a tank”  
+> ***YouBigNugget***
+
+I’ve only used web technologies, no need of any plugin, just a recent browser like Chrome / Firefox.
+
+This is the result:
+
+
+
+and you can play it here:
+
+
+
+
+
+## Overview of a one week game development
+
+### Backbone.js, for the model, events and class inherence
+
+I’m a fan of the “do it yourself” idea, not using any library or only using small 140byt.es codes. But the frequent issue with that is (1) always doing the same thing again and again, (2) taking a lot of time on the architecture, and not finishing anything. When you have a due date, relying on libraries and frameworks could save you a lot of time.  
+I’ve choose Backbone.js for its Model architecture with class inherence, a get/set system, and also its event system bound to model instances, the destroy function with the “destroy” event to bind on,… It was also a new library to learn for me.
+
+#### Models
+
+Here is the class diagram of the game:
+
+![not available][7]
+
+ [7]: http://yuml.me/f5dea341.jpg
+
+### Learning Three.js, a 3D library on top of WebGL.
+
+WebGL is [more and more supported by browsers][8].  
+WebGL means OpenGL in the web. It allows to make efficient and hardware accelerated 3D computation.
+
+ [8]: http://caniuse.com/#search=webgl
+
+Here is the same, not using any library but using pure WebGL wasn’t possible in one week! This is why I’ve chosen to use Three.js, probably today the most popular WebGL library.  
+I was impressed how Three.js is finally not so hard to use, knowing some basic 3D concepts from my old Blender days.
+
+You create a `Scene`, add a `Camera`, add Meshes to the scene, A `Mesh` has a `Material` and a `Geometry`, … everything very straighforward.
+
+One challenging part was when trying to compute global world position relative to a given object position, for instance to compute the Bullet initial position and orientation from the Tank position and orientation.
+
+Fortunately I’ve got some help ![:)][4] and got the answer: multiply your vector with the worldMatrix of the mesh.
+
+> @[greweb][9] Should be calculatable quite easily. Multiply the position vector by the object’s matrixWorld property.
+> 
+> — Paul Lewis (@aerotwist) [Juin 12, 2012][10]
+
+ [9]: https://twitter.com/greweb
+ [10]: https://twitter.com/aerotwist/status/212617930024816641
+
+
+
+> @[greweb][9] var position = new THREE.Vector3().getPositionFromMatrix( object.matrixWorld );
+> 
+> — Mr.doob (@mrdoob) [Juin 12, 2012][11]
+
+ [11]: https://twitter.com/mrdoob/status/212648943673290752
+
+
+
+### Playing with AI
+
+Like TankKeyboardControls, I’ve created a new “TankControls” for computer tanks: **TankRandomControls** was the first dumb one, it just does random things:
+
+function TankRandomControls () {  
+var self = this;  
+self.moveForward = false;  
+self.moveBackward = false;  
+self.moveLeft = false;  
+self.moveRight = false;  
+self.fire = false;  
+self.fireMissile = false;  
+var i = ;  
+setInterval (function () { // take random decisions every 0.5 second  
+  i;  
+self.moveForward = i%3== && Math.random() > 0.2;  
+self.moveBackward = !self.moveForward && Math.random() > 0.5;  
+self.moveLeft = Math.random() < 0.1;  
+self.moveRight = Math.random() < 0.1;  
+self.fire = Math.random() > 0.2;  
+self.fireMissile = Math.random() < 0.2;  
+}, 500);  
+}
+
+**TankRemoteControls** was the second one using some simple AI rules:
+
+*   Try to avoid walls and objects
+*   Either do random things or target a tank (more likely)
+*   Target the closest tank, update target every 5 seconds
+*   Turn the tank to the target tank, shoot bullets and missiles
+*   Move forward if the target is far away / Move backward if the target is too close
+
+See the source code here: .
+
+### Sounds
+
+I’ve used [JSFX][12], an experimental library, were you can generate sounds based on a few parameters.  
+It’s a 8-bit sound generator perfect for generate old-school sounds.
+
+ [12]: http://www.egonelbre.com/js/jsfx/
+
+So you can create each sound in Javascript like this:
+
+SOUNDS = {  
+bullet: jsfxlib.createWave(["noise",7.0000,0.1800,0.0000,0.0820,0.0000,0.2220,20.0000,800,2400.0000,-0.4280,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.9920,0.0000,0.0000,0.2200,0.0000]),  
+missile: jsfxlib.createWave(["noise",0.0000,0.1200,0.0000,0.5460,0.0000,0.8560,64.0000,250,1063.0000,0.2800,0.0860,0.0240,5.4329,0.3565,0.4660,-0.6380,0.0580,0.0080,0.0000,0.0000,-0.1140,0.2160,0.9800,-0.9840,1.0000,0.3070,0.9880]),  
+explosion: jsfxlib.createWave(["noise",1.0000,0.4,0.02,0.6820,1.7460,1.9700,100.0000,378.0000,2242.0000,-0.5500,-0.3720,0.0240,0.4899,-0.1622,0.2620,0.3400,0.7240,0.0205,-0.1020,0.0416,-0.0980,0.1,0.8050,0.0940,0.4280,0.0000,-0.2620]),  
+collideWall: jsfxlib.createWave(["noise",0.0000,0.4000,0.0000,0.0560,0.0000,0.2960,20.0000,560.0000,2400.0000,-0.4820,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000])  
+};  
+// ...  
+// SOUNDS.bullet.play()
+
+The jsfxlib.createWave function returns a HTML5 Audio element and you can play with its API (.play(), .pause(), …).  
+But doing this way, you will not be able to play a sound at the same time so I’ve made a buffer system which duplicate N times the sound in different audio elements.  
+I have also try to generate different sounds to randomize it a little.
+
+See the full source code here: .
+
+### Post Processing Effects with GLSL shaders
+
+I was very impressed by the power of GLSL for its possibilities and efficiency.  
+GLSL are definitely the indispensable thing you need to add a better atmosphere in your games.
+
+#### Before
+
+[![][14]][14]
+
+ []: http://blog.greweb.fr/wp-content/uploads/2012/06/before.png
+
+#### After
+
+[![][15]][15]
+
+ []: http://blog.greweb.fr/wp-content/uploads/2012/06/after_.png
+
+and when getting shot:
+
+[![][16]][16]
+
+ []: http://blog.greweb.fr/wp-content/uploads/2012/06/after.png
+
+These effects are done by combining these two GLSL effects.  
+Here is the GLSL code of these effects.
+
+#### The radio noise effect
+
+
+
+#### The shot interference
+
+
+
+### Wait! what is this crazy “GLSL” language?
+
+GLSL is an OpenGL language close to the C syntax design to have a direct control of the graphic pipeline. You can directly add passes to the rendering process with GLSL shaders.  
+GLSL gives you a lot of very useful types (like vectors, matrix, …) and functions (like smoothstep, …). [Read the spec][16] to know more about it.  
+I also recommend you to experiment the [GLSL Sandbox][17]. You can see awesome demos and their codes shared by people made with GLSL. It also have an online IDE to easily code and instantly test your shaders.
+
+ [16]: http://www.opengl.org/documentation/glsl/
+ [17]: http://glsl.heroku.com/
+
+### WebGL and Three.js integration
+
+You can use GLSL in different ways with Three.js. You can add a GLSL shader to an object material, and you can also add GLSL shaders on top of the Canvas (post-processing). We will only see how to add GLSL shaders as a post processing render on the entire Canvas.
+
+Fortunately Three.js have some utils classes to make the GLSL shaders integration easier.
+
+I have been inspired from the awesome work done here: .
+
+There is a lot of code out there, so I’ve try to extract the minimum required for mixing the 2 GLSL shaders for a post-processing on the entire canvas of a Three.js scene:
+
+
+
+As you can see, you can easily inject your own Javascript variables in a GLSL shader to make a bridge between the JS and the GLSL code and so having quite generic and configurable shaders.  
+Quite cool!
+
+### Adding game UI
+
+Web, with HTML and CSS, allows to have different containers, layers, positioning systems,…  
+Perfect! For the game UI, we used different elements:  
+[![][19]][19]
+
+ []: http://blog.greweb.fr/wp-content/uploads/2012/06/ui.png
+
+Radar and Damage are implemented with an independent Canvas while Level is a simple text div.
+
+For instance, this is Damage (I called LifeIndicator):
+
+(function(){  
+  
+var LifeIndicator = function (nodeId) {  
+this.canvas = document.getElementById(nodeId);  
+this.ctx = this.canvas.getContext("2d");  
+this.life = 1;  
+this.render();  
+}  
+  
+LifeIndicator.prototype.setLife = function (life) {  
+this.life = life;  
+this.render();  
+}  
+  
+LifeIndicator.prototype.render = function () {  
+var c = this.ctx;  
+var w = c.canvas.width, h = c.canvas.height;  
+c.clearRect(, , w, h);  
+// TODO  
+var g = Math.floor(255*this.life);  
+var r = 255-g;  
+c.fillStyle = "rgb(" r "," g ",0)";  
+var wt = 6;  
+var ht = 12;  
+c.fillRect((w-wt)/2, , wt, ht);  
+c.fillRect(, ht, w, h);  
+}  
+  
+window.LifeIndicator = LifeIndicator;  
+  
+}());
+
+## Play Framework integration
+
+I was planning to make a multiplayer game but I couldn’t find the time for this.  
+I use Play Framework 2 and its power and concepts for handling streams (even if I don’t use it yet).  
+The only part I can show you for now is the game map generation. For making a multiplayer game, I needed to have the game state on server side to be able to submit game infos (map, players, …) to new players.
+
+This is a few scala code to generate a nice distribution of random objects in the map:
+
+object Game {  
+  def createRandom: Game = {  
+    val random = new Random()  
+    val half = 5000  
+    val size = 2*half  
+    val split = 4  
+    val objects =  
+    Range(, split).map { xi =>  
+      Range(, split).map { yi =>  
+        val s = size.toDouble / split.toDouble  
+        val x = -half.toDouble math.round(s*(xi random.nextDouble));  
+        val y = -half.toDouble math.round(s*(yi random.nextDouble));  
+        var sizeRandom = random.nextDouble  
+        val w = 200.*math.ceil((1-sizeRandom)*8.);  
+        val h = 200.*math.ceil(sizeRandom*8.);  
+        RectObj(Vec3(x,y,), w, h)  
+      }.toList  
+    }.toList.flatten  
+    Game( (Vec3(-half, -half, ), Vec3(half, half, )), List(), objects, List() )  
+  }  
+}  
+  
+case class Game (bounds: Tuple2[Vec3, Vec3], chars: List[Char], objects: List[GameObj], dynamics: List[GameDyn])  
+...
+
+[See the full source][19] (some code may not be used).
+
+ [19]: https://github.com/gre/dta/blob/master/app/models/models.scala
+
+## Still an unfinished game
+
+There is more things to do now:
+
+*   More visual effects
+*   More sound effects
+*   A better collision system (using a physic engine?)
+*   Multiplayer
+*   A better gameplay with some goals, different kind of games, …
+
+### Initial multiplayer objective rescheduled
+
+My initial game release was focus on the game core, graphisms and gameplay.
+
+I was unfortunately not ready enough to make the multi-player real-time part for the first week sprint but I have some though on the subject.  
+I was asking myself what are the best way to make the game synchronisation between clients while trying to keep as much client-side code as possible. I wanted a scalable decentralized game. I had some though on how to solve this issue. For instance, when a client shoots, he sends a “shoot” event with the timestamp, server just streams events (with a tick frequency) sent by clients and clients replay the game exactly the same way everywhere (using all these time-based events) with some interpolation with the current time.  
+I need to think more about this now, and try to use [PlayFramework][20].
+
+ [20]: http://playframework.org/
+
+## Source code
+
+
+
+**[EDIT] You may be mainly interested by the [main.js][21]. It shows how powerful the even-driven programming is, for plugging components together.  
+**
+
+ [21]: https://github.com/gre/dta/blob/master/app/assets/javascripts/main.js
+
+## Special thanks
+
+[@mrspeaker][22] for helping me with Three.js & also collision system,  
+[@mrdoob][23] & [@aerotwist][24] for replying to my newbies questions,  
+guys on IRC (#three.js),  
+and of-course 7dfps guys.
+
+ [22]: http://twitter.com/mrspeaker
+ [23]: http://twitter.com/mrdoob
+ [24]: http://twitter.com/aerotwist

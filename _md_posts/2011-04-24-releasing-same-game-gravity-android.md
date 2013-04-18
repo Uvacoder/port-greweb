@@ -1,0 +1,25 @@
+---
+title: Releasing Same Game Gravity (Android)
+author: Gaetan
+layout: post
+permalink: /2011/04/releasing-same-game-gravity-android/
+dsq_thread_id:
+  - 463659772
+categories:
+  - Mobile
+tags:
+  - android
+  - game
+  - market
+---
+# 
+
+Following on from the success of my Same game made in HTML5 Canvas, I’ve decided to extend it to a (web) mobile game.
+
+It’s now available on Android market.
+
+More infos on .
+
+
+
+This ball removal puzzle game is made with HTML5 technologies and PhoneGap. Source code will be published within a few months.
