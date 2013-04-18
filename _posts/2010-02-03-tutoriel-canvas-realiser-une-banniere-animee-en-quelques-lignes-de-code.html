@@ -1,0 +1,260 @@
+---
+layout: post
+title: ! 'Tutoriel Canvas : Réaliser une bannière animée en quelques lignes de code'
+tags:
+- animation
+- banniere
+- bezier
+- canvas
+- development
+- html
+- javascript
+- Programming
+- Tutoriels
+- Web
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _topsy_long_url: http://blog.greweb.fr/2010/02/tutoriel-canvas-realiser-une-banniere-animee-en-quelques-lignes-de-code/
+  topsy_short_url: ''
+  dsq_thread_id: '463659547'
+  _flattr_post_hidden: '0'
+  _flattr_post_customurl: ''
+---
+<strong>
+Pré-requis conseillé: <a href="http://blog.greweb.fr/2011/03/html-canvas-pour-les-neophytes">Voir la vidéo : HTML Canvas pour les néophytes</a>
+</strong>
+
+<div>Le <strong>HTML 5</strong> intègre de nouvelles technologies comme le <strong>canvas</strong>, une véritable API graphique destinée à remplacer le flash dans les années à venir.</div>
+<div>Ce tutoriel vise à présenter <strong>canvas</strong> comme une <strong>librairie très simple d'utilisation et haut niveau</strong> grâce au langage <strong>javascript</strong>.</div>
+<div>Il vous apprendra à réaliser une animation similaire à la bannière <del datetime="2012-06-08T16:44:33+00:00">actuelle</del> (ancienne maintenant) de mon blog en <strong>quelques lignes de code</strong>.</div>
+<!--more-->
+<div>Il est volontairement ordonnancé de manière didactique, si vous maitriser les concepts, n'hésitez pas à avancer.</div>
+<hr />
+<h2>Code de base (skeleton template)</h2>
+<div>Nous allons travailler avec ce code <strong>html</strong> de base :</div>
+<code lang="html">
+<!DOCTYPE html>
+<html>
+  <head><title></title></head>
+  <body>
+    <canvas id="tuto" width="500" height="100" style="border: 1px solid;"></canvas>
+    <script language="javascript">
+      var canvas = document.getElementById('tuto');
+      var ctx = canvas.getContext('2d');
+
+      // Le code javascript ira ici
+
+    </script>
+  </body>
+</html>
+</code>
+
+<div>
+Ce code nous servira dans tous le reste du tutoriel.
+<h3>Deux choses notables :</h3>
+<ul>
+	<li>Nous avons créé un élément <strong>canvas</strong> et indiqué ses dimensions <strong>(500x100)</strong>. Pour mieux pouvoir repérer ses dimensions, nous lui avons ajouté une bordure.</li>
+	<li>En <strong>javascript</strong>, nous avons récupéré l'élément DOM puis le contexte 2d qui nous servira pas la suite.</li>
+</ul>
+<h2>Quelques notions de base du canvas</h2>
+<h3>La surface du canvas</h3>
+<div>Le <strong>canvas</strong> occupe une surface dont la dimension est définie par les paramètres <em>width</em> et <em>height</em>.</div>
+<div>Pour ceux qui ne serait pas familier avec les <strong>bibliothèques graphiques</strong>, cette surface peut être vu comme un quadrillage de pixel sur <strong>deux dimensions</strong> : <strong>x</strong> variant de <em>0 à width</em> et <strong>y</strong> variant de <em>0 à height</em>.</div>
+<div>Le point d'origine de ce repère orthonormé est situé <strong>dans le coin haut gauche du canvas</strong>.</div>
+<div><img src="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/canvas-cartesian.png" alt="" /></div>
+<h3>Le concept de contexte</h3>
+<div>Le contexte 2d récupéré dans la variable <strong>ctx</strong> est en fait l'<strong>interface de programmation</strong> (API) de la bibliothèque graphique <strong>canvas</strong>.</div>
+<div>C'est en quelque sorte l'<strong>intermédiaire entre le programmeur et la bibliothèque graphique</strong>.</div>
+<div>Ainsi par exemple, si l'on veux dessiner un rectangle de dimension <strong>20x10</strong> à la position <strong>(5,6)</strong>, il suffit simplement d'écrire :
+<code lang="javascript">ctx.fillRect(5,6,20,10)</code></div>
+<h3>Les paramètres globaux du canvas</h3>
+<div>Pour dessiner, toute librairie graphique a besoin de connaitre un certain nombre de paramètres tels que la <em>couleur du trait, la taille de la brosse, etc</em>.</div>
+<div>Plutôt que de devoir passer en paramètre ces informations aux fonctions du contexte, <strong>canvas</strong> met directement à disposition ses paramètres afin de pouvoir les modifier facilement.</div>
+<div>Ainsi, nous pourrons définir la couleur de remplissage dans <strong>ctx.fillStyle</strong> et la couleur de trait dans <strong>ctx.strokeStyle</strong>.</div>
+<h2>Commençons à coder</h2>
+<div>Avant d'attaquer l'animation, nous allons commencer à manier les <strong>outils de tracage</strong>.</div>
+<h3>Chemins et traits simples</h3>
+<div>Nous allons commencer par tracer un trait simple qui va traverser tous le canvas.</div>
+<div>Essayez le code suivant :</div>
+<code lang="javascript">ctx.beginPath();               // commence à tracer un chemin
+ctx.moveTo(0, 20);             // défini le premier point de tracage à la position (0, 20)
+ctx.lineTo(canvas.width, 30);  // Tracer une ligne jusqu'à la position (canvas.width, 30). canvas.width désigne la largeur du canvas (500 dans notre exemple).
+ctx.stroke();                  // Indique au canvas de dessiner le chemin tracé depuis le beginPath
+</code>
+<a href="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/step1.html" target="_blank">Voir le résultat</a>
+<h3>Chemins et courbes de bézier</h3>
+<h4>La notion de courbe de bézier</h4>
+<div>
+
+Une courbe de bézier est définie par 4 points :
+<ul>
+	<li>Deux points désignant le début et la fin du trait.</li>
+	<li>Deux points appelés <strong>poignées</strong> permettant de contrôler la courbe.</li>
+</ul>
+</div>
+<div><img src="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/bezier-schema.png" alt="" /></div>
+<h4>Application en canvas</h4>
+<div>Essayez le code suivant :</div>
+<code lang="javascript">ctx.beginPath();
+ctx.moveTo(0, 20);
+ctx.bezierCurveTo(canvas.width/3, canvas.height, 2*canvas.width/3, 0, canvas.width, 20);
+ctx.stroke();
+</code>
+<a href="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/step2.html" target="_blank">Voir le résultat</a>
+<div>
+<ul> <strong>De la même façon, la procédure consiste à : </strong>
+	<li>commencer un chemin,</li>
+	<li>se placer à une certaine position,</li>
+	<li>effectuer un traçage (courbe de bézier),</li>
+	<li>terminer le traçage (<strong>ctx.stroke()</strong>).</li>
+</ul>
+</div>
+<div>Intéressons nous plus particulièrement au traçage de la courbe de bézier avec l'appel de <strong>ctx.bezierCurveTo</strong>.</div>
+<h5>bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)</h5>
+<div>Cette fonction prends en argument les coordonnées du premier point de contrôle <strong>(cp1x, cp1y)</strong>, du deuxième point de contrôle <strong>(cp2x, cp2y)</strong> et du point final <strong>(x, y)</strong>. A noter que le point de début est le point sur lequel on s'est placé au moyen de <strong>moveTo</strong>.</div>
+<div>
+
+<strong>Dans notre exemple, les deux points de contrôle sont placés ainsi :</strong>
+<div><img src="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/bezier-exemple.png" alt="" /></div>
+</div>
+<h3>Ajout de l'animation</h3>
+<div>Pour animer notre courbe de bézier, nous allons faire varier les 4 points de notre courbe en fonction du temps.</div>
+<div>
+
+En javascript, il y a deux moyen d'effectuer une animation :
+<ul>
+	<li style="text-decoration: line-through;">Au moyen de <strong>setInterval</strong> permettant d'appeler une fonction par interval de temps régulier.</li>
+	<li style="text-decoration: line-through;">Au moyen de <strong>setTimeout</strong> permettant d'appeler une fonction après un temps donné.</li>
+	<li><strong style="color: red;">[UPDATE 2011]</strong> Il est maintenant recommandé d'utiliser <strong>requestAnimationFrame</strong> qui est l'équivalent de setTimeout mais destiné à l'animation donc plus performant. <a target="_blank" href="http://paulirish.com/2011/requestanimationframe-for-smart-animating/">Plus d'informations içi (en)</a></li>
+</ul>
+<div>La première approche est parfaite pour une animation <strong>"statique", avec peu d'intéraction</strong>.</div>
+<div>La seconde approche est intéressante lorsque l'animation <strong>doit être contrôlée</strong> (intéraction). En effet, cette approche consiste à appeler setTimeout à chaque cycle d'animation.</div>
+<div>Nous choisirons d'utiliser <strong>setInterval</strong>, plus simple et plus adaptée à notre tutoriel.</div>
+</div>
+<h4>Approche linéaire</h4>
+<div>Commençons simplement par une <strong>évolution linéaire des points</strong>.</div>
+<div>Essayez le code suivant :</div>
+<code lang="javascript">var i = 0; // variable fonction du temps
+var cycle = function() {
+ctx.clearRect(0,0,canvas.width,canvas.height); // clean the canvas
+var y = Math.abs(canvas.height-i%(2*canvas.height)); // y évolue par rebond entre 0 et canvas.height au cours du temps (linéarité)
+ctx.beginPath();
+ctx.moveTo(0, y);
+ctx.bezierCurveTo(canvas.width/3, canvas.height/2, 2*canvas.width/3, canvas.height/2, canvas.width, y);
+ctx.stroke();
+i++;
+};
+setInterval(cycle, 30); // lance le cycle chaque 30 millisecondes
+</code>
+<a href="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/step3.html" target="_blank">Voir le résultat</a>
+<div>Pour l'instant les poignées sont fixes et l'évolution linéaire de <strong>y</strong> donne un effet de rebond peu intéréssant.</div>
+<div>C'est pour cela que nous abandonnons l'idée d'une évolution linéaire des positions au cours du temps pour l'approche sinusoïdale.</div>
+<h4>Approche sinusoïdale</h4>
+<div>Comme nous l'avons vu, l'évolution linéaire n'est pas adaptée pour ce genre d'animation (effet de rebond). Il faudrait rendre l'animation plus fluide.</div>
+<div>Pour cela, nous allons utiliser <strong>une évolution sinusoïdale des positions au cours du temps</strong>.</div>
+<div>Essayez le code suivant :</div>
+<code lang="javascript">var i = 0; // variable fonction du temps
+var cycle = function() {
+ctx.clearRect(0,0,canvas.width,canvas.height);
+var offset = i/20;
+var y = (Math.sin(offset)+1)*canvas.height/2; // y varie de 0 à canvas.height
+var cpy1 = (Math.cos(offset)+0.5)*canvas.height; // les poignées évoluent également de façon sinusoïdale
+var cpy2 = canvas.height - cpy1;
+ctx.beginPath();
+ctx.moveTo(0, y);
+ctx.bezierCurveTo(canvas.width/3, cpy1, 2*canvas.width/3, cpy2, canvas.width, y);
+ctx.stroke();
+i++;
+};
+setInterval(cycle, 30);
+</code>
+<a href="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/step4.html" target="_blank">Voir le résultat</a>
+<h3>Peaufinage</h3>
+<h4>Amélioration du style du trait</h4>
+<div>Essayez le code suivant :</div>
+<code lang="javascript">ctx.strokeStyle = 'rgba(80,150,240,0.5)'; // couleur bleu avec opacité de 50%
+ctx.lineWidth = 5; // épaisseur de trait de 5 pixels
+var i = 0;
+var cycle = function() {
+ctx.clearRect(0,0,canvas.width,canvas.height);
+var offset = i/20;
+var y = (Math.sin(offset)+1)*canvas.height/2;
+var cpy1 = (Math.cos(offset)+0.5)*canvas.height;
+var cpy2 = canvas.height - cpy1;
+ctx.beginPath();
+ctx.moveTo(0, y);
+ctx.bezierCurveTo(canvas.width/3, cpy1, 2*canvas.width/3, cpy2, canvas.width, y);
+ctx.stroke();
+i++;
+};
+setInterval(cycle, 30);
+</code>
+<a href="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/step5.html" target="_blank">Voir le résultat</a>
+<h4>Ajout de plusieurs courbes</h4>
+<div>Pour avoir un effet plus accrochant, nous allons ajouter plusieurs courbes de bézier avec un décalage temporel entre elles.</div>
+<div>Nous allons également attribuer plusieurs styles aux différentes courbes.</div>
+<code lang="javascript">var numberOfLines = 5;
+var i = 0;
+var cycle = function() {
+ctx.clearRect(0,0,canvas.width,canvas.height);
+for(var j=0; j<numberOfLines; ++j) {
+var offset = (i+j*10)/20;
+ctx.lineWidth = 1+2*(numberOfLines-j); // épaisseur variable en fonction de la ligne
+ctx.strokeStyle = 'rgba(80,150,240,'+(j/5+0.1)+')'; // opacité variable en fonction de la ligne
+var y = (Math.sin(offset)+1)*canvas.height/2;
+var cpy1 = (Math.cos(offset)+0.5)*canvas.height;
+var cpy2 = canvas.height - cpy1;
+ctx.beginPath();
+ctx.moveTo(0, y);
+ctx.bezierCurveTo(canvas.width/3, cpy1, 2*canvas.width/3, cpy2, canvas.width, y);
+ctx.stroke();
+}
+i++;
+};
+setInterval(cycle, 30);
+</code>
+<a href="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/step6.html" target="_blank">Voir le résultat</a>
+<h3>Aller plus loin</h3>
+<div>Il est possible de continuer encore plus loin en ajoutant <strong>l'évolution de plusieurs paramètres en fonction du temps</strong>.</div>
+<div>Pour conclure, voici la démonstration finale :
+<code lang="javascript">
+var canvas = document.getElementById('tuto');
+var ctx = canvas.getContext('2d');
+
+var numberOfLines = 5;
+var i = 0;
+var cycle = function() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for(var j=0; j<numberOfLines; ++j) {
+    ctx.lineWidth = 1+2*(numberOfLines-j);
+    ctx.strokeStyle = 'rgba(100,200,'+Math.floor(Math.abs(Math.cos(i/80)*256))+','+(j/5+0.1)+')';
+    var offset = (i+j*10*Math.abs(Math.cos(i/100)))/20;
+    var y = (Math.sin(offset)+1)*canvas.height/2;
+    var cpy1 = (Math.cos(offset)+0.5)*canvas.height;
+    var cpy2 = canvas.height - cpy1;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.bezierCurveTo(canvas.width/3, cpy1, 2*canvas.width/3, cpy2, canvas.width, y);
+    ctx.stroke();
+  }
+  i++;
+};
+setInterval(cycle, 30);
+</code>
+<a href="http://data.greweb.fr/blog/image/tuto/canvas/animate-banner/final.html" target="_blank">Voir le résultat</a>
+
+</div>
+<div>
+
+Nous avons ajouté :
+<ul>
+	<li>L'évolution de la <strong>couleur</strong> au cours du temps.</li>
+	<li>L'évolution du <strong>décalage entre les courbes</strong> au cours du temps.</li>
+</ul>
+</div>
+<em>This article will be translated into english soon...</em>
+
+</div>

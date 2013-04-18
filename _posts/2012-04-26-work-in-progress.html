@@ -1,0 +1,100 @@
+---
+layout: post
+title: Work in <progress />
+tags:
+- html5
+- javascript
+- Programming
+- progress
+- Web
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _flattr_post_language: fr_FR
+  _flattr_post_category: text
+  _flattr_post_hidden: '0'
+  dsq_thread_id: '665041758'
+  meta_description: Native progress bar in the browser
+---
+<strong>Did you know browsers now have a built-in HTML tag for making progress bar?</strong> 
+
+<div style="text-align: center">
+<progress style="width: 50%">(progress is not supported)</progress>
+</div>
+
+How cool is that!
+
+It is perfect for making web applications loading bar in just one line of HTML and a few Javascript code.
+
+A progress tag will be displayed on recent browsers with a OS-native progress bar representing a loading. Like many HTML tag, if it is not supported, it fallbacks nicely by displaying its inner content. This fallback content should either be your own designed progress bar or simply display a percentage.
+
+It is today supported by Firefox 9+, Chrome, Opera and IE10.
+<!--more-->
+
+<h2>Example</h2>
+
+[cc_html]<progress value="23" max="100">23 %</progress>[/cc_html] 
+
+<h3>On your browser:</h3>
+<progress value="23" max="100">23 %</progress>
+
+<h3>On Linux / Firefox (with GNOME)</h3>
+<img src="http://blog.greweb.fr/wp-content/uploads/2012/04/progress.png" alt="" title="progress" width="145" height="20" class="alignnone size-full wp-image-1514" />
+
+<h3>On Mac OS / Chrome:</h3>
+<img src="http://blog.greweb.fr/wp-content/uploads/2012/04/Capture-d’écran-2012-04-26-à-14.59.37.png" alt="" title="progress_23" width="145" height="22" class="alignnone size-full wp-image-1476" />
+
+<h3>On IE 6:</h3>
+<img src="http://blog.greweb.fr/wp-content/uploads/2012/04/Capture-d’écran-2012-04-26-à-15.20.32.png" alt="" title="progress_23_IE" width="39" height="23" class="alignnone size-full wp-image-1480" />
+
+<h2>Let's see some cases:</h2>
+
+<h3>waiting</h3>
+[cci_html]<progress max="1000"></progress>[/cci_html] <progress style="float: right" max="1000"></progress>
+
+<h3>starting</h3>
+[cci_html]<progress value="0" max="1000"></progress>[/cci_html] <progress style="float: right" value="0" max="1000"></progress>
+
+<h3>in progress:</h3>
+[cci_html]<progress value="500" max="1000"></progress>[/cci_html] <progress style="float: right" value="500" max="1000"></progress>
+
+<h3>finished:</h3>
+[cci_html]<progress value="1000" max="1000"></progress>[/cci_html] <progress style="float: right" value="1000" max="1000"></progress>
+
+
+<h2>Making a download bar</h2>
+When you need to load big resource like images, videos, or 3D materials, you usually want to display the progress of the download. 
+You could still do it using some divs and CSS + Javascript, but this is now much simpler to use a  &lt;progress /&gt; :
+
+<h3>One line of HTML:</h3>
+[cc_html]
+<progress id="download"></progress>
+[/cc_html]
+
+<h3>And the Javascript:</h3>
+(for more convenience, we are using jQuery)
+[cc_js]
+var totalBytes = 10000000; // CHANGE ME WITH THE SIZE OF THE RESOURCE
+var req = new XMLHttpRequest();
+var progress = $('#download');
+progress.attr("max", totalBytes);
+req.addEventListener("progress", function (e) {
+  progress.attr("value", e.loaded).text(Math.floor(100*e.loaded/totalBytes)+" %");
+}, false);  
+req.addEventListener("load", function (e) {
+  // THE RESOURCE IS LOADED
+  progress.replaceWith("<div>Downloaded!</div>");
+});
+req.open("GET","resource.dat",true);                                                                                                                                            
+req.send();
+[/cc_js]
+
+<div style="text-align: center">
+<strong><a href="http://greweb.fr/progress/" target="_blank">See it in action here.</a></strong>
+</div>
+
+It is quite easy to extend my code to support multiple files to download.
+
+It is also easy to use this progress bar for anything else, but remember it represents a progress. If you want to represent some kind of stats, refer to the dedicated &lt;meter /&gt; tag.

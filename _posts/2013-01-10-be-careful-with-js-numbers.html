@@ -1,0 +1,87 @@
+---
+layout: post
+title: Be careful with JS numbers!
+tags:
+- float
+- javascript
+- number
+- Web
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _flattr_post_hidden: '0'
+  _flattr_post_customurl: ''
+  dsq_thread_id: '1018847248'
+---
+<blockquote class="twitter-tweet" lang="fr"><p>@<a href="https://twitter.com/greweb">greweb</a> : Let's do a kickstarter to build the 1st space rocket running on embedded Javascript... I think we can discover new physics rules!</p>&mdash; mandubian (@mandubian) <a href="https://twitter.com/mandubian/status/289422662101504000" data-datetime="2013-01-10T17:25:14+00:00">Janvier 10, 2013</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+It is <a href="http://wtfjs.com/">common</a> in Javascript to have unexpected behaviors, but this one is particulary vicious.
+
+<blockquote>10000000000000000 === 10000000000000001</blockquote>
+
+<strong>Javascript doesn't have integer type but lets you think it has.</strong> [cci_js]parseInt[/cci_js] and [cci_js]parseFloat[/cci_js] built-in functions, the fact that "1" is displayed as "1" and not as "1.0" (like many languages) contribute to the general misunderstood.
+
+<strong>In Javascript, all numbers are floating numbers and are prone to <a href="https://en.wikipedia.org/wiki/Floating_point">floating point approximation</a>.</strong>
+
+When you write [cci_js]var i = 1;[/cci_js], and you console.log it, Javascript is nice, you obtain [cci]1[/cci] and not [cci]1.0000000000000001[/cci]. 
+
+But you can experiment that, in Javascript, [cci_js]1.0000000000000001 === 1[/cci_js] is true...
+
+
+<blockquote>I hear you, telling me that <em>this sounds OK, floating point approximation rules, right?</em></blockquote>
+
+
+But the same thing occurs for big numbers:
+[cc_js]10000000000000000 === 10000000000000001[/cc_js]
+
+Oh <strong>F**K</strong> !
+
+[edit] where in python:
+<img src="https://pbs.twimg.com/media/BAg2wRyCIAAGuXW.png:large" alt="" />
+
+<h2>Termination of loops</h2>
+
+The following is worse:
+
+<script src="https://gist.github.com/4504986.js"></script>
+
+is logging [cci_js]10000000000000000[/cci_js] forever!
+
+Because 10000000000000001 can't exist in Javascript with approximations, 10000000000000001 is 10000000000000000, so you can't increment this value, and you are stuck in this crazy f**king loop. 
+
+Conclusion, <em>Program termination proof</em> sounds hard to reach in Javascript!
+
+<!--more-->
+
+<h2>How many numbers in a 1000 range?</h2>
+
+Between 10000000000000000 and 10000000000001000, there are actually 750 Javascript integers.
+
+<script src="https://gist.github.com/4505510.js"></script>
+
+<h2>Real World Example</h2>
+
+The issue can actually <strong>lead to real web application disaster</strong>. Imagine if your database use Long for id (well like almost every databases in the world, like twitter does), and <strong>if you use the id as number in Javascript and not as string</strong>, you can have strange behaviors like never being able to represent and access a resource from the Javascript or worse!
+
+<script src="https://gist.github.com/4505517.js"></script>
+
+<h2>TL;DR. The lesson</h2>
+
+This is not something new, floating point approximation, but the way Javascript fix values to round the approximations mislead us.
+
+Now, simple thing, <strong>Avoid numbers when approximation is not permitted</strong> like for resource id (especially when you retrieve it from a server).
+
+This probably impacts your JSON APIs because it's the last thing you had think of!
+
+Otherwise, <strong>if you need to manipulate big integers in Javascript use a library for that</strong>.
+
+Example: <a href="http://silentmatt.com/biginteger/">http://silentmatt.com/biginteger/</a>
+
+[EDIT]
+9007199254740993 (which is 2^53+1) is the smallest not representable integer in Javascript. In other words, you can trust Javascript numbers before this integer!
+
+[EDIT 2]
+<a href="http://news.ycombinator.com/item?id=5051525">Thanks to 0x0 on HackerNews</a> who told me the twitter id issue example really happened in a previous twitter API: <a href="https://dev.twitter.com/docs/twitter-ids-json-and-snowflake">https://dev.twitter.com/docs/twitter-ids-json-and-snowflake</a>

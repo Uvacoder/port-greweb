@@ -1,0 +1,41 @@
+---
+layout: post
+title: ! 'RecordMyDesktop : pas de son (no sound) : Solution'
+tags:
+- audio
+- GNU/Linux
+- recordmydesktop
+- solution
+status: publish
+type: post
+published: true
+meta:
+  dsq_thread_id: '463659293'
+---
+L'application <strong>RecordMyDesktop</strong> (sous Linux) qui permet le <acronym title="enregistrement audio/vidéo de l'écran">screencast</acronym> ne fonctionne pas toujours concernant l'<strong>enregistrement du son</strong>.
+
+Ce billet vous permettra peut-être de résoudre ce problème...
+
+<!--more-->
+
+Après quelques manipulations, j'ai réussi à régler mon problème d'enregistrement de son sous <strong>gtk-recordmydesktop</strong>.
+
+Personnellement, J'utilise <strong>Linux Ubuntu 9.04</strong> <em>(fraichement installé donc configuration de défaut)</em>, avec la carte son <strong>Realtek ALC850</strong>.
+<h2>Solution</h2>
+<h3>Version graphique (avec gtk-recordmydesktop)</h3>
+<ul>
+	<li>Au menu de l'application, <strong>cliquez sur <em>Avancé</em></strong>.</li>
+	<li>Sélectionnez l'onglet <em>Son</em>.</li>
+	<li>Dans <em>Périphérique</em>, vous avez normalement par défaut le mot <code>DEFAULT</code>. <strong>Remplacez-le par <code>hw:1,0</code></strong>.</li>
+	<li>Fermez la fenêtre <em>Avancé</em>. Faites un essai d'enregistrement. Normalement le son qui sort de vos enceintes et même le son du microphone est <strong>correctement enregistré</strong>.</li>
+	<li>Si cela ne fonctionne pas, essayer à la place de <code>hw:1,0</code> de mettre <code>hw:0,0</code>.</li>
+</ul>
+<h4>Une image vaut mieux que des mots</h4>
+<img src="http://data.greweb.fr/blog/image/recordmydesktop-no_sound_fixed.png" alt="" />
+<h3>Version console</h3>
+<ul>
+	<li>L'astuce revient à utiliser l'option : <strong>-device hw:1,0</strong></li>
+</ul>
+Donc par exemple : <code>recordmydesktop -device hw:1,0</code>
+
+<hr />J'espère que cette astuce vous a permis de résoudre ce problème.

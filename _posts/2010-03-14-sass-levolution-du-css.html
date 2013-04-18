@@ -1,0 +1,357 @@
+---
+layout: post
+title: ! 'SASS : l''évolution du CSS pour Play, Rails ou autres'
+tags:
+- css
+- play
+- Programming
+- rails
+- sass
+- Web
+status: publish
+type: post
+published: true
+meta:
+  dsq_thread_id: '463659593'
+---
+<strong>SASS, Syntactically Awesome Stylesheets</strong>, est un langage de feuille de style évolué qui permet de factoriser beaucoup de code css et de rendre son écriture et sa maintenance <strong>rapide et moins contraignante</strong>. Il est compilé en css.
+
+
+<h2>Pourquoi utiliser SASS ?</h2>
+Son utilisation a de nombreux avantages par rapport au CSS :
+<ul>
+<li>sa <strong>simplicité</strong> (pas de crochets, pas de point virgule mais juste de l'indentation)</li>
+<li>l'<strong>imbrication</strong> des sélecteurs css (appliquant l'idée DRY : don't repeat yourself)</li>
+<li>l'utilisation de <strong>variables</strong></li>
+<li>l'utilisation d'<strong>opérations élémentaires</strong> (sur les pixels, les couleurs, ...)</li>
+<li>la <strong>factorisation</strong> du code (au lieu de faire des copier-coller, on peux factoriser le code à travers les "mixins").</li>
+<li>La <strong>réduction</strong> css et la <strong>clarté</strong> du code</li>
+<li>La <strong>compression du code</strong> compilé avec la possibilité de tout mettre dans un fichier (via l'héritage) et de minimifier le code css.</li>
+</ul>
+
+Ce langage n'est pas difficile à apprendre, cela ressemble au css, avec de nombreuses fonctionnalités intéressantes en plus.
+
+<!--more-->
+
+<h2>La syntaxe du langage</h2>
+La syntaxe du sass est <strong>compatible avec celle du css à quelques exceptions près</strong> :
+<ul>
+<li>Ne plus mettre de point virgule <strong>;</strong> </li>
+<li>Ne plus mettre de crochets <strong>{ }</strong> </li>
+<li>Respecter les conventions traditionnelles (<strong>attribut: valeur</strong> un espace après le deux points mais pas avant)</li>
+<li>Respecter l'indentation : Il faut choisir une indentation et s'y tenir dans un même fichier. Au choix : une tabulation, 2 espaces, 4 espaces, ... Les lignes <em>propriétés: valeurs</em> d'un sélecteur css doivent dépasser d'une indentation ce sélecteur.</li>
+</ul>
+
+En respectant ces points, vous pouvez déjà <strong>coder en SASS comme en CSS</strong>.
+
+Mais cela ne serait pas intéressant sans les nouveautés suivantes :
+
+<h3>La factorisation des sélecteurs en plusieurs niveaux</h3>
+
+Au lieu d'avoir ce type d'arborescence à un niveau :
+<code lang="css">
+.main .head
+  color: red
+.main .body
+  color: blue
+</code>
+
+Nous pouvons factoriser le sélecteur "<em>.main</em>" et se ramener à deux niveaux :
+<code lang="css">
+.main
+  .head
+    color: red
+  .body
+    color: blue
+</code>
+
+Ce procédé de factorisation basé sur l'esprit <strong>DRY</strong> (Don't Repeat Yourself) est aussi applicable sur les attributs eux-mêmes :
+<code lang="css">
+a
+  font:
+    family: serif
+    weight: bold
+    size: 1.2em
+</code>
+
+sera compilé en css par :
+<code lang="css">
+a {
+  font-family: serif;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+</code>
+
+<h3>Les variables</h3>
+La possibilité d'utiliser des variables est un gros apport au css. Elle permet <strong>une meilleure maintenance du code et une meilleure scalabilité d'une application</strong> (en utilisant par exemple des fichiers sass de thèmes définissant toutes les couleurs, images, polices, ...).
+Il existe plusieurs <strong>types de variables</strong> (nombre réel, pixels, couleurs, chaines de caractères ...) et il est possible d'utiliser des <strong>opérations élémentaires</strong>.
+
+Lorsqu'on écrit une ligne <strong>attribut / value</strong> avec l'utilisation de variables (dynamique),
+on utilise le caractère '<strong>=</strong>' au lieu de '<strong>:</strong>' pour l'affectation.
+
+<h4>Les couleurs</h4>
+<code lang="css">
+!link_color = red
+a
+  color = !link_color
+  &:hover
+    color = !link_color+#222
+</code>
+A noter que le symbole <strong>&amp;</strong> remplace le sélecteur parent.
+
+Ce qui donne le code compilé suivant :
+<code lang="css">
+a {
+  color: red;
+}
+a:hover {
+  color: #ff2222;
+}
+</code>
+
+<h4>Les pixels</h4>
+<code lang="css">
+!margin = 16px
+.border
+  padding = !margin / 2
+  margin = !margin / 2
+</code>
+
+donne le code compilé :
+
+<code lang="css">
+.border {
+  padding: 8px;
+  margin: 8px;
+}
+</code>
+
+
+<h3>Les "mixins"</h3>
+Les mixins sont des procédures qui contiennent plusieurs lignes de sass.
+Il est possible d'utiliser des arguments sur ces mixins.
+
+<code lang="css">
+=border-radius(!radius = 5px)
+  border-radius= !radius
+  -moz-border-radius= !radius
+  -webkit-border-radius= !radius
+
+#wrapper
+  +border-radius(10px)
+  > footer
+    +border-radius()
+</code>
+Cet exemple est typiquement intéressant car il permet d'utiliser <strong>border-radius</strong> de façon <strong>cross-browser</strong> et avec une ligne de code.
+
+A noter qu'il est possible d'affecter des valeurs par défaut aux mixins.
+
+Le résultat css compilé est le suivant :
+<code lang="css">
+#wrapper {
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+#wrapper > footer {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+</code>
+
+<h3>Exemple complet</h3>
+Voici un exemple complet de l'utilisation du SASS
+<code lang="css">
+/* This is just an example */
+
+/* variables */
+!main_width = 900px
+!aside_width = 300px
+!section_width = 520px
+
+!link_color = red
+
+!font_title = "Liberation","Georgia","serif"
+
+/* mixins */
+=border-radius(!radius = 5px)
+  border-radius= !radius
+  -moz-border-radius= !radius
+  -webkit-border-radius= !radius
+
+=block()
+  display: block
+  overflow: auto
+
+/* colors */
+a
+  color = !link_color
+  &:hover
+    color = !link_color+#222
+
+
+/* layout */
+
+#wrapper
+  margin: 0 auto
+  position: relative
+  width = !main_width
+  +border-radius(10px)
+  >nav
+    +block()
+    padding: 2px
+      top: 5px
+    font-size: 1.2em
+    font-family = !font_title
+    a
+      font-weight: bold
+      &:hover
+        color: white
+
+  >header
+    +block()
+    clear: both
+    height: 48px
+    font-family = !font_title
+
+  >footer
+    +block()
+    padding: 5px
+    text-align: center
+    clear: both
+
+  #main
+    position: relative
+    >section
+      +block()
+      width = !section_width
+      padding: 20px
+
+    >aside
+      +block()
+      float: right
+      width = !aside_width
+      padding: 20px
+</code>
+
+et le résultat du fichier CSS compilé
+
+<code lang="css">
+/* This is just an example */
+/* variables */
+/* mixins */
+/* colors */
+a {
+  color: red;
+}
+  a:hover {
+    color: #ff2222;
+}
+
+/* layout */
+#wrapper {
+  margin: 0 auto;
+  position: relative;
+  width: 900px;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+  #wrapper >nav {
+    display: block;
+    overflow: auto;
+    padding: 2px;
+    padding-top: 5px;
+    font-size: 1.2em;
+    font-family: Liberation, Georgia, serif;
+}
+    #wrapper >nav a {
+      font-weight: bold;
+}
+      #wrapper >nav a:hover {
+        color: white;
+}
+  #wrapper >header {
+    display: block;
+    overflow: auto;
+    clear: both;
+    height: 48px;
+    font-family: Liberation, Georgia, serif;
+}
+  #wrapper >footer {
+    display: block;
+    overflow: auto;
+    padding: 5px;
+    text-align: center;
+    clear: both;
+}
+  #wrapper #main {
+    position: relative;
+}
+    #wrapper #main >section {
+      display: block;
+      overflow: auto;
+      width: 520px;
+      padding: 20px;
+}
+    #wrapper #main >aside {
+      display: block;
+      overflow: auto;
+      float: right;
+      width: 300px;
+      padding: 20px;
+}
+</code>
+
+Le SASS offre <strong>encore plus de possibilités</strong>, notamment l'interpolation, les conditions, les boucles, ...
+Vous trouverez plus d'informations sur la <em>documentation SASS</em>.
+
+<h2>Utilisation</h2>
+<h3>Pré-requis</h3>
+<strong>Note</strong>: Ce qui suit ne s'applique pas pour le plugin sass du framework Play! .
+
+Pour utiliser SASS, sous linux, installez les packets <strong>ruby</strong> et <strong>rubygems</strong> puis installez <strong>haml</strong> avec la commande :
+<code lang="bash">gem install haml</code>
+
+<h3>Avec le framework java Play!</h3>
+Grâce au module sass de play framework, le SASS est <strong>compilé à la volée</strong> au moment du chargement d'une page (en mode développement) ou au chargement de l'application (en mode production).
+<h4>Installation</h4>
+Depuis play 1.1, il suffit de lancer la commande <code lang="bash">play install sass</code>
+Ensuite il faut activer le module dans la configuration de l'application (fichier <em>conf/application.conf</em>).
+
+<h3>Avec le framework Ruby on Rails</h3>
+
+<h4>Installation</h4>
+Pour activer le plugin SASS sur une application Rails, lancez :
+<code>haml --rails path/to/rails/app</code>
+
+<h3>Autrement</h3>
+Vous pouvez toujours utiliser SASS en compilant vos fichier sass en css à chaque modification (voir <em>Commandes pratiques</em>).
+Vous inclurez ensuite le fichier css compilé dans votre html.
+
+<h2>Convertir ses anciens CSS en SASS</h2>
+Si vous ne voulez pas repartir de zéro dans le design d'un projet, vous pouvez tout à fait repartir avec les anciens CSS en les exportant en SASS.
+
+<h2>Commandes pratiques</h2>
+<ul>
+<li>Pour convertir vos fichier CSS en SASS il vous suffit d'utiliser :
+<code lang="bash">css2sass <fichier css> <fichier sass></code></li>
+<li>Pour compiler vos fichier SASS en CSS, utilisez :
+<code lang="bash">sass <fichier sass> <fichier css compilé></code></li>
+</li>
+</ul>
+
+
+<h2>Liens</h2>
+<ul>
+<li><a href="http://sass-lang.com/">Site du langage SASS</a></li>
+<li><a href="http://www.playframework.org/">Site du framework Play!</a></li>
+</ul>
+
+<h3>Aller plus loin</h3>
+<ul>
+<li><a href="http://compass-style.org/">Compass : framework SASS</a></li>
+<li><a href="http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html">Documentation SASS</a></li>
+</ul>

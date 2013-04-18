@@ -1,0 +1,106 @@
+---
+layout: post
+title: HTML5 Canvas as a color converter
+tags:
+- canvas
+- color
+- hackability
+- Web
+status: publish
+type: post
+published: true
+meta:
+  _edit_last: '1'
+  _flattr_post_language: fr_FR
+  _flattr_post_category: text
+  _flattr_post_hidden: '0'
+  dsq_thread_id: '674703271'
+  _flattr_post_customurl: ''
+---
+<img src="http://blog.greweb.fr/wp-content/uploads/2012/05/color-alpha-options.png" alt="" title="color-alpha-options" width="198" height="76" class="alignleft size-full wp-image-1526" />
+I'm currently working on the User Interface of a scene editor for my <a href="http://demo.greweb.fr/illuminated.js/">Illuminated.js library</a> with some color and alpha picker.
+
+HTML5 now have the [cci_html]<input type="color" />[/cci_html] and [cci_html]<input type="range" />[/cci_html] which is nice. It works on Chrome and there are some <a href="https://github.com/bgrins/spectrum">polyfills</a> to make it working on older browsers.
+
+We will now see how we can easily <strong>retrieve a rgba color from such an UI</strong>, regardless of the color format given by the color picker and <strong>combine the alpha component from the alpha range picker</strong>.
+
+<blockquote>We can implement an <strong>anythingToRGBA converter</strong> in 10 lines of Javascript!</blockquote>
+
+<h2>What?</h2>
+
+Basically, for instance, you have this: [cci_javascript]"#ff6432"[/cci_javascript] and [cci_javascript]0.8[/cci_javascript]
+
+and you want this: [cci_javascript]"rgba(255,100,50,0.8)"[/cci_javascript]
+
+which is this color: <span style="background-color: rgba(255,100,50,0.8); width: 20px; height: 20px; display: inline-block">&nbsp;&nbsp;&nbsp;&nbsp;</span>.
+
+<blockquote>Well, of course, we could use a library with regexp parsers!</blockquote>
+
+But there is a lot of different formats available especially if you want to convert a color from <a href="http://www.w3.org/TR/css3-color/">CSS</a>!
+
+Only for the <span style="color: blue">blue</span> color, you have at least 7 different representations: [cci]#00F[/cci], [cci]#0000FF[/cci], [cci]rgb(0,0,255)[/cci], [cci]rgba(0,0,255,1)[/cci], [cci]hsl(255,100%,50%)[/cci], [cci]hsla(255,100%,50%,1)[/cci], 
+and... [cci]blue[/cci]!
+
+<blockquote>Ouch, so let's make a huge converter library!</blockquote>
+
+Nope! 
+
+All of these are color formats are supported by CSS and also Canvas.
+<strong>So, why not just re-using what the browser can do?</strong>
+
+<!--more-->
+
+<h2>How?</h2>
+
+Because we have access to Canvas in Javascript, <strong>we can implement an anythingToRGBA converter in a few line of Javascript</strong>:
+
+[cc_javascript]
+var getRGBA = (function(){
+  var canvas = document.createElement("canvas");
+  canvas.width = canvas.height = 1;
+  var ctx = canvas.getContext("2d");
+  return function (color, alpha) {
+    ctx.clearRect(0,0,1,1);
+    ctx.fillStyle = color;
+    ctx.fillRect(0,0,1,1);
+    var d = ctx.getImageData(0,0,1,1).data;
+    return 'rgba('+[ d[0], d[1], d[2], alpha ]+')';
+  }
+}());
+[/cc_javascript]
+
+You have now a ready to use Javascript color library! 
+
+[cci_javascript]getRGBA("#ff6432", 0.8)[/cci_javascript] will returns [cci_javascript]"rgba(255,100,50,0.8)"[/cci_javascript]. 
+[cci_javascript]getRGBA("red", 0.5)[/cci_javascript] will returns [cci_javascript]"rgba(255,0,0,0.5)"[/cci_javascript].
+
+You can "standardize" your color and use it anywhere!
+
+<strong>Feel free to adapt the code to any other desired format.</strong>
+
+We can easily make the reverse (give a rgba color and get the #RRGGBB and alpha values):
+
+[cc_javascript]
+var extractColorAndAlpha = (function(){
+  var canvas = document.createElement("canvas");
+  canvas.width = canvas.height = 1;
+  var ctx = canvas.getContext("2d");
+
+  function toHex (value) { 
+    var s = value.toString(16); 
+    if(s.length==1) s = "0"+s;
+    return s;
+  }
+
+  return function (color) {
+    ctx.clearRect(0,0,1,1);
+    ctx.fillStyle = color;
+    ctx.fillRect(0,0,1,1);
+    var d = ctx.getImageData(0,0,1,1).data;
+    return {
+      color: "#"+toHex(d[0])+toHex(d[1])+toHex(d[2]),
+      alpha: Math.round(1000*d[3]/255)/1000
+    };
+  }
+}());
+[/cc_javascript]

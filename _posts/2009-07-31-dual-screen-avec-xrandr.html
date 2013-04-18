@@ -1,0 +1,151 @@
+---
+layout: post
+title: Utiliser xrandr pour configurer deux écrans (dual-screen)
+tags:
+- Bash Tips
+- dual-screen
+status: publish
+type: post
+published: true
+meta:
+  dsq_thread_id: '463659306'
+---
+Ce billet va vous montrer comment <strong>activer</strong> et <strong>désactiver</strong> facilement un <strong>second écran</strong> sous Linux afin d'étendre son espace graphique. Au moyen d'un script shell, il est possible d'effectuer cette opération en <strong>un clic</strong>.
+
+<!--more-->
+
+Pour cela, vous avez besoin de deux écrans branchés.
+
+Nous supposerons qu'ils supportent les mêmes résolutions mais il est bien entendu possible de faire cohabiter deux résolutions différentes.
+
+Nous utiliserons la commande <code>xrandr</code> permettant la configuration du <acronym title="le mécanisme qui gére l'affichage graphique sous GNU/Linux">serveur graphique X</acronym>.
+<h4>Récupérer les informations des deux écrans</h4>
+Vous ne connaissez pas les <strong>résolutions supportées </strong>par vos écrans ? Pas de panique <code>xrandr</code> est là pour cela !
+
+<strong>Tapez</strong> simplement <code>xrandr</code> <strong>dans une <acronym title="Sous Ubuntu Linux, le terminal se trouve dans Applications/Accessoires/Terminal">Terminal</acronym></strong>.
+
+Chez moi cela donne :
+<pre>Screen 0: minimum 320 x 200, current 1280 x 1024, maximum 2560 x 1024
+
+VGA-0 connected (normal left inverted right x axis y axis)
+1280x1024 60.0 + 75.0 60.0
+1152x864 75.0
+1024x768 75.0 70.1 60.0
+832x624 74.6
+800x600 72.2 75.0 60.3 56.2
+640x480 75.0 59.9
+720x400 70.1 70.1
+
+DVI-0 connected 1280x1024+0+0 (normal left inverted right x axis y axis) 376mm x 301mm
+1280x1024 60.0 + 75.0* 60.0
+1152x864 75.0
+1024x768 75.0 70.1 60.0
+832x624 74.6
+800x600 72.2 75.0 60.3 56.2
+640x480 75.0 59.9
+720x400 70.1 70.1</pre>
+<h5>Mais qu'est-ce que ce charabias ?</h5>
+<code>Screen 0: minimum 320 x 200, current 1280 x 1024, maximum 2560 x 1024 </code> signifie que mon <strong>affichage</strong> identifié par le <strong>numéro 0</strong> (sur le serveur X) supporte une <strong>résolution minimale</strong> de 320x200, une <strong>résolution maximale</strong> de 2560x1024 et est <strong>actuellement</strong> de 1280x1024.
+
+Attention il ne faut pas confondre <strong>affichage</strong> et <strong>écran</strong> ! Un affichage peut se faire sur plusieurs écrans. Ainsi <code>2560 x 1024 </code> concerne en réalité chez moi <strong>deux écrans</strong>.
+
+Un petit schéma pour mieux comprendre :
+
+<img src="http://data.greweb.fr/blog/image/bash/dualscreen/schema.png" alt="Écran Gauche 1280x1024, Écran Droite 1280x1024, Donc résolution totale: 2560x1024" />
+
+<em>Petite anecdote</em>: Sur le schéma, l'écran de gauche est à la position (0, 0), l'écran de droite à la position (1280, 0).
+
+Ensuite nous avons chez moi deux paragraphes : un commençant par <code>VGA-0</code>, l'autre commençant par <code>DVI-0</code>. Ce sont en fait mes <strong>deux écrans connectés</strong>.
+
+Dans chacun de ces deux paragraphes, nous avons une liste des <strong>résolutions</strong> et <strong>fréquences supportés par ces écrans</strong>.
+
+Par exemple: <code>1280x1024</code> est une résolution, <code>60.0</code> et <code>75.0</code> sont les fréquences supportées pour cette résolution.
+
+Avez vous remarqué la petite <strong>*</strong> à la ligne <code>1280x1024 60.0 + 75.0* 60.0</code> de l'écran <code>DVI-0</code> ? Cela signifie que j'utilise actuellement cette résolution et cette fréquence.
+
+<strong>Ce sont des informations importantes pour la suite...</strong>
+<h4>Activer et désactiver un deuxième écran à la console</h4>
+Avant de commencer un <strong>script bash</strong>, vous pouvez tester certaines commandes pour vérifier le bon comportement des deux écrans.
+
+Choisissez sur chacun des deux écrans une résolution et une fréquence d'affichage.
+
+Chez moi, j'ai choisi <strong>le mode <acronym title="résolution">1280x1024</acronym>@<acronym title="fréquence">75.0</acronym></strong>.
+
+Ensuite il faut que vous calculez le décalage que l'écran de droite a par rapport à l'écran de gauche. C'est trés simple, pas de panique !
+
+Pour un dual-screen classique, ce décalage correspond à <acronym title="la premiére valeur de la résolution pour faire simple">l'abscisse</acronym> de la résolution de l'écran de gauche.
+
+En gros voici ce qu'il faut retenir :
+
+<strong>Écran de gauche</strong> : Son nom <strong>N</strong>, sa résolution <strong>AxB</strong> et fréquence <strong>F</strong>, position de <strong>0x0</strong>
+
+<strong>Écran de droite</strong> : Son nom <strong>M</strong>, sa résolution <strong>CxD</strong> et fréquence <strong>G</strong>, position de <strong>Ax0</strong>
+
+Ce qui donne dans mon cas :
+
+<strong>Écran de gauche</strong> : nom <strong>DVI-0</strong>, sa résolution <strong>1280x1024</strong> et fréquence <strong>75.0</strong>, position de <strong>0x0</strong>
+
+<strong>Écran de droite</strong> : nom <strong>VGA-0</strong>, sa résolution <strong>1280x1024</strong> et fréquence <strong>75.0</strong>, position de <strong>1280x0</strong>
+
+Sachant cela, pour <strong>activer mes deux écrans</strong> j'ai juste à taper :
+<pre>xrandr --output DVI-0 --pos 0x0 --mode 1280x1024 --rate 75.0;
+xrandr --output VGA-0 --pos 1280x0 --mode 1280x1024 --rate 75.0;</pre>
+Ensuite pour <strong>désactiver l'écran de droite</strong> et utiliser juste l'écran de gauche, il suffit de taper :
+<pre>xrandr --output VGA-0 --off;
+xrandr --output DVI-0 --pos 0x0 --mode 1280x1024 --rate 75.0;</pre>
+Vous voyez, c'est compliqué !
+<h4>Un script pour ne plus à avoir à taper ces commandes</h4>
+Je vous propose un script qui <strong>active ou désactive le dual-screen</strong>. Si on l'appelle simplement, on active le dual-screen, si on l'appelle en ajoutant un argument <code>off</code> on désactive le dual-screen.
+
+<strong>Ouvrez un Terminal</strong> et placez-vous dans votre <acronym title="répertoire dans lequel placer le script">répertoire de script</acronym>
+
+<code>cd <em>mondossierdescript</em></code>
+
+Ensuite, <strong>créez un fichier</strong> <code>dualscreen</code> et attribuez lui les <strong>droit d'exécution</strong>.
+
+<code>touch dualscreen &amp;&amp; chmod +x dualscreen</code>
+
+<strong>Ouvrez-le</strong>.
+
+<code>gedit dualscreen</code> (gedit à remplacer par votre éditeur de texte préféré)
+
+Voici le contenu de mon <strong>script</strong> :
+<code lang="bash">
+#!/bin/bash
+
+if [ $# == 0 ]; then arg="on"; else arg=$1; fi
+
+if [ $arg == "off" ]
+then {
+	xrandr --output VGA-0 --off;
+	xrandr --output DVI-0 --pos 0x0 --mode 1280x1024 --rate 75.0;
+	echo "dual-screen disabled.";
+}
+else {
+	xrandr --output DVI-0 --pos 0x0 --mode 1280x1024 --rate 75.0;
+	xrandr --output VGA-0 --pos 1280x0 --mode 1280x1024 --rate 75.0;
+	echo "dual-screen enabled.";
+}
+fi
+
+exit 0;
+</code>
+<strong>Adaptez-le</strong> selon les commandes que vous aviez tapées auparavant dans un terminal.
+
+<strong>Enregistrez et fermez</strong> votre script.
+
+Vous pouvez d'ores et déjà <strong>tester</strong> votre script. Testez <code>./dualscreen</code> qui devrait <strong>activer le dual-screen</strong> et <code>./dualscreen off</code> qui devrait <strong>désactiver le dual-screen</strong>.
+<h5>Créer un raccourci vers mon script dans mon tableau de bord</h5>
+Il peut être intéressant de pouvoir activer ou désactiver le <strong>dual-screen en un clic</strong>.
+
+Pour créer un raccourci sur <strong>Ubuntu Linux </strong>:
+
+Faites un <strong>Clic droit sur le tableau de bord </strong>/ <strong>Ajouter au tableau de bord.</strong> Ensuite double-cliquez sur <strong>Lanceur d'application personnalisé</strong> tout en haut de la fenêtre qui s'est ouverte.
+
+Depuis la fenêtre <strong>Créer un lanceur </strong>: Choisissez le Type <strong>Application dans un terminal</strong>, tapez le <strong>nom</strong> désiré, allez chercher votre script depuis <strong>Parcourir</strong>, puis <strong>validez</strong>. Vous pouvez aussi changer <strong>l'icône</strong> ou ajouter un <strong>commentaire</strong>.
+
+Un icône apparaît dans le tableau de bord. Lorsque vous cliquez dessus, le dual-screen s'active.
+
+Note: Pour faire un raccourci qui désactive le dual-screen, la seule différence est qu'il faudra ajouter <code> off</code> à la fin du champ Commande de la fenêtre<strong> Créer un lanceur</strong>.
+
+Pour toutes questions, posez un commentaire sur ce billet.

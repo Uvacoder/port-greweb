@@ -1,0 +1,248 @@
+---
+layout: post
+title: Réaliser une maquette web avec le CSS 3
+tags:
+- css
+- sass
+- Web
+status: publish
+type: post
+published: true
+meta:
+  dsq_thread_id: '463659605'
+---
+Le CSS depuis sa version 3 constitue une <strong>bonne évolution technologique pour palier l'utilisation abusive d'images</strong> dans la réalisation d'une application web.
+
+Il n'est ainsi plus nécessaire de recourir à des images pour réaliser des <strong>ombres</strong>, des <strong>dégradés</strong>, des <strong>bordures arrondis</strong> ou encore utiliser des <strong>polices spécifiques</strong>.
+
+L'avenir du CSS3 nous promet encore plus : il est d'ores et déjà possible sur certains navigateurs d'effectuer des <strong>animations</strong>, des <strong>transitions</strong>, des <strong>effets de reflets</strong>,... sans devoir recourir au <em>javascript</em>, au <em>canvas</em> ou, pire encore, au <em>flash</em>.
+
+<!--more-->
+
+<h2>Généralités</h2>
+
+<h3>Pourquoi ?</h3>
+Quelques raisons pour utiliser le CSS 3...
+<h4>dans une optique de maintenabilité</h4>
+En utilisant des images pour réaliser des effets simples, <strong>il faut mettre à jour l'image à chaque fois</strong>. Si bien qu'il est nécessaire d'utiliser un logiciel de dessin et de garder les sources pour pouvoir facilement modifier les couleurs à l'avenir.
+<strong>La modification d'un thème est alors pénible</strong> : Pour chaque image du thème : il faut ouvrir la source de l'image avec son logiciel préféré (GIMP, Photoshop, ...), modifier la couleur, exporter l'image, recharger la page,... A contrario, <strong>il ne suffit que de modifier une ligne de code CSS pour changer sa couleur</strong> (l'utilisation de variable avec SASS est intéréssant).
+
+<h4>par simplicité</h4>
+Le CSS 3 <strong>offre plus de possibilités</strong> donc <strong>simplifie bien des tâches</strong> qui étaient complexe à réaliser auparavant. Bordures arrondis, ombres, dégradés, animations, reflets,... sont maintenant facilement réalisables avec le CSS 3.
+
+Voici un exemple frappant parmi tant d'autres :
+Auparavant, on voyait fleurir à foison des tableaux pour réaliser de simples bordures arrondis.
+<h5>On voyait auparavant</h5>
+<code lang="html">
+<table class="radius">
+<tr>
+<td class="topleft"></td>
+<td class="top"></td>
+<td class="topright"></td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="content">content here...</td>
+<td class="right"></td>
+</tr><tr>
+<td class="bottomleft"></td>
+<td class="bottom"></td>
+<td class="bottomright"></td>
+</tr>
+</table>
+<style>
+table.radius .topleft {
+background: url(topleft.png);
+width: 20px;
+height: 20px;
+}
+/* DE MEME pour les 8 autres cases ... */
+</style>
+</code>
+
+<h5>Maintenant avec le CSS3</h5>
+<code lang="html">
+<div class="radius">content here...</div>
+<style>
+.radius {
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+}
+</style>
+</code>
+La propriété <strong>border-radius</strong> n'est pas encore standardisé (<em>le W3C y travaille, c'est donc en attente de publication, finalisation</em>), c'est pourquoi on utilise les propriétés préfixés par <strong>-moz</strong> et <strong>-webkit</strong> (respectivement pour gecko et webkit) en attendant la standardisation du W3C.
+
+<h4>dans un objectif de scalabilité des thèmes</h4>
+L'utilisation des possibilités du CSS 3 au lieu d'images va permettre d'<strong>étendre rapidement son application web à plusieurs thèmes</strong> et de modifier facilement ces thèmes. Il suffira d'avoir un fichier pour chaque thème.
+
+<h3>SASS et le framework Compass</h3>
+Afin de résoudre les problèmes de <em>cross-navigateur</em> abordés précédemment, je vous conseille l'utilisation du <strong>SASS</strong> et du framework <a href="http://compass-style.org/">Compass</a>.
+Pour plus de renseignements sur le SASS, n'hésitez pas à lire <a href="/2010/03/sass-levolution-du-css">cet article</a>.
+
+<h3>Principales nouveautés du CSS 3</h3>
+
+Dans la suite de cet article, <strong>pour plus de simplicités, nous nous arrêtons à la compatibilité de Firefox</strong> (préfixé par -moz) mais bien entendu, il est possible de les rendre compatibles avec tous les navigateurs récents. Comme précisé avant, l'utilisation du framework <em>Compass</em> permet entre autres de résoudre ce problème.
+
+<h4>Les bordures arrondis</h4>
+<img src="http://data.greweb.fr/blog/image/css3/exemple_border_radius.png" alt="" />
+
+<code lang="html">
+<span class="exemple">Exemple</span>
+<style>
+.exemple {
+  -moz-border-radius: 10px;
+  border: 1px solid black;
+  padding: 2px 5px;
+}
+</style>
+</code>
+
+<h4>Les dégradés</h4>
+Compatibles depuis Firefox 3.6.
+<img src="http://data.greweb.fr/blog/image/css3/exemple_gradient.png" alt="" />
+
+<code lang="html">
+<span class="exemple">Exemple</span>
+<style>
+.exemple {
+  -moz-border-radius: 10px;
+  border: 1px solid black;
+  padding: 2px 5px;
+  background: -moz-linear-gradient(-90deg, green, yellow);
+}
+</style>
+</code>
+
+<h4>Les ombres</h4>
+<h5>Sous les textes</h5>
+<img src="http://data.greweb.fr/blog/image/css3/exemple_text_shadow.png" alt="" />
+<code lang="html">
+<span class="exemple">Exemple</span>
+<style>
+.exemple {
+  -moz-border-radius: 10px;
+  border: 1px solid black;
+  padding: 2px 5px;
+  background: -moz-linear-gradient(-90deg, green, yellow);
+  text-shadow: -1px -1px 1px yellow;
+}
+</style>
+</code>
+<h5>Sous les éléments</h5>
+<img src="http://data.greweb.fr/blog/image/css3/exemple_box_shadow.png" alt="" />
+<code lang="html">
+<span class="exemple">Exemple</span>
+<style>
+.exemple {
+  -moz-border-radius: 10px;
+  border: 1px solid black;
+  padding: 2px 5px;
+  background: -moz-linear-gradient(-90deg, green, yellow);
+  text-shadow: -1px -1px 1px yellow;
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+</style>
+</code>
+
+A noter d'ailleurs que la couleur de format <strong>rgba(<ins>r</ins>, <ins>g</ins>, <ins>b</ins>, <ins>a</ins>)</strong> est une nouveauté du CSS 3.
+
+<h3>Optimiser la compatibilité avec les navigateurs plus anciens</h3>
+Voici une utilisation intelligente des dégradés (avec SASS) pour permettre une meilleure <strong>compatibilité</strong> avec, en dernier recours, une couleur ou une image alternative :
+<code lang="css">
+=vertical-gradient(!from, !to, !alt=(!from/2 + !to/2))
+  background = !alt
+  background = -webkit-gradient(linear, left top, left bottom, from(!from), to(!to))
+  background = -moz-linear-gradient(-90deg, !from, !to)
+
+/* exemples d'utilisation : */
+#main > header
+  +vertical-gradient(#719369, #587451, url(header.png))
+
+#main > header
+  +vertical-gradient(green, yellow, #80FF80)
+</code>
+
+<h2>Exemple de maquette</h2>
+Voici un <strong>exemple d'utilisation du CSS3</strong> utilisé sur un projet récent (réalisé à l'université).
+<img src="http://data.greweb.fr/blog/image/css3/university_nostalgia_exemple.png" alt="" />
+
+Il n'y a aucune image (sauf l'avatar tux) et l'application est entièrement compatible avec au minimum Firefox et Chrome.
+Si l'application vous intéresse, elle est sur <a href="http://github.com/gre/University-nostalgia">github</a>.
+<h3>Extrait du code SASS</h3>
+<code lang="css">
+@import compass.sass
+@import compass/reset.sass
+@import theme.sass
+
+=vertical-gradient(!from, !to, !alt=(!from/2 + !to/2))
+  background = !alt
+  background = -webkit-gradient(linear, left top, left bottom, from(!from), to(!to))
+  background = -moz-linear-gradient(-90deg, !from, !to)
+
+!back = #e9f3e7
+!back_aside = #F8FAF5
+!back_header_from=#719369
+!back_header_to=#587451
+!back_footer_from=#b4c1b1
+!back_footer_to=#9da89a
+
+#wrapper
+  +border-radius(!global_border_radius)
+  :border 1px solid !back-#111
+  >nav
+    +border-top-radius(10px)
+    :background white
+  >header
+    +vertical-gradient(!back_header_from, !back_header_to, url(/public/images/header.png))
+    :color white
+    :z-index 1
+  >footer
+    +vertical-gradient(!back_footer_from, !back_footer_to)
+    +border-bottom-radius(10px)
+
+  #main
+    background = !back_aside
+    +box-shadow(0px, -1px, 2px, rgba(0,0,0,0.25))
+    :z-index 2
+    >section
+      :background white
+</code>
+
+<h3>Un triangle en css ???</h3>
+Ce n'est pas de la magie mais <strong>il est possible de faire des triangles en CSS</strong> (même en CSS2) grâce à une petite astuce. Explication en images :
+<h4>Une boite avec une couleur pour chaque bordure</h4>
+<img src="http://data.greweb.fr/blog/image/css3/triangle_01.png" alt="" />
+<code lang="html">
+<div class="box"></div>
+<style>
+.box {
+  background: black;
+  width: 40px;
+  height: 40px;
+  border-width: 15px;
+  border-color: yellow red blue green;
+  border-style: solid;
+}
+</style>
+</code>
+<h4>width et height à 0</h4>
+<img src="http://data.greweb.fr/blog/image/css3/triangle_02.png" alt="" />
+<h4>Bordures transparentes</h4>
+<img src="http://data.greweb.fr/blog/image/css3/triangle_03.png" alt="" />
+<code lang="html">
+<div class="box"></div>
+<style>
+.box {
+  background: black;
+  width: 0;
+  height: 0;
+  border-width: 15px;
+  border-color: transparent red transparent transparent;
+  border-style: solid;
+}
+</style>
+</code>
+
+<h4>Autre utilisation des triangles</h4>
+Le même procédé m'a permis de faire ceci :
+<img src="http://data.greweb.fr/blog/image/css3/triangle_menus.png" alt="" />

@@ -1,0 +1,338 @@
+---
+layout: post
+title: CSS-selector-based templating system for scalable JavaScript applications
+tags:
+- css
+- javascript
+- Programming
+- scalable
+- templating
+- Web
+status: publish
+type: post
+published: true
+meta:
+  _flattr_post_language: sq_AL
+  _flattr_post_category: text
+  _flattr_post_hidden: '0'
+  _flattr_btn_disabled: ''
+  _edit_last: '1'
+  _topsy_long_url: http://blog.greweb.fr/2012/02/css-selector-based-templating-example-with-javascript/
+  topsy_short_url: ''
+  meta_description: In this article, we will focus on the power of CSS as a descriptive
+    language, current template system approach and their problems with modularity
+    and extensibility, and try to mix both features from the concept to a concrete
+    implementation.
+  meta_keywords: css, javascript, templating
+  dsq_thread_id: '564142637'
+---
+<img alt="" src="http://blog.greweb.fr/wp-content/uploads/2012/02/218px-Mir_diagram-fr.svg_.png" title="Mir station modularity" class="alignleft" width="218" height="240" /> In this article, we will focus on the power of <strong>CSS as a descriptive language</strong>, current template system approach and their problems with <strong>modularity</strong> and <strong>extensibility</strong>, and try to mix both features from the <strong>concept</strong> to a <strong>concrete implementation</strong>.
+
+<br style="clear: both" />
+<!--more-->
+
+<h2>What is <abbr title="Cascading Style Sheets">CSS</abbr> ?</h2>
+<abbr title="Cascading Style Sheets">CSS</abbr> is an extremely powerful descriptive language.
+It helps to define <strong>how to display a document</strong> (e.g. a web page).
+
+A style sheet contains a set of <strong>CSS rules</strong>. 
+Each CSS rule has a <strong>CSS selector</strong> associated with a set of <strong>declarations</strong>. 
+You can see a CSS selector as a selection filter applied on every HTML element. A few element can match a CSS selector if they fit the structure describes in this selector.
+Each <strong>declaration</strong> is composed of a couple (<strong>property</strong> : <strong>value</strong>). 
+The <strong>CSS property</strong> is a predefined property related to a display or layout behavior. 
+The <strong>value</strong> will apply a custom value for the property on all elements matching the CSS selector.
+
+Let's focus on some advantages of this descriptive language:
+
+<h3>A CSS rule is independant from others.</h3>
+The order of CSS rules <em>(selector + declarations)</em> <strong>really</strong> does not matter.
+The priority between CSS rules is based on the selector itself and not on their arrangement.
+
+<h3>You can "mix" CSS rule</h4>
+2 CSS rules can have the same CSS selector. An element can be matched with multiple CSS rules. CSS rules are merged, it's called the cascading.
+This is the most important feature of CSS. 
+It implies a very modular and extensible language.
+
+<h4>Example</h4>
+<code lang="css">
+a { 
+  color: #33CC00;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+#articles {
+  font-size: 12px;
+}
+#articles a {
+  color: red; /* overriding the generic color of a */
+}
+</code>
+
+<h2>Some limitations of today's template system</h2>
+
+Most of template system are based on inherence between templates.
+<ul>
+  <li>You have usually an "inclusion" approach: a template will "include" multiple external template. <em>(Many template into Many template)</em></li>
+  <li>And an "extension" approach: You define in a main template an area where you can append a template. Others templates "extend" your main template. <em>(One main template for Many template)</em></li>
+</ul>
+
+These approaches aims to factorize template codes and that's great.
+
+But it doesn't fit my needs:
+<ul>
+  <li>It brings <strong>dependencies between templates</strong>. </li>
+  <li>If you add a new template, you have to modify existing templates.
+If your application tend to go modules based, this is going to be unmaintainable.
+</li>
+</ul>
+
+<blockquote>
+<strong>web application module (n)</strong>
+1 : an independent unit of functionality that is part of the total structure of a web application
+</blockquote>
+
+<h3>A solution for scalable applications and libraries</h3>
+
+I've recently started to rewrite my <a href="http://sliderjs.org/">SliderJS</a> library and I needed to split it into very modular features and having loose coupling between each component.
+
+I followed this <a href="http://www.ubelly.com/2011/11/scalablejs/">Scalable JavaScript Application Architecture</a> article.
+
+So, <strong>how to bring loose coupling in templating?</strong>.
+Each module have its own template and know where to append. Bringing this logic in a main template would break the independency and if I need to add new modules soon, it will not working without modifiyng it.
+How to keep the scalability of the main template without modifying it?
+
+<!--
+A first solution I found was to use some "dom created" events triggered each time a module has templated its HTML and appended into the DOM. This solution was bad and bring 2 issues: 
+You can't easily define the position of your node, for instance if 3 modules need to append in a same container, you don't know what will result about their appending order.
+It brings more dependency between modules, it's not so loosely-coupled.
+-->
+
+The best solution I found is to combine <strong>CSS selectors</strong> concepts with <strong>template system</strong> approaches.
+
+<h2>CSS concepts applied on templating</h2>
+
+I've decided to inspire from CSS: <strong>attaching a CSS selector with a template</strong>.
+It benefits from some CSS advantages explained before.
+
+<h3>Simple twitter widget example</h3>
+
+<code lang="html">
+<div class="twitter">
+  <h1>Twitter</h1>
+  <ul class="twitts">
+    <li class="twitt">Hello world!</li>
+  </ul>
+  <footer><a href="http://twitter.com/greweb">Follow me on twitter</a></footer>
+</div>
+</code>
+
+<h4>Classical approach</h4>
+
+The way to template it with the classical approach would be:
+
+[cc lang="html"]
+<div class="twitter">
+  <h1>Twitter</h1>
+  <ul class="twitts">
+    {for twitt in twitts}
+    <li class="twitt">{twitt}</li>
+    {/for}
+  </ul>
+  <footer><a href="http://twitter.com/{me}">Follow me on twitter</a></footer>
+</div>
+[/cc]
+
+<h4>CSS selector based approach</h4>
+
+But we can also split the original "template" in small fragments and mix all of them.
+It helps to define each templates independently.
+
+<strong>We can identify:</strong>
+
+- A <strong>root template fragment</strong>:
+<code lang="html"><div class="twitter"></div></code>
+
+- A <strong>header fragment</strong> appended with [cci lang="css"].twitter[/cci] selector and with an <strong>high priority</strong>:
+<code lang="html"><h1>Twitter</h1></code>
+
+- A <strong>twitts list fragment</strong> appended with [cci lang="css"].twitter[/cci] selector:
+<code lang="html">
+<ul class="twitts">
+  {for twitt in twitts}
+  <li class="twitt">{twitt}</li>
+  {/for}
+</ul>
+</code>
+
+with <strong>parameters</strong> [cci lang="javascript"]twitts = [ "Hello world!" ][/cci]
+
+- An empty <strong>footer fragment</strong> appended with [cci lang="css"].twitter[/cci] selector and with a <strong>low</strong> priority:
+<code lang="html"><footer></footer></code>
+
+- A "follow me" <strong>link fragment</strong> appended with [cci lang="css"].twitter footer[/cci] selector:
+<code lang="html"><a href="http://twitter.com/{me}">Follow me on twitter</a></code>
+
+with <strong>parameters</strong> [cci lang="javascript"]me = "greweb"[/cci]
+
+
+<h3>Advanced example</h3>
+
+This is another example with a slider. 
+
+Let's conceptually imagine the following template language:
+<code lang="html">
+@root { html: <div class="slider"></div> }
+
+.slider {
+  html: <div class="slides"></div>
+}
+
+.slider div.slides {
+  html: <canvas class="slides"></canvas>
+}
+
+.slider div.slides {
+  html:
+  <div class="slide">
+    <a href="<%= link %>">
+      <img src="<%= img %>" />
+      <span class="caption"><%= title %></span>
+    </a>
+  </div>
+}
+
+.slider {
+  priority: -10
+  html: <div class="pager"></div>
+}
+
+.slider div.pager {
+  priority: 10
+  html: <a class="prevSlide" href="javascript:;">prev</a>
+}
+
+.slider div.pager {
+  priority: -10
+  html: <a class="nextSlide" href="javascript:;">next</a>
+}
+
+.slider div.pager {
+  html: <span class="pages"></span>
+}
+
+.slider div.pager {
+  html: <span class="pages">
+    <% for (var i=0; i<slides.length; ++i) { %>
+    <a class="page" href="javascript:;"><%= i+1 %></a>
+    <% } %>
+  </span>
+}
+</code>
+
+combined with some parameters, it will result
+
+<code lang="html">
+<div class="slider">
+  <div class="slides">
+    <div class="slide"><a href=".."><img src=".."/><span class="caption">...</span></a></div>
+    <div class="slide">...</div>
+    <div class="slide">...</div>
+    <canvas class="slides"></canvas>
+  </div>
+  <div class="pager">
+    <a href="javascript:;" class="prevSlide">prev</a>
+    <div class="pages">
+      <a href="javascript:;" class="page">1</a>
+      <a href="javascript:;" class="page">2</a>
+      <a href="javascript:;" class="page">3</a>
+    </div>                                                                      
+    <a href="javascript:;" class="nextSlide">next</a>
+  </div>
+</div>
+</code>
+
+Of-course we could also do this programmatically with DOM. But see the benefit of such a descriptive way to define things?
+
+You should keep in mind that <strong>the order of rules definition does not matter</strong>. In that's sense, it is <strong>a mixable, extensible, modular and loosely-coupled template system</strong>.
+
+<h3>More about this <abbr title="Proof Of Concept">POC</abbr></h3>
+
+Unlike CSS, <strong>two same rules aren't merged but are appended</strong>.
+
+The <em><strong>priority</strong></em> governs the order of append. The higher the value is, the sooner it is appended to the containers selected by the CSS selector.
+
+As you can see, there is a <strong>micro-templating</strong> inside each rule. For this example, it looks like the John Resig 's Micro Templating.
+
+Note also that a rule must be aware of its <strong>parameters</strong> to work properly. But this only concerns the implementation: You have to find a way to give a dynamic reference of these parameters when you add a rule.
+
+<h3>Concrete implementation</h3>
+
+The code above was a conceptual proof of concept, but I implement a subset of these features in Javascript and made "SelectorTemplating.js" available here : <a href="https://gist.github.com/1731611">https://gist.github.com/1731611</a>
+
+This is how it can be used for (almost) the same example. You will see different style of usage:
+<code lang="javascript">
+var node = document.getElementById("slider");
+var t = new SelectorTemplating(node);
+var tmpl; // defined somewhere, the John Resig 's Micro Templating.
+
+// root module
+function root () { return '<div class="slider"></div>' }
+t.add(null, root);
+
+// slides module
+var slidesTmpl = tmpl('<div class="slides"> <% if(obj.slides) { for(var i=0; i<slides.length; ++i) { var s = slides[i]; %> <div class="slide"> <a href="<%= s.link %>"> <img src="<%= s.img %>" /> <span class="caption"><%= s.title %></span> </a> </div> <% }} %> </div>')
+var slides = [ ... ]; // mutable
+t.add(".slider", function () { return slidesTmpl(slides: slides) });
+
+// canvas module
+t.add(".slider div.slides", function () { return '<canvas class="slides"></canvas>' });
+
+// pager module
+var pagesTmpl = tmpl('<div class="pager"> <span class="pages"> <% if(obj.slides) { for(var i=0; i<slides.length; ++i) { %> <a href="javascript:;" class="page"><%= i+1 %></a> <% }} %> </span> </div>');
+var slides = [...]; // synchronised with the slides module
+var prevButton, nextButton; // DOM element init when templated
+var pages = function () {
+  return pagesTmpl(slides: slides);
+}
+t.add(".sliderjs", pages, null, -10);
+t.add(".sliderjs .options", function () { return '<a class="prevSlide" href="javascript:;">prev</a>' }, function (n) { prevButton = n[0] }, 10 }); // prepend first in options
+t.add(".sliderjs .options", function () { return '<a class="nextSlide" href="javascript:;">next</a>' }, function (n) { nextButton = n[0] }, -10 }); // append at the end of options
+
+// when all modules are init :
+t.init();
+</code>
+
+<pre>
+t.add (selector, templateFunction, callback, priority)
+ * selector is the selector function. if null, append to root.
+ * a template function is an identifier in the template.
+ * the callback is called at the end of the templating with 2 arguments : the appended nodes and the global container.
+</pre>
+
+<h4>Algorithm of the template process</h4>
+
+<pre>
+container := the container element
+rules := an array containing all rules.
+sort rules by priority.
+(1) take one rule from rules
+  - elements := []
+  - if the selector is @root, elements := [container]
+  - otherwise, elements := all elements which matches the selector
+  - if the elements is empty, back to (1) by taking the next rule.
+  - (2) if not, templatize the html and append it into all of these elements. remove the rule from rules. back to (1) by starting from the first rules. 
+
+the loop (1) must end when :
+  - there is no rules anymore
+  - you have covered all the rules array without finding a match (without passing by (2) for this loop). In that case, it means some rules are not used.
+</pre>
+
+There is a known limitation of the algorithm I intend to fix soon: 
+Once we found matching elements for a rule, we append the template in these elements once, and we remove the rule. It's a simple way to avoid recursion. But this approach doesn't work if a selector can potentially matches elements defined in different rules. <em>I know how to fix this but it's not yet implemented.</em>
+
+<h2>What's next?</h2>
+We are working hard for the next version (v2) of <a href="http://sliderjs.org/">SliderJS</a> by trying to make a revolutionary IDE platform for SliderJS. It requires a modulification of every components of SliderJS, we try to keep things simple (no external library required, the core system is only 4k sized). You will have more information soon!
+
+This templating system should benefits of this work.
+
+Keep in touch!

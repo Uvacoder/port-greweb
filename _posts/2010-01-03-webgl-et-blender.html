@@ -1,0 +1,18 @@
+---
+layout: post
+title: WebGL et blender
+tags:
+- blender
+- GLGE
+- Infographie libre
+- Web
+- WebGL
+status: publish
+type: post
+published: true
+meta:
+  dsq_thread_id: '466393758'
+---
+<p>Voici une impressionnante démonstration d'une scène 3D (réalisée sous blender) dans un navigateur web, et ceci sans plugin supplémentaire (contrairement au flash) mais grâce à WebGL (canvas 3D), une API javascript utilisant <strong>openGL</strong>.</p>
+<!--more-->
+<h2>Qu'est ce que GLGE?</h2> <p><strong>GLGE</strong> est une bibliothèque graphique facilitant l'utilisation de <strong>WebGL</strong>. Rappelons que WebGL est une API Javascript permettant d'accéder à openGL sur un navigateur web et ainsi de bénéficier de l'accélération 3D de la carte graphique et ceci sans aucun plugin.</p> <p><strong>GLGE est donc une surcouche à WebGL</strong> de plus haut niveau, permettant ainsi d'accélérer le développement.</p> <p><a href="http://www.glge.org">Site internet</a></p> <h2>Démonstrations</h2> <p>La démonstration de WebGL avec GLGE est disponible ici&nbsp;: <a href="http://www.glge.org/demo/" title="http://www.glge.org/demo/">http://www.glge.org/demo/</a>. <strong>Son chargement nécessite un navigateur très récent</strong>, c'est à dire&nbsp;: un nightly builds de firefox ou de web kit (<a href="http://www.glge.org/getting-webgl/">plus d'informations ici</a>).</p> <p>Autrement vous pouvez visionner un screencast de la page web en question&nbsp;:</p> <object height="295" width="480"><param name="movie" value="http://www.youtube.com/v/Vva36undIss&amp;hl=fr_FR&amp;fs=1&amp;" /><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /> <h2>Utilisation</h2> <h3>Depuis blender</h3> <p>L'exportation d'une scène sous blender se fait grâce aux scripts <strong>objectexport.py</strong> et <strong>skelexport2.py</strong> respectivement pour exporter les <strong>objets</strong> et les <strong>armatures</strong> (disponibles à la racine du projet GLGE).</p> <p>Elle est encore <strong>incomplète</strong> (car elle concerne uniquement les objets et les armatures) mais on peux imaginer d'ici quelques mois l'arrivée de scripts permettant l'exportation instantanée d'une<strong> scène entière de blender</strong> (c'est à dire les models, les textures, les animations, les blocs logic du GameEngine) vers un contenu web.</p>

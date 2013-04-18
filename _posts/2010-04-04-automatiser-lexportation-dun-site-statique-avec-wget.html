@@ -1,0 +1,111 @@
+---
+layout: post
+title: Automatiser l'exportation d'un site statique avec wget
+tags:
+- Tutoriels
+- Web
+- webmaster
+- wget
+status: publish
+type: post
+published: true
+meta:
+  dsq_thread_id: '465092035'
+---
+<p>Il est préférable d'<strong>utiliser un framework web</strong> même si l'on veut réaliser un <strong>site vitrine simple (statique)</strong>, car l'on bénéficie des avantages du framework notamment de l'héritage (entre autre) des templates, de l'internationalisation, de la configuration des <em>routes</em>, du <em>SASS</em>, etc.</p>
+<p>De plus, cela permet de rendre la maintenabilité moins longue et couteuse.</p>
+<p>Néanmoins, son hébergeur ne permet pas toujours de faire tourner son site avec le framework utilisé (par exemple <em>ruby on rails</em> ou <em>play! framework</em>).</p>
+<p>Pour remédier à ce problème, il suffit d'<strong>exporter son site statique en simples pages HTML</strong>.</p>
+<p>
+Cet article est donc destiné aux particuliers ne voulant pas investir dans un serveur dédié, fans de framework avancés qui ne sont pas supportés par les offres d'entrée de gamme des hébergeurs (qui n'offrent généralement que le support du php).
+</p>
+
+<!--more-->
+
+<p><strong>D'ailleurs, pour ce type de site, pourquoi utiliser un framework MVC si l'on utilise que des vues ?</strong></p>
+
+<h2>La démarche</h2>
+
+<h3>Le site web</h3>
+<p><strong>Réalisez le site</strong> avec votre framework préféré et faites en sorte que la page principale (<strong>/</strong>) <strong>permette l'accès à toutes les pages du site</strong> par des liens (pas forcément directs).</p>
+
+<h3>Exportation</h3>
+<p>Avec <strong>wget</strong> récupérez votre site à la ligne de commande :</p>
+<code lang="bash">wget -r -k -np "http://localhost:9000/"</code>
+<p>
+A l'instar d'un moteur de recherche, c'est cette commande qui va s'occuper de <strong>retracer toutes les pages web de votre site</strong>, mais aussi toutes ses ressources (images, css, js, ..). En plus de cela, elle va <strong>préserver le fonctionnement des liens</strong> entre pages.
+</p>
+<p>Adaptez <em>http://localhost:9000/</em> à l'url de votre site.</p>
+<p>Cela va créer le dossier <em>localhost:9000</em>, il ne vous restera plus qu'à l'envoyer sur votre serveur http.</p>
+
+<h2>Internationalisation</h2>
+<p>Voici une solution pour exporter son internationalisation.</p>
+<p>Elle consiste à rediriger l'utilisateur, depuis la page principale, sur la bonne page internationalisée en fonction de sa langue (indiquée par le navigateur), tout <strong>en gardant les fichiers publics en commun</strong> (css, images).</p>
+<h3>Préparer ses routes</h3>
+<p>préparez les uri pour qu'elles soient de la forme <strong>/{lang}/*/</strong> avec <strong>lang</strong> désignant la langue désirée.</p>
+<h4>Exemples de routes</h4>
+<code>
+/en/
+/en/about/
+/fr/
+/fr/about/
+</code>
+
+<h3>Ajouter des liens dans les templates pour changer de langue</h3>
+<p>Cette action est délicate car, comme précisé auparavant, <strong>wget</strong> essaye de retracer tous les liens entre pages.</p>
+<p>Ainsi, si l'on crée des liens entre les différentes langues, <strong>wget</strong> créera un dossier <em>public</em> pour chaque langue internationalisée. </p>
+<p>Pour contourner ce problème et ainsi factoriser les fichiers communs, <strong>une solution est de créer les liens à posteriori</strong>.</p>
+<h4>Solution exemple avec play framework</h4>
+<code lang="html">
+<p>
+#{if lang!='en'}
+  <a ADD_HERE_ENGLISH_LINK_ATTRIBUTES>english version</a>
+#{/if}
+#{if lang!='fr'}
+  <a ADD_HERE_FRENCH_LINK_ATTRIBUTES>french version</a>
+#{/if}
+</p>
+</code>
+<code lang="bash">
+#!/bin/bash
+# script bash
+wget -r -k -np "http://localhost:9000/"
+sed -i s/ADD_HERE_ENGLISH_LINK_ATTRIBUTES/href=\"\\/en\\/\"/g $(find . -name "*.html")
+sed -i s/ADD_HERE_FRENCH_LINK_ATTRIBUTES/href=\"\\/fr\\/\"/g $(find . -name "*.html")
+</code>
+
+<h3>Préparer une page de redirection</h3>
+<p><strong>Placez à posteriori un script de redirection à l'url /</strong> pour rediriger vers la page adéquat.</p>
+
+<h4>Par exemple un script php</h4>
+<code lang="php">
+<?php
+$langs = array();
+
+if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+    preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);
+    if (count($lang_parse[1])) {
+        $langs = array_combine($lang_parse[1], $lang_parse[4]);
+        foreach ($langs as $lang => $val) {
+            if ($val === '') $langs[$lang] = 1;
+        }
+        arsort($langs, SORT_NUMERIC);
+    }
+}
+
+foreach ($langs as $lang => $val) {
+	if (strpos($lang, 'fr') === 0) {
+		header('Location: fr');
+    die();
+  }
+	else if (strpos($lang, 'en') === 0) {
+		header('Location: en');
+    die();
+  }
+}
+header('Location: en');
+?>
+</code>
+
+<h2>Exemple</h2>
+<p>Mon <a href="http://pro.grenlibre.fr/">site professionnel</a> est développé et maintenu avec <a href="http://playframework.org/">Play! framework</a> et exporté en suivant ces mêmes astuces.</p>

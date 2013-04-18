@@ -1,0 +1,262 @@
+---
+layout: post
+title: ! 'Bash completion : gérer l''auto-complétion bash d''un programme'
+tags:
+- bash
+- completion
+- manpages
+- Programming
+- Tutoriels
+status: publish
+type: post
+published: true
+meta:
+  dsq_thread_id: '463659470'
+---
+Peu de tutoriels existent autour de la programme de script bash permettant la gestion de l'<strong>auto-complétion</strong> et des <strong>suggestions</strong> mais c'est pourtant une chose importante pour tout bon logiciel fréquemment utilisé en ligne de commande.
+
+Cela consiste à <strong>compléter les arguments d'une commande en bash</strong> au moyen de la touche tabulation (TAB).
+
+Voici donc un petit tutoriel pour commencer le <strong>bash_completion</strong>.
+
+<!--more-->
+<h2>Requis pour le fonctionnement de bash_completion</h2>
+<h3>Un terminal bash</h3>
+Évidemment, sans terminal "bash-compatible", on ne pourrait pas utiliser le <em>bash completion</em> !
+<h3>Le packet <strong>bash-completion</strong> installé</h3>
+Il est <strong>généralement automatiquement installé</strong> sur une majorité des distributions Linux actuelles, à vérifier tout de même.
+<code>sudo apt-get install bash-completion</code> sous ubuntu.
+<h3>Un .bashrc adéquat</h3>
+Votre .bashrc doit contenir l'inclusion de <strong>/etc/bash_completion</strong>.
+
+Par exemple sous Ubuntu cette partie est automatiquement présente dans <strong>~/.bashrc</strong> :
+<code lang="bash">
+if [ -f /etc/bash_completion ];
+then ./etc/bash_completion
+fi
+</code>
+<h2>Fonctionnement de bash completion</h2>
+Le fonctionnement global est le suivant :
+<ul>
+	<li><strong>A chaque demande d'auto-completion</strong> avec la touche TAB, une fonction bash est exécutée.</li>
+	<li>La fonction bash à exécuter est déterminée par la commande <strong>complete</strong>. Pour associer une commande bash à une fonction de <em>bash completion</em>, il suffit en effet de faire : <strong>complete -F _mafonction macommandeassocié</strong>.</li>
+	<li>Cette fonction bash comporte un code qui va <strong>traiter l'auto-complétion en fonction du contexte</strong> <em>(le nombre d'argument, l'argument précédent, les arguments déjà entrés, l'argument actuel en cours de frappe, etc)</em>. Ce traitement consiste à affecter une valeur à la variable <strong>COMPREPLY</strong> qui sera utilisé par <strong>bash_completion</strong> par la suite. Cette valeur est généralement généré par la commande <strong>compgen</strong>.</li>
+</ul>
+<h2>Mode d'emploi de compgen et complete</h2>
+Voici les informations sur <strong>compgen</strong> et <strong>complete</strong> récupéré depuis les pages manuel de <strong>bash</strong>.
+<h3>compgen</h3>
+<strong>compgen</strong> [<ins>option</ins>] [<ins>mot</ins>]
+
+Produit les correspondances des complètements possibles pour <ins>mot</ins> selon les <ins>option</ins>s, qui peuvent être toute option acceptée par la commande interne <strong>complete</strong> à l’exception de <strong>-p</strong> et <strong>-r</strong> et écrit  le résultat  sur  la sortie standard. Lorsqu’on utilise les options <strong>-F</strong> ou <strong>-C</strong>, les diverses variables de  l’interpréteur  créées  par les  outils  de complètement programmables, lorsque disponibles, n’auront pas de valeurs utilisables.
+
+Les correspondances seront produites de la même façon que si  le programme  de  complètement  programmable  les  avait  produites directement à partir d’une spécification  de  complètement  avec les   mêmes   attributs.   Si   mot  est  spécifié,  seules  les complètements qui correspondent à mot sont affichés.
+
+La valeur renvoyée est vrai, à moins  qu’une  option  incorrecte ait  été fournie ou qu’aucune correspondance n’ait été produite.
+<h3>complete</h3>
+<em>Version réduite. Plus d'informations dans <strong>man bash</strong>.</em>
+
+<strong>complete</strong> [<strong>-abcdefgjksuv</strong>] [<strong>-o</strong> <ins>option-complètement</ins>] [<strong>-A</strong> <ins>action</ins>] [<strong>-G</strong> glob‐pat] [<strong>-W</strong> <ins>liste_de_mots</ins>] [<strong>-P</strong> <ins>prefix</ins>] [<strong>-S</strong> <ins>suffix</ins>] [<strong>-X</strong> <ins>motif_filtre</ins>] [<strong>-F</strong> <ins>fonction</ins>] [<strong>-C</strong> <ins>commande</ins>] <ins>nom</ins> [<ins>nom</ins> ...]
+
+<strong>complete -pr</strong> [<ins>nom</ins> ...]
+
+Spécifie comment  les  arguments  de  chaque  nom  doivent  être complétés.  Si l’option <strong>-p</strong> est fournie ou si aucune option n’est fournie, les  spécifications  de  complètement  existantes  sont affichées  de  telle  façon  qu’elles  puissent être réutilisées comme  entrée.  L’option  <strong>-r</strong> retire   une   spécification   de complètement  à chaque nom fourni ou, si aucun nom n’est fourni, toutes les spécifications de complètement.
+
+Le processus d’application de ces spécifications de complètement lorsqu’un  complètement  de  mot  est tenté est décrit plus haut dans <strong>Complètement programmable</strong>.
+
+Les autres options, si spécifiées, ont les significations  suivantes.  Les  arguments  des  options <strong>-G</strong>, <strong>-W</strong> et <strong>-X</strong> (et, si nécessaire, les options <strong>-P</strong> et <strong>-S</strong>) devraient être protégées pour  leur éviter  le  développement avant que la commande interne <strong>complete</strong> soit appelée.
+
+<strong>-o</strong> <ins>option-complètement</ins>
+
+L’<ins>option-complètement</ins> commande plusieurs aspects du comportement  des spécifications de complètement au-delà de la     simple      production      de      complètement.
+
+<ins>option-complètement</ins> peut être l’une des suivantes :
+
+<strong>bashdefault, default, dirnames,  filenames, nospace, plusdirs</strong>
+
+<strong> -A</strong> <ins>action</ins>
+
+L’<ins>action</ins> peut être l’une des suivantes pour produire une liste des complètements possibles :
+
+<strong>alias, arrayvar, binding, builtin, command, directory, disabled, enabled, export, file, function, group, helptopic, hostname,  job, keyword, running, service, setopt, shopt, signal, stopped, user, variable</strong>
+
+<strong>-G</strong> <ins>globpat</ins>
+
+Le motif de développement des noms de  fichiers  <ins>globpat</ins> est développé pour produire les complètements possibles.
+
+<strong>-W</strong> <ins>liste_de_mots</ins>
+
+La <ins>liste_de_mots</ins> est  découpée  en  utilisant  les  caractères de la variable spéciale <strong>IFS</strong> comme délimiteurs et chaque mot résultant est  développé.  Les  complètements possibles  sont  les éléments de la liste résultante qui correspondent au mot en cours de complètement.
+
+<strong>-C</strong> <ins>commande</ins>
+
+La  <ins>commande</ins> est  exécutée  dans  un  environnement  de sous-interpréteur   et  sa  sortie  est  utilisée  comme complètements possibles.
+
+<strong>-F</strong> <ins>fonction</ins>
+
+La  <ins>fonction</ins> de  l’interpréteur   est   exécutée   dans l’interpréteur    courant.    Lorsqu’elle   finit,   les complètements possibles sont récupérés à  partir  de  la valeur de la variable de type tableau <strong>COMPREPLY</strong>.
+
+<strong>-X</strong> <ins>motif_filtre</ins>
+
+<ins>motif_filtre</ins> est un motif utilisé pour le développement des noms de fichiers. Il est appliqué  à  la  liste  des complètements  possibles  produite  par  les  options et arguments précédents et chaque  complètement  correspondant à  <ins>motif_filtre</ins> est supprimé de la liste. Un ! au début du <ins>motif_filtre</ins> inverse le motif ;  dans  ce  cas, tout  complètement  qui ne correspond pas à <ins>motif_filtre</ins> est supprimé.
+
+<strong>-P</strong> <ins>prefix</ins>
+
+<ins>prefix</ins> est ajouté au début de chaque complètement possible après  que  toutes  les  autres  options  ont  été appliquées.
+
+<strong>-S</strong> <ins>suffix</ins>
+
+<ins>suffix</ins> est ajouté à chaque complètement  possible  après que toutes les autres options ont été appliquées.
+
+La  valeur  renvoyée  est vrai, à moins qu’une option incorrecte ait été fournie, qu’une option comme <strong>-p</strong> ou <strong>-r</strong> ait  été  fournie sans un <ins>nom</ins> d’argument, qu’une tentative ait été faite pour supprimer une spécification de complètement pour un <ins>nom</ins> pour lequel il  n’existe  pas  de  spécification, ou bien qu’une erreur soit survenue lors de l’ajout d’une spécification de complètement.
+<h2>Pratique</h2>
+Dans nos exemples, nous utiliserons la commande <strong>grenlibre</strong> (qui n'existe pas) pour l'auto-complétion.
+<h3>Hello world en completion</h3>
+<h4>Code de <strong>hello_world.sh</strong> :</h4>
+<code lang="bash"># Fonction de notre auto completion
+_grenlibre()
+{
+# declaration des variables locales
+local args cur opts
+
+#COMPREPLY désigne la réponse à renvoyer pour la complétion actuelle
+COMPREPLY=()
+
+# argc : vaut le nombre d'argument actuel sur la ligne de commande
+argc=${COMP_CWORD}|&gt;
+
+# cur  : désigne la chaine de caractère actuelle pour le dernier mot de la ligne de commande
+cur="${COMP_WORDS[argc]}"
+
+# les options possibles pour notre auto-complétion
+opts="Hello world"
+
+# on auto-complete la ligne de commande en recherchant cur dans la liste opts.
+COMPREPLY=( $(compgen -W "$opts" -- $cur ) )
+#A noter que le -- est important ici pour éviter les "injections d'options" depuis $cur.
+}
+
+# On active l'auto-completion de la commande grenlibre en relation avec la fonction _grenlibre
+complete -F _grenlibre grenlibre</code>
+
+<h4>Exécution</h4>
+On exécute notre script avec la commande :
+<code>. hello_world.sh</code> (ici le <strong>&lt;point&gt;&lt;espace&gt;</strong> est important avec <strong>hello_world.sh</strong>).
+
+Dans le cas où l'on voudrait rendre définitif notre script, c'est à dire ne pas avoir à retaper <code>. hello_world.sh</code> à chaque fois, on pourra le déplacer dans <strong>/etc/bash_completion.d/</strong>, répertoire automatiquement exécuté à l'initialisation d'un terminal bash.
+<h4>Test de l'auto-complétion</h4>
+C'est bien beau d'avoir programmé notre script mais il faudrait peut-être aussi le tester !
+<ul>
+	<li><strong>grenlibre </strong>&lt;TAB&gt;&lt;TAB&gt;</li>
+</ul>
+<code>$ grenlibre Hello  world</code>
+affiche la liste des options <strong>opts</strong>. Ici <strong>Hello</strong> et <strong>world</strong>.
+<ul>
+	<li><strong>grenlibre Hel</strong>&lt;TAB&gt;&lt;TAB&gt;</li>
+</ul>
+<code>$ grenlibre Hello</code>
+Complète "Hel" par "Hello" grâce à la liste des options <strong>opts</strong>.
+<h3>Assembleur</h3>
+Réalisons maintenant l'auto-complétion d'un programme du genre assembleur / compilateur tel que gcc, as. Nous l'appellerons encore <strong>grenlibre</strong>.
+<h4>Analyse des usages</h4>
+Supposons que ce programme nous propose plusieurs usages en ligne de commande :
+<ul>
+	<li>grenlibre &lt;fichier .src&gt;</li>
+	<li>grenlibre &lt;fichier .src&gt; -output &lt;fichier binaire&gt;</li>
+	<li>grenlibre -output &lt;fichier binaire&gt; &lt;fichier .src&gt;</li>
+</ul>
+mais aussi avec plusieurs fichier sources :
+<ul>
+	<li>grenlibre &lt;fichier .src&gt; [&lt;fichier .src&gt;  ...]</li>
+	<li>grenlibre [&lt;fichier .src&gt; ...] -output &lt;fichier binaire&gt; [&lt;fichier .src&gt;  ...]</li>
+</ul>
+On peut penser à d'autres options...
+<ul>
+	<li>grenlibre -help</li>
+</ul>
+<h5>Ce qui nous donne le pseudo code suivant</h5>
+<ul>
+	<li>si le mot commence par "-", on va <strong>auto-compléter les options</strong></li>
+	<li>sinon <strong>si le dernier argument n'était pas un argument d'option</strong>, il faut <strong>auto-compléter les fichiers .src</strong> depuis le répertoire actuel.</li>
+</ul>
+<h4>Code de <strong>assembleur.sh</strong></h4>
+<code lang="bash"># Fonction de notre auto completion
+_grenlibre()
+{
+local argc cur prev opts
+COMPREPLY=()
+
+argc=${COMP_CWORD}|&gt; # nombre d'arguments actuel
+cur="${COMP_WORDS[argc]}" # argument actuel (en cours de frappe)
+prev="${COMP_WORDS[argc-1]}" # argument précédent
+opts="-output -help" # liste des options
+
+# si le mot commence par "-"
+if [[ "$cur" == -* ]] ; then
+
+# On auto-complète l'argument actuel à l'aide de la liste d'options opts
+COMPREPLY=( $(compgen -W "$opts" -- $cur ) )
+
+else # sinon
+
+# si le dernier argument n'était pas un argument option
+if [[ "$prev" != -* ]] ; then
+
+# On auto-complète l'argument actuel avec les fichiers .src
+COMPREPLY=( $(compgen -f -X "!*.src" $cur ) )
+
+fi
+
+fi
+}
+</code>
+# On active l'auto-complétion de la commande grenlibre en relation avec la fonction _grenlibre
+complete -F _grenlibre grenlibre
+<h4>Exécution</h4>
+Comme précédemment, il suffit d'utiliser la commande <code>. assembleur.sh</code> .
+<h4>Test de l'auto-complétion</h4>
+Mon dossier actuel comporte 3 fichiers .src : <em>algo.src</em>, <em>graphic.src</em>, <em>main.src</em> et les 2 scripts <em>assembleur.sh</em> et <em>hello_world.sh</em>.
+<ul>
+	<li><strong>grenlibre</strong> &lt;TAB&gt;&lt;TAB&gt;</li>
+</ul>
+<pre>$ grenlibre algo.src     graphic.src  main.src</pre>
+Il propose la liste des fichiers .src de ce répertoire.
+<ul>
+	<li><strong>grenlibre ma</strong>&lt;TAB&gt;</li>
+</ul>
+<pre>$ grenlibre main.src</pre>
+Auto-complétion effectuée.
+<ul>
+	<li><strong>grenlibre main.src -</strong>&lt;TAB&gt;&lt;TAB&gt;</li>
+</ul>
+<pre>$ grenlibre main.src --help    -output</pre>
+Il propose la liste des options.
+<ul>
+	<li><strong>grenlibre main.src -output </strong>&lt;TAB&gt;&lt;TAB&gt;</li>
+</ul>
+Aucune complétion ici, c'est bien le résultat voulu.
+<ul>
+	<li><strong>grenlibre main.src -output a.out a</strong>&lt;TAB&gt;</li>
+</ul>
+<pre>$ grenlibre main.src -output a.out algo.src</pre>
+Notez que <strong>assembleur.sh</strong> commence également par a, mais que algo.src a été complété. En effet seul les fichiers .src sont pris en compte autant dans l'affichage de suggestions que l'auto-complétion.
+<ul>
+	<li><strong>grenlibre main.src -output a.out algo.src g</strong>&lt;TAB&gt;</li>
+</ul>
+<pre>$ grenlibre main.src -output a.out algo.src graphic.src</pre>
+Voila le résultat en quelque pressions de touches. Efficace, non ?
+<h2>Conclusion</h2>
+Vous voici donc lancé dans le bash_completion !
+
+Pour continuer, vous pouvez en exercice tenter de refaire le fonctionnement de bash_completion déjà existant et ensuite comparer vos codes avec les fonctions existantes.
+
+Vous trouverez votre bonheur dans <strong>/etc/bash_completion</strong> et dans le dossier des scripts <strong>/etc/bash_completion.d/</strong>.
+
+Vous pouvez aussi voir la liste des complete effectué avec <code>complete -p</code> et la liste des fonctions incluses avec <code>define -f</code> . N'hésitez pas à ajouter un <code> | less</code> en fin de commande pour naviguer facilement dans le résultat.
+
+Bonne continuation, toute remarque est la bienvenue.
+<h2>Références</h2>
+<ul>
+	<li><a href="http://www.debian-administration.org/article/An_introduction_to_bash_completion_part_1">An_introduction_to_bash_completion_part_1</a></li>
+	<li><a href="http://www.debian-administration.org/article/An_introduction_to_bash_completion_part_2">An_introduction_to_bash_completion_part_2</a></li>
+	<li><strong>man bash</strong></li>
+</ul>

@@ -1,0 +1,18 @@
+---
+layout: post
+title: Lire un fichier audio en cours de téléchargement sous Firefox
+tags:
+- audio
+- Bash Tips
+- firefox
+- mplayer
+- téléchargement
+status: publish
+type: post
+published: true
+meta:
+  dsq_thread_id: '464623967'
+---
+<p>Le téléchargement de podcasts audios <acronym title="pesant plusieurs centaines de Mo">lourds</acronym> est souvent long et fastidieux. Vous auriez peut-être envie de commencer à <strong>écouter le podcast durant son téléchargement</strong> sous Firefox.</p> <p>L'astuce qui suit <strong>fonctionne avec toutes les plateformes de téléchargement</strong> telles que <em>megaupload</em>, <em>depositfiles</em>, <em>rapidshare</em>, ...</p> <p>Elle <strong>concerne le système Linux</strong> au moyen de <code>mplayer</code> mais est tout aussi <strong>applicable sur d'autres systèmes d'exploitation</strong>.</p>
+<!--more-->
+<p>Lorsque vous téléchargez un fichier sous Firefox, un <strong>fichier temporaire .part</strong> est créé à côté du fichier en cours de téléchargement et contient en réalité <strong>le contenu du téléchargement</strong>.</p> <hr /> <h2>L'astuce</h2> <ul> <li><strong>Ouvrez un Terminal</strong>.</li> </ul> <ul> <li><strong>Déplacez vous dans le dossier</strong> contenant votre podcast en téléchargement.</li> </ul> <p>chez moi: <code>cd Bureau/</code></p> <ul> <li><strong>Lisez le fichier .part de votre podcast avec mplayer</strong> (ou avec un autre lecteur de flux audio selon le système d'exploitation).</li> </ul> <p>Par exemple&nbsp;: <code>mplayer monfichieraudio.mp3.part</code></p> <hr /> <p>Voilà c'est tout&nbsp;! Vous êtes en train de lire le fichier en cours de téléchargement. Si votre téléchargement à suffisamment d'avance, vous pouvez avancer dans la lecture du podcast avec la <strong>flèche de droite</strong> mais attention, si vous dépassez l'avancement actuel du téléchargement, la musique s'arrêtera.</p>
