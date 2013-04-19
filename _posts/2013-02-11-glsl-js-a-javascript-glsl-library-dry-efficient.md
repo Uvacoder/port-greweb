@@ -57,6 +57,7 @@ Worse than that, you have to know in your Javascript code what are the GLSL type
 
 How boring is that:
 
+```glsl
 // Synchronizing the new values of 2 variables in pure WebGL.  
   
 var myInt = 1;  
@@ -67,6 +68,7 @@ gl.uniform1i(myFloatLocation, myInt); // 1i means one integer
 var myVector2 = { x: 1.3, y: 2.4 };  
 var myVector2Location = gl.getUniformLocation(program, "myVector2");  
 gl.uniform2f(myVector2Location, myVector2.x, myVector2.y); // 2f means float[2]
+```
 
 **glsl.js** provides a DRY and simple way to synchronize Javascript variables.
 
@@ -109,11 +111,9 @@ Today, WebGL is widely supported on modern desktop browsers. It’s not yet the 
 
 However, using Chrome Beta, I’m able to run my HTML5 game at 60fps on my Nexus 4, which is quite promising for the future.
 
-
-
 *Enough talking, let’s see some examples now…*
 
-
+<!-- more -->
 
 ### [][11]Hello World Example
 
