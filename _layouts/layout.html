@@ -5,13 +5,63 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="author" content="Your Name" />
     <title>{{ page.title }}</title>
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Fredericka+the+Great' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel="image_src" href="{{post.thumbnail}}" />
+    <link rel='shortcut icon' href='/favicon.png' />
   </head>
   <body>
-    <header>
-      <h1><a href="/">{{ page.title }}</a></h1>
+
+    <header role="banner">
+      <h1><a href="{{ site.url }}">@GreWeb</a></h1>
+      <h2>embrace standard web technologies for web, games and mobile apps</h2>
     </header>
-    <section>
-      {{ content }}
-    </section>
+
+    <nav>
+      <a href="http://github.com/gre" target="_blank">Github</a>
+      <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+      <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+    </nav>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        {{ content }}
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Latest posts</h3>
+          <ul>
+            {% for post in site.posts limit: 5 %}
+            <li>
+              <a href="{{ post.url }}">{{ post.title }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <p>Hi, I am Gaëtan Renaudeau. <a href="mailto:renaudeau.gaetan@gmail.com">renaudeau.gaetan@gmail.com</a></p>
+          <img style="float:left;margin-right:5px" src="https://si0.twimg.com/profile_images/1233885470/avatar_bigger.jpg" alt="" />
+          <p>I work in Zenexity, the Paris' startup behind PlayFramework, as a web architect where I build web applications for leading companies.</p>
+          <p>I write articles, do talks and videos around web technologies. I've develop some HTML5 games like Same Game Gravity, Javascript libraries like SliderJS, and recently wrote a chapter in the book "HTML5 Games Most Wanted".</p>
+          <p>I speak French, English and start learning Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </footer>
+
   </body>
 </html>

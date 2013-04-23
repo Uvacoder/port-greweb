@@ -1,0 +1,15 @@
+---
+layout: layout
+---
+
+<div class="archives">
+  <h3>"{{ page.tag }}"</h3>
+  <ul>
+    {% for post in page.posts %}
+      <li>
+        <time class="date" datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%B' }} {{ post.date | date: '%e' }}, {{ post.date | date: '%Y' }}</time>
+        <a class="post" href="{{ post.url }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

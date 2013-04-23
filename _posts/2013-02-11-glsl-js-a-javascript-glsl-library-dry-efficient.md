@@ -3,6 +3,7 @@ title: 'glsl.js, a Javascript + GLSL library = DRY &#038; efficient'
 author: Gaetan
 layout: post
 permalink: /2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/
+thumbnail: /images/2013/02/glsl_mario.jpg
 dsq_thread_id:
   - 1076517763
 categories:
@@ -14,15 +15,28 @@ tags:
   - library
   - WebGL
 ---
-# 
 
-[![glsl_mario][2]][2]
+ [2]: http://greweb.fr/glsl.js/examples/balls
+ [3]: http://greweb.fr/glsl.js/examples
+ [4]: http://greweb.fr/glsl.js/docs
+ [5]: http://github.com/gre/glsl.js
+ [6]: http://greweb.fr/glsl.js/test
+ [7]: http://greweb.fr/glsl.js/examples/pong/
+ [8]: http://glsl.heroku.com
+ [13]: http://greweb.fr/glsl.js/examples/helloworld
+ [15]: http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
+ [16]: http://glsl.heroku.com/
+ [24]: http://greweb.fr/glsl.js/examples/canvas-text/
+ [25]: http://greweb.fr/glsl.js/examples/video/
+ [26]: http://greweb.fr/glsl.js/examples/mario_sprites/
 
- []: http://greweb.fr/glsl.js/examples/balls/
+
+[![glsl_mario](/images/2013/02/glsl_mario.jpg)][2]
+
 
 **TL;DR. WebGL is super powerful and efficient. This library abuses this power for efficient 2D.**
 
-glsl.js is a subset* of a WebGL library which focuses on making the GLSL (OpenGL Shading Language) easy and accessible for vizualisation and game purposes (2D or 3D).
+glsl.js is a subset of a WebGL library which focuses on making the GLSL (OpenGL Shading Language) easy and accessible for vizualisation and game purposes (2D or 3D).
 
 *   **[Bouncing balls example video tutorial][2]**
 *   [Open other examples][3]
@@ -30,15 +44,7 @@ glsl.js is a subset* of a WebGL library which focuses on making the GLSL (OpenGL
 *   [Fork me on Github][5]
 *   [Unit tests][6]
 
- [2]: http://greweb.fr/glsl.js/examples/balls
- [3]: http://greweb.fr/glsl.js/examples
- [4]: http://greweb.fr/glsl.js/docs
- [5]: http://github.com/gre/glsl.js
- [6]: http://greweb.fr/glsl.js/test
-
-[![glsl_pong][8]][8]
-
- []: http://greweb.fr/glsl.js/examples/pong/
+[![glsl_pong](/images/2013/02/glsl_pong.jpg)][7]
 
 ## Why?
 
@@ -48,7 +54,6 @@ I wanted to make a graphic library where you wouldn’t have to know about this 
 
 Do you know [glsl.heroku.com][8]? It’s a cool platform for demoscene where you can experiment some nice effects in GLSL. My library extends this concept of rendering in one whole fragment shader (which takes the plain canvas) but also provides a way to inject your own Javascript variables.
 
- [8]: http://glsl.heroku.com
 
 ### DRY
 
@@ -57,7 +62,7 @@ Worse than that, you have to know in your Javascript code what are the GLSL type
 
 How boring is that:
 
-```glsl
+```javascript
 // Synchronizing the new values of 2 variables in pure WebGL.  
   
 var myInt = 1;  
@@ -80,23 +85,22 @@ How it works behind is the framework will statically parse your GLSL and infer t
 
 It now simply becomes:
 
+```javascript
 // Set the values of 2 variables in glsl.js  
 this.set("myInt", 1);  
 this.set("myVector2", { x: 1.3, y: 2.4 });  
 // ... see also this.sync() and this.syncAll()
+```
 
 * * *
 
 More technically, **glsl.js** is a subset* of a WebGL library which focus on **making the GLSL (OpenGL Shading Language) easy and accessible** for vizualisation and game purposes (2D or 3D).
 
-> * Subset, because we only focus on using a *fragment shader* (the *vertex shader* is static and take the full canvas size), But don’t worry, you have a long way to go with just one *fragment shader*.
+> \* Subset, because we only focus on using a *fragment shader* (the *vertex shader* is static and take the full canvas size), But don’t worry, you have a long way to go with just one *fragment shader*.
 
 The concept is to split the **rendering part in a GLSL fragment** from the **logic part in Javascript** of your app/game. Both part are linked by **a set of variables** (the state of your app/game).
 
-[![schema][10]][10]
-
- []: https://f.cloud.github.com/assets/211411/133026/5ed79ff8-709b-11e2-85dd-60332f74dc31.png
- [10]: https://f.cloud.github.com/assets/211411/133026/5ed79ff8-709b-11e2-85dd-60332f74dc31.png
+![schema](https://f.cloud.github.com/assets/211411/133026/5ed79ff8-709b-11e2-85dd-60332f74dc31.png)
 
 **glsl.js** aims to abstract every GL functions so you don’t have to learn any OpenGL API.  
 What you only need to care about is the logic in Javascript and the rendering in GLSL.
@@ -111,6 +115,8 @@ Today, WebGL is widely supported on modern desktop browsers. It’s not yet the 
 
 However, using Chrome Beta, I’m able to run my HTML5 game at 60fps on my Nexus 4, which is quite promising for the future.
 
+<iframe width="640" height="360" src="http://www.youtube.com/embed/EzTCdjpdTfk?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
+
 *Enough talking, let’s see some examples now…*
 
 <!-- more -->
@@ -121,36 +127,35 @@ However, using Chrome Beta, I’m able to run my HTML5 game at 60fps on my Nexus
 
 Here is an Hello World example. For more examples, see [/examples][3].
 
-  
-  
-#ifdef GL_ES  
-precision mediump float;  
-#endif  
-uniform float time;  
-uniform vec2 resolution;  
-void main (void) {  
-  vec2 p = ( gl_FragCoord.xy / resolution.xy );  
-  gl_FragColor = vec4(p.x, p.y, (1. cos(time))/2., 1.0);  
-}  
-  
-  
-  
-  var glsl = Glsl({  
-    canvas: document.getElementById("viewport"),  
-    fragment: document.getElementById("fragment").textContent,  
-    variables: {  
-      time: 0 // The time in ms  
-    },  
-    update: function (time, delta) {  
-      this.set("time", time);  
-    }  
-  }).start();  
+```html
+<canvas id="viewport" width="600" height="400"></canvas>
+<script id="fragment" type="x-shader/x-fragment">
+#ifdef GL_ES
+precision mediump float;
+#endif
+uniform float time;
+uniform vec2 resolution;
+void main (void) {
+  vec2 p = ( gl_FragCoord.xy / resolution.xy );
+  gl_FragColor = vec4(p.x, p.y, (1.+cos(time))/2., 1.0);
+}
+</script>
+<script src="../../glsl.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var glsl = Glsl({
+    canvas: document.getElementById("viewport"),
+    fragment: document.getElementById("fragment").textContent,
+    variables: {
+      time: 0 // The time in ms
+    },
+    update: function (time, delta) {
+      this.set("time", time);
+    }
+  }).start();
+</script>
+```
 
-
-[![screenshot][13]][13]
-
- []: https://f.cloud.github.com/assets/211411/132729/e702c2b4-7090-11e2-8904-49e904e6c5a2.png
- [13]: https://f.cloud.github.com/assets/211411/132729/e702c2b4-7090-11e2-8904-49e904e6c5a2.png
+[![screenshot](https://f.cloud.github.com/assets/211411/132729/e702c2b4-7090-11e2-8904-49e904e6c5a2.png)][13]
 
 ### [][14]GLSL: OpenGL Shading Language
 
@@ -168,11 +173,7 @@ GLSL provides an interesting collection of **types** (e.g. `int`, `float`, `vec2
 
 [Here is a good reference for this][15].
 
- [15]: http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
-
 You can also deeply explore the awesome collection of [glsl.heroku.com][16]. Any of glsl.heroku.com examples are compatible with **glsl.js** if you add some required variables (\*time\*, *mouse*, …).
-
- [16]: http://glsl.heroku.com/
 
 ### [][17]App/Game Logic
 
@@ -189,6 +190,7 @@ Variables must match your GLSL uniform variables. Every time you update your var
 
 **Exemple:**
 
+```javascript
 Glsl({  
   canvas: canvas,  
   fragment: fragCode,  
@@ -201,6 +203,7 @@ Glsl({
     this.set("random1", Math.random());  
   }  
 }).start();
+```
 
 **Note:** *under the hood, a type environment of uniform variables is inferred by parsing your GLSL code.* 
 
@@ -214,10 +217,13 @@ Hopefully, GLSL also supports arrays. You can actually bind a Javascript array t
 
 In GLSL,
 
+```glsl
 uniform float tenfloats[10];
+```
 
 In Javascript,
 
+```javascript
 var glsl = Glsl({  
   ...  
   variable: {  
@@ -228,6 +234,7 @@ var glsl = Glsl({
     this.sync("tenfloats");  
   }  
 }).start();
+```
 
 Alternatively, you can still use a classical javascript Array (but native Javascript arrays are prefered because more efficient).
 
@@ -247,6 +254,7 @@ Even more interesting now, you can synchronize a whole object into the GLSL worl
 
 In GLSL,
 
+```glsl
 struct Circle {  
   vec2 center;  
   float radius;  
@@ -263,9 +271,11 @@ void main (void) {
   else  
     gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);  
 }
+```
 
 In Javascript,
 
+```javascript
 function Circle (x, y, radius) {  
   this.center = { x: x, y: y };  
   this.radius = radius;  
@@ -285,9 +295,11 @@ Glsl({
     this.sync("c1");  
   }  
 }).start();
+```
 
 structs inside structs are also supported:
 
+```glsl
 struct Circle {  
   vec2 center;  
   float radius;  
@@ -296,6 +308,7 @@ struct Player {
   Circle circle;  
   bool visible;  
 }
+```
 
 ### [][20]Using Arrays of Objects
 
@@ -305,10 +318,13 @@ The two previous chapters can be assemble!
 
 Yes man, Array of JS object is possible!
 
+```glsl
 uniform Circle circles[2];  
 // circles[0].radius  
 // …
+```
 
+```javascript
 Glsl({  
   ...  
   variable: {  
@@ -316,6 +332,7 @@ Glsl({
   },  
   ...  
 }).start();
+```
 
 ### [][21]Using images
 
@@ -323,10 +340,13 @@ Glsl({
 
 GLSL:
 
+```glsl
 uniform sampler2D img;
+```
 
 Javascript:
 
+```javascript
 var image = new Image();   
 img.src = "foo.png";  
 var glsl = Glsl({  
@@ -338,6 +358,7 @@ var glsl = Glsl({
 img.onload = function () {  
   glsl.start();  
 }
+```
 
 Note: Using an image loader library can be a good idea.
 
@@ -345,20 +366,18 @@ In GLSL, you will need to use the texture lookup functions to access the image c
 
 #### See also
 
-
+[The mario_sprites example][26]
 
 ### [][22]Using another canvas
 
  [22]: #using-another-canvas
 
-[![hello_world_text_glsl_js][24]][24]
-
- []: http://greweb.fr/glsl.js/examples/canvas-text/
+[![hello_world_text_glsl_js](/images/2013/02/hello_world_text_glsl_js.png)][24]
 
 ### Using 
 
-[![glsl_js_video][25]][25]
-
- []: http://greweb.fr/glsl.js/examples/video/
+[![glsl_js_video](/images/2013/02/glsl_js_video.png)][25]
 
 ## See also
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/kxBkfy_8JEs" frameborder="0" allowfullscreen=""></iframe>

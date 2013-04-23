@@ -2,9 +2,10 @@
 layout: layout
 ---
 
-<div class="content">
-  <div id="post">
-    <h1>{{ post.title }}</h1>
+<article>
+  {% assign post = page %}
+  {% include post-header.html %}
+  <div class="entry-content">
     {{ content }}
   </div>
-</div>
+</article>

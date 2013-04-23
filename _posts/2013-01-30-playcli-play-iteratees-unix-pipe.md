@@ -4,9 +4,9 @@ author: Gaetan
 layout: post
 permalink: /2013/01/playcli-play-iteratees-unix-pipe/
 suf_thumbnail:
-  - http://blog.greweb.fr/wp-content/uploads/2013/01/playcli_200.png
+  - /images/2013/01/playcli_200.png
 suf_featured_image:
-  - http://blog.greweb.fr/wp-content/uploads/2013/01/playcli_200.png
+  - /images/2013/01/playcli_200.png
 dsq_thread_id:
   - 1053042488
 categories:
@@ -20,12 +20,29 @@ tags:
 ---
 # 
 
-> **TL;DR.** PlayCLI is a new [Scala][1] library to work with UNIX commands and [Play-Iteratees][2] (a scala implementation of Iteratees facilitating the handling of data streams reactively). Here’s an overview:
-
  [1]: http://scala-lang.org
  [2]: http://www.playframework.org/documentation/2.0/Iteratees
+ [3]: http://greweb.fr/playcli/api
+ [4]: http://github.com/gre/playCLI
+ [5]: http://github.com/gre/playCLI-examples
+ [6]: http://blog.greweb.fr/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/
+ [7]: http://mandubian.com/2012/08/27/understanding-play2-iteratees-for-normal-humans/
+ [8]: http://greweb.fr/playcli/api/#enumerate(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator[Array[Byte]]
+ [9]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Enumerator
+ [10]: http://greweb.fr/playcli/api/#pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]
+ [11]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Enumeratee
+
+ [12]: http://greweb.fr/playcli/api/#consume(command:scala.sys.process.ProcessBuilder,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Iteratee[Array[Byte],Int]
+ [13]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Iteratee
+ [14]: http://www.scala-lang.org/api/current/index.html#scala.sys.process.package
+ [15]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Done$
+ [16]: #pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]
+ [17]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Input$$EOF$
 
 
+> **TL;DR.** PlayCLI is a new [Scala][1] library to work with UNIX commands and [Play-Iteratees][2] (a scala implementation of Iteratees facilitating the handling of data streams reactively). Here’s an overview:
+
+<iframe src="http://greweb.fr/playcli/embedder.html#index.html" frameborder="0" width="550" height="452"></iframe>
 
 ## Links
 
@@ -33,21 +50,17 @@ tags:
 *   [PlayCLI source code (Github)][4].
 *   [PlayCLI Examples application (Github)][5].
 
- [3]: http://greweb.fr/playcli/api
- [4]: http://github.com/gre/playCLI
- [5]: http://github.com/gre/playCLI-examples
-
 ### SBT
 
+```scala
 "fr.greweb" %% "playcli" % "0.1"
+```
 
-
+<!-- more -->
 
 ## Why PlayCLI
 
 After having made [Zound][6] in a HackDay (an experiment to generate an audio stream with playframework iteratees and through the WAVE format), I figured out this was going to be hard to make it work with multiple audio format: *tell me if I’m wrong but*, there are not so much audio libraries in Java/Scala, or most of them does not support stream handling (and not reactively), and it was going to be crazy to re-implement everything in Scala (both in term of cost and performance).
-
- [6]: http://blog.greweb.fr/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/
 
 Besides, **UNIX has plenty of tools** to do this and:
 
@@ -66,25 +79,29 @@ Play Iteratees are an elegant & powerful way to handle streams reactively, and I
 
 **Bash:**
 
+```bash
 cat words.txt | grep $word > result.txt
+```
 
 **Scala:**
 
+```scala
 Enumerator.fromFile("words.txt") &>   
   splitByNl &> // split a stream of Array[Byte] into stream of String (not impl here)  
   Enumeratee.filter(_.containsSlice(word))  |>>>   
   fileWriter // consume the steam while storing in a file (not impl here)
+```
 
 or if you prefer the “without symbol” version:
 
+```scala
 Enumerator.fromFile("words.txt").  
   through splitByNl.  
   through Enumeratee.filter(_.containsSlice(word)).  
   run fileWriter
+```
 
 However, It’s biased to say Iteratees are only UNIX pipes, they are more than that, but I’m not going to extend on that subject, they are at least statically typed and safe (it’s more than just a stream of bytes, see [this article][7]).
-
- [7]: http://mandubian.com/2012/08/27/understanding-play2-iteratees-for-normal-humans/
 
 So if Iteratees are at least UNIX pipes, why can’t we use Unix pipes from iteratees?
 
@@ -101,23 +118,16 @@ Depending on your needs, you can **Enumerate / Pipe / Consume** an UNIX command:
 [CLI.enumerate][8] is a way to create a stream from a command which **generates output**  
 (it creates an [Enumerator][9][Array[Byte]] )
 
- [8]: http://greweb.fr/playcli/api/#enumerate(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator[Array[Byte]]
- [9]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Enumerator
-
 [CLI.pipe][10] is a way to pipe a command which **consumes input and generates output**  
 (it creates an [Enumeratee][11][Array[Byte],Array[Byte]])
-
- [10]: http://greweb.fr/playcli/api/#pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]
- [11]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Enumeratee
 
 [CLI.consume][12] creates a process which **consumes a stream** – useful for side effect commands  
 (it creates an [Iteratee][13][Array[Byte],Int])
 
- [12]: http://greweb.fr/playcli/api/#consume(command:scala.sys.process.ProcessBuilder,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Iteratee[Array[Byte],Int]
- [13]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Iteratee
 
 #### Examples
 
+```scala
 import playcli._  
 import scala.sys.process._  
   
@@ -136,13 +146,12 @@ val searchResult: Enumerator[String] = dictionaryEnumerator &> grep("able") &> a
 Ok.stream(Enumerator.fromFile("image.jpg") &> convert).withHeaders(CONTENT_TYPE -> "image/png")  
   
 Enumerator.fromFile("video.avi") &> ffmpeg &> ...
+```
 
 ### Process
 
 CLI uses [scala.sys.process][14]  
 and create a Process instance for each UNIX command.
-
- [14]: http://www.scala-lang.org/api/current/index.html#scala.sys.process.package
 
 A CLI process is terminates when:
 
@@ -151,11 +160,7 @@ A CLI process is terminates when:
 *   [Done][15] is reached (for [enumerate][8] and [pipe][16]).
 *   [EOF][17] is sent (for [pipe][10] and [consume][12]).
 
- [15]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Done$
- [16]: #pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]
- [17]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Input$$EOF$
-
-CLI still waits for the Process to terminate by asking the exit code (via `Process.exitCode&#40;&#41;`).  
+CLI still waits for the Process to terminate by asking the exit code (via `Process.exitCode()`).  
 If the process is never ending during this phase, it will be killed when `terminateTimeout` is reached.
 
 PS: Thanks to implicits, you can simply give a String or a Seq to the CLI.* functions a `ProcessBuilder`.

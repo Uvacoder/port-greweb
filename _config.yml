@@ -1,5 +1,9 @@
-auto: true
 markdown: redcarpet
 pygments: true
-permalink: /:year/:month/:day/:title
+permalink: /:year/:month/:title
 paginate: 10
+url: http://greweb.me/
+
+tags:
+  template: _layouts/archive
+  title: @GreWeb - {tag}
