@@ -336,14 +336,16 @@ body > nav:after,
 body > footer:after,
 body #content > article:after,
 body nav.pagination:after,
-article > header,
-article > footer,
 #sidebar:after,
 #main:after,
 #content:after,
 .sidebar:after {
   content: "";
   display: table;
+  clear: both;
+}
+article > header,
+article > footer {
   clear: both;
 }
 /**style**/
@@ -384,40 +386,54 @@ body > header h2 {
   text-transform: uppercase;
 }
 body > nav {
-  background: #444;
+  background: #fff;
 }
 body > nav a {
-  color: #9cf;
   text-decoration: none;
   margin-right: 10px;
-}
-body > nav a:hover {
-  color: #adf;
 }
 body > footer > * {
   margin: 0 10px;
 }
 #main {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.7);
   color: #000;
 }
 #container {
-  background: #eee;
+  background: #ffffff url(/images/bg.png);
   color: #000;
 }
 #sidebar section {
-  margin-bottom: 20px;
+  border-radius: 5px;
+  margin-bottom: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px dashed #ddd;
+  font-size: 0.9em;
 }
 #sidebar section:last-child {
   border-bottom: none;
 }
 #sidebar section h3 {
   font-weight: bold;
+  font-family: 'Fredericka the Great', sans-serif;
+  color: #000;
+  border-bottom: 1px solid #000;
+  margin-bottom: 10px;
+  margin-left: -10px;
 }
 #sidebar section p {
   margin-bottom: 0.5em;
+}
+#sidebar section.latest_posts ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#sidebar section.latest_posts li {
+  white-space: nowrap;
+  overflow: hidden;
+  -webkit-text-overflow: ellipsis;
+  -moz-text-overflow: ellipsis;
+  text-overflow: ellipsis;
 }
 article > header {
   color: #3B7FB0;
@@ -431,21 +447,15 @@ article > header .tags {
   float: right;
 }
 article > header .tags .tag {
-  text-decoration: none !important;
-  border-bottom: 1px solid transparent;
+  margin-left: 2px;
+  text-decoration: none;
 }
 article > header .tags .tag:hover {
-  border-bottom: 1px solid #7ad;
+  text-decoration: none;
+  color: #147;
 }
 article > header .tags .tag:before {
   content: "#";
-}
-article > header .tags .tag:after {
-  content: ", ";
-  border-bottom: 1px solid #fff;
-}
-article > header .tags .tag:last-child:after {
-  content: "";
 }
 article > header h1 {
   margin: 0 0 0.3em 0;
@@ -454,9 +464,12 @@ article > header h1 {
   color: #3B7FB0;
   border-bottom: 2px solid #3B7FB0;
 }
-article > header h1 a,
+article > header h1 a {
+  color: #3B7FB0;
+  text-decoration: none;
+}
 article > header h1 a:hover {
-  color: inherit;
+  color: #147;
   text-decoration: none;
 }
 article > footer {
