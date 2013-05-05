@@ -32,7 +32,7 @@ module Jekyll
     class Configuration < OpenStruct
       @@defaults = {
         :dirname  => 'tags',
-        :template => '_templates/tag',
+        :template => '_layouts/archive',
         :title    => 'Articles tagged with &laquo;{tag}&raquo;'
       }
 

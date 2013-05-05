@@ -3,19 +3,19 @@ layout: layout
 title: @GreWeb &bull; embrace standard web technologies for web, games and mobile apps
 ---
 
-
 {% for post in paginator.posts %}
 <article>
   {% include post-header.html %}
+    <div class="entry-content excerpt">
     {% if post.excerpt %}
-    <div class="excerpt">
       {{ post.excerpt }}
-    </div>
     {% else %}
       {{ post.content | mark_excerpt }}
     {% endif %}
+    </div>
     {% if post.excerpt %}
     <footer>
+      <a class="comments" href="{{ post.url }}#disqus_thread">Comments</a>
       <a class="continue-reading" href="{{ post.url }}">Continue reading »</a>
     </footer>
     {% endif %}

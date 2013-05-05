@@ -40,7 +40,9 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 
 /**default styles**/
-p, article blockquote, ul, ol { margin-bottom: 1.5em; }
+article {
+  p, blockquote, ul, ol { margin-bottom: 1.5em; }
+}
 ul { list-style-type: disc;
 ul { list-style-type: circle; margin-bottom: 0px;
   ul { list-style-type: square; margin-bottom: 0px; }}}
@@ -78,30 +80,41 @@ big { font-size: 1.2em; }
 body {
   max-width: 1000px;
   margin: 0 auto;
-  line-height: 1.2em;
+  line-height: 1.4em;
 }
 
 body > header {
-  padding: 20px;
   min-height: 50px;
+  overflow: hidden;
+  position: relative;
   h1 {
+    position: relative;
     float: left;
+    z-index: 2;
+    margin-left: 20px;
+    line-height: 90px;
   }
   h2 {
+    position: relative;
     width: 250px;
     float: right;
+    z-index: 2;
+    margin: 20px 0;
+    margin-right: 20px;
+  }
+  canvas.visualizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
   }
 }
 @media only screen and (max-width: 520px) {
   body > header {
-    h1 {
-      float: none;
-    }
     h2 {
-      float: none;
-      margin: auto;
-      margin-top: 5px;
-      width: 350px;
+      width: auto;
+      max-width: 350px;
+      margin-top: none;
     }
   } 
 }
@@ -133,10 +146,6 @@ body > footer {
 #sidebar {
   padding: 20px;
   overflow: hidden;
-}
-
-#sidebar > section {
-  margin: 20px 0;
 }
 
 @media only screen and (min-width: 768px) {
@@ -178,6 +187,8 @@ body>nav:after,
 body>footer:after, 
 body #content>article:after, 
 body nav.pagination:after,
+article > header,
+article > footer,
 #sidebar:after,
 #main:after,
 #content:after,
@@ -185,17 +196,6 @@ body nav.pagination:after,
   content: "";
   display: table;
   clear: both;
-}
-
-
-.thumbnail-left {
-  float: left;
-  width: 45%;
-  margin-right: 2%;
-}
-
-.twitter-timeline {
-  width: 100% !important;
 }
 
 /**style**/
@@ -224,7 +224,6 @@ body > header {
   h1 {
     font-family: 'Fredericka the Great', sans-serif;
     font-size: 3em;
-    line-height: 1.2em;
     a, a:hover, a:active, a:focus {
       color: #fff;
       text-decoration: none;
@@ -269,22 +268,44 @@ body > footer {
 }
 
 #sidebar {
+  section {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ddd;
+    &:last-child {
+      border-bottom: none;
+    }
+    h3 {
+      font-weight: bold;
+    }
+    p {
+      margin-bottom: 0.5em;
+    }
+  }
 }
 
 article {
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-  }
   > header {
     color: #3B7FB0;
     .date {
-      opacity: .6;
+      opacity: 0.6;
+      margin-right: 10px;
     }
     .tags {
+      font-family: 'Fredericka the Great', sans-serif;
       float: right;
       .tag {
+        text-decoration: none !important;
+        border-bottom: 1px solid transparent;
+        &:hover {
+          border-bottom: 1px solid #7ad;
+        }
+        &:before {
+          content: "#";
+        }
         &:after {
           content: ", ";
+          border-bottom: 1px solid #fff;
         }
         &:last-child:after {
           content: "";
@@ -293,6 +314,7 @@ article {
     }
     h1 {
       margin: 0 0 0.3em 0;
+      line-height: 1.4em;
       font-size: 1.6em;
       color: #3B7FB0;
       border-bottom: 2px solid #3B7FB0;
@@ -304,38 +326,51 @@ article {
   }
   > footer {
     margin-top: 1em;
-    padding-bottom: 0.5em;
-    border-bottom: 2px dashed #59D;
+    padding-top: 0.5em;
+    border-top: 2px dashed #59D;
     text-align: right;
+    .comments {
+      float: left;
+      opacity: 0.5;
+    }
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    margin: 1em 0 0.5em 0;
+    line-height: 1.5em;
   }
   h1 {
-    margin: 0.5em 0;
     font-size: 1.6em;
-    line-height: 1.3em;
   }
   h2 {
-    margin: 0.5em 0;
-    font-size: 1.5em;
     color: #A31818;
+    font-size: 1.5em;
   }
   h3 {
     color: #7318A3;
-    margin: 0.4em 0;
     font-size: 1.3em;
   }
   h4 {
     color: #183FA3;
-    margin: 0.3em 0;
     font-size: 1.1em;
   }
   h5 {
     color: #189CA3;
-    margin: 0.3em 0;
     font-size: 1.1em;
   }
   h6 {
-    margin: 0.3em 0;
     font-size: 1.1em;
+  }
+  img, video, iframe[src*="youtube.com"],  iframe[src*="greweb.me"], iframe[src*="greweb.fr"] {
+    max-width: 100%;
+  }
+  img {
+    height: auto;
+    &.thumbnail-left {
+      float: left;
+      width: 45%;
+      margin-right: 2%;
+    }
   }
   blockquote {
     margin: 1.2em;
@@ -385,6 +420,10 @@ nav.pagination {
 
 article .entry-content {
 
+}
+
+.twitter-timeline {
+  width: 100% !important;
 }
 
 /**code**/

@@ -148,10 +148,10 @@ summary {
   display: block;
 }
 /**default styles**/
-p,
+article p,
 article blockquote,
-ul,
-ol {
+article ul,
+article ol {
   margin-bottom: 1.5em;
 }
 ul {
@@ -256,28 +256,39 @@ big {
 body {
   max-width: 1000px;
   margin: 0 auto;
-  line-height: 1.2em;
+  line-height: 1.4em;
 }
 body > header {
-  padding: 20px;
   min-height: 50px;
+  overflow: hidden;
+  position: relative;
 }
 body > header h1 {
+  position: relative;
   float: left;
+  z-index: 2;
+  margin-left: 20px;
+  line-height: 90px;
 }
 body > header h2 {
+  position: relative;
   width: 250px;
   float: right;
+  z-index: 2;
+  margin: 20px 0;
+  margin-right: 20px;
+}
+body > header canvas.visualizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 @media only screen and (max-width: 520px) {
-  body > header h1 {
-    float: none;
-  }
   body > header h2 {
-    float: none;
-    margin: auto;
-    margin-top: 5px;
-    width: 350px;
+    width: auto;
+    max-width: 350px;
+    margin-top: none;
   }
 }
 body > nav {
@@ -297,9 +308,6 @@ body > footer * {
 #sidebar {
   padding: 20px;
   overflow: hidden;
-}
-#sidebar > section {
-  margin: 20px 0;
 }
 @media only screen and (min-width: 768px) {
   #main {
@@ -328,6 +336,8 @@ body > nav:after,
 body > footer:after,
 body #content > article:after,
 body nav.pagination:after,
+article > header,
+article > footer,
 #sidebar:after,
 #main:after,
 #content:after,
@@ -335,14 +345,6 @@ body nav.pagination:after,
   content: "";
   display: table;
   clear: both;
-}
-.thumbnail-left {
-  float: left;
-  width: 45%;
-  margin-right: 2%;
-}
-.twitter-timeline {
-  width: 100% !important;
 }
 /**style**/
 a {
@@ -369,7 +371,6 @@ body > header {
 body > header h1 {
   font-family: 'Fredericka the Great', sans-serif;
   font-size: 3em;
-  line-height: 1.2em;
 }
 body > header h1 a,
 body > header h1 a:hover,
@@ -404,31 +405,51 @@ body > footer > * {
   background: #eee;
   color: #000;
 }
-article h1,
-article h2,
-article h3,
-article h4,
-article h5,
-article h6 {
+#sidebar section {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ddd;
+}
+#sidebar section:last-child {
+  border-bottom: none;
+}
+#sidebar section h3 {
   font-weight: bold;
+}
+#sidebar section p {
+  margin-bottom: 0.5em;
 }
 article > header {
   color: #3B7FB0;
 }
 article > header .date {
-  opacity: .6;
+  opacity: 0.6;
+  margin-right: 10px;
 }
 article > header .tags {
+  font-family: 'Fredericka the Great', sans-serif;
   float: right;
+}
+article > header .tags .tag {
+  text-decoration: none !important;
+  border-bottom: 1px solid transparent;
+}
+article > header .tags .tag:hover {
+  border-bottom: 1px solid #7ad;
+}
+article > header .tags .tag:before {
+  content: "#";
 }
 article > header .tags .tag:after {
   content: ", ";
+  border-bottom: 1px solid #fff;
 }
 article > header .tags .tag:last-child:after {
   content: "";
 }
 article > header h1 {
   margin: 0 0 0.3em 0;
+  line-height: 1.4em;
   font-size: 1.6em;
   color: #3B7FB0;
   border-bottom: 2px solid #3B7FB0;
@@ -440,38 +461,60 @@ article > header h1 a:hover {
 }
 article > footer {
   margin-top: 1em;
-  padding-bottom: 0.5em;
-  border-bottom: 2px dashed #59D;
+  padding-top: 0.5em;
+  border-top: 2px dashed #59D;
   text-align: right;
 }
+article > footer .comments {
+  float: left;
+  opacity: 0.5;
+}
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+  font-weight: bold;
+  margin: 1em 0 0.5em 0;
+  line-height: 1.5em;
+}
 article h1 {
-  margin: 0.5em 0;
   font-size: 1.6em;
-  line-height: 1.3em;
 }
 article h2 {
-  margin: 0.5em 0;
-  font-size: 1.5em;
   color: #A31818;
+  font-size: 1.5em;
 }
 article h3 {
   color: #7318A3;
-  margin: 0.4em 0;
   font-size: 1.3em;
 }
 article h4 {
   color: #183FA3;
-  margin: 0.3em 0;
   font-size: 1.1em;
 }
 article h5 {
   color: #189CA3;
-  margin: 0.3em 0;
   font-size: 1.1em;
 }
 article h6 {
-  margin: 0.3em 0;
   font-size: 1.1em;
+}
+article img,
+article video,
+article iframe[src*="youtube.com"],
+article iframe[src*="greweb.me"],
+article iframe[src*="greweb.fr"] {
+  max-width: 100%;
+}
+article img {
+  height: auto;
+}
+article img.thumbnail-left {
+  float: left;
+  width: 45%;
+  margin-right: 2%;
 }
 article blockquote {
   margin: 1.2em;
@@ -514,6 +557,9 @@ div.archives ul li a.post {
 nav.pagination {
   text-align: center;
   margin: 0.4em;
+}
+.twitter-timeline {
+  width: 100% !important;
 }
 /**code**/
 .highlight,

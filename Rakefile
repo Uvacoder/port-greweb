@@ -1,6 +1,10 @@
+require 'rubygems'
+require 'jekyll'
+require 'tmpdir'
+require 'shellwords'
+
 # Change your GitHub reponame
 GITHUB_REPONAME = "gre/gre.github.io"
-
 
 desc "Generate blog files"
 task :generate do
