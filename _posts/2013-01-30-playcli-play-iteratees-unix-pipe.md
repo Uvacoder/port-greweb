@@ -3,22 +3,12 @@ title: 'PlayCLI: Play Iteratees + UNIX pipe'
 author: Gaetan
 layout: post
 permalink: /2013/01/playcli-play-iteratees-unix-pipe/
-suf_thumbnail:
-  - /images/2013/01/playcli_200.png
-suf_featured_image:
-  - /images/2013/01/playcli_200.png
-dsq_thread_id:
-  - 1053042488
-categories:
-  - Programming
-  - Web
 tags:
-  - Iteratee
+  - iteratee
   - playframework
   - reactive
   - unix
 ---
-# 
 
  [1]: http://scala-lang.org
  [2]: http://www.playframework.org/documentation/2.0/Iteratees

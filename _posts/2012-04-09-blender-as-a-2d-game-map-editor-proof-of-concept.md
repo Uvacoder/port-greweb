@@ -3,17 +3,10 @@ title: 'Blender as a 2D game level editor &#8211; Proof Of Concept'
 author: Gaetan
 layout: post
 permalink: /2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/
-dsq_thread_id:
-  - 642562970
-categories:
-  - game development
-  - Programming
 tags:
-  - 3D
-  - BBG
+  - bbg
+  - gamedev
   - blender
-  - featured
-  - game
   - javascript
 ---
 # 

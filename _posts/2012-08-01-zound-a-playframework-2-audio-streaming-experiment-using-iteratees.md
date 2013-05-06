@@ -3,18 +3,11 @@ title: Zound, a PlayFramework 2 audio streaming experiment using Iteratees
 author: Gaetan
 layout: post
 permalink: /2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/
-dsq_thread_id:
-  - 784598067
-categories:
-  - Web
 tags:
   - audio
-  - featured
-  - Iteratee
-  - play2
+  - iteratee
   - playframework
 ---
-# 
 
 ![ZOUND](/images/2012/07/ZOUND.png)
 

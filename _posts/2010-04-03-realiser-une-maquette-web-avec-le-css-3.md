@@ -3,10 +3,6 @@ title: Réaliser une maquette web avec le CSS 3
 author: Gaetan
 layout: post
 permalink: /2010/04/realiser-une-maquette-web-avec-le-css-3/
-dsq_thread_id:
-  - 463659605
-categories:
-  - Web
 tags:
   - css
   - sass

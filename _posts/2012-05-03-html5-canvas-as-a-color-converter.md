@@ -3,14 +3,10 @@ title: HTML5 Canvas as a color converter
 author: Gaetan
 layout: post
 permalink: /2012/05/html5-canvas-as-a-color-converter/
-dsq_thread_id:
-  - 674703271
-categories:
-  - Web
 tags:
   - canvas
+  - javascript
   - color
-  - hackability
 ---
 
  [2]: http://demo.greweb.fr/illuminated.js/

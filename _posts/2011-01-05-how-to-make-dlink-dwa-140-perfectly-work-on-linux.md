@@ -3,18 +3,8 @@ title: How to make DLink DWA-140 B2 perfectly work on Linux
 author: Gaetan
 layout: post
 permalink: /2011/01/how-to-make-dlink-dwa-140-perfectly-work-on-linux/
-dsq_thread_id:
-  - 463659685
-categories:
-  - GNU/Linux
-  - Tutoriels
 tags:
-  - bundle
-  - GNU/Linux
-  - installation
-  - ndiswrapper
-  - solution
-  - wifi
+  - linux
 ---
 
 **[EDIT] Note: the DWA-140 B2 is now supported by recent Linux version.**

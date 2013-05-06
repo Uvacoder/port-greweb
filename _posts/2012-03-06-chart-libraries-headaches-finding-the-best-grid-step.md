@@ -3,18 +3,7 @@ title: 'Chart libraries headaches &#8211; finding the best grid step'
 author: Gaetan
 layout: post
 permalink: /2012/03/chart-libraries-headaches-finding-the-best-grid-step/
-thumbnail:
-  - /images/2012/02/wrong-chart-scale.png
-featured_image:
-  - /images/2012/02/wrong-chart-scale.png
-topsy_short_url:
-  - 
-dsq_thread_id:
-  - 601208596
-categories:
-  - Programming
 tags:
-  - chart
   - javascript
   - math
 ---

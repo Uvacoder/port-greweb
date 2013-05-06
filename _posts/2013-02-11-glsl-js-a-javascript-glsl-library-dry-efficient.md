@@ -3,16 +3,12 @@ title: 'glsl.js, a Javascript + GLSL library = DRY &#038; efficient'
 author: Gaetan
 layout: post
 permalink: /2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/
-thumbnail: /images/2013/02/glsl_mario.jpg
-dsq_thread_id:
-  - 1076517763
-categories:
-  - game development
-  - Web
 tags:
-  - GLSL
+  - gamedev
+  - bbg
   - javascript
   - library
+  - GLSL
   - WebGL
 ---
 

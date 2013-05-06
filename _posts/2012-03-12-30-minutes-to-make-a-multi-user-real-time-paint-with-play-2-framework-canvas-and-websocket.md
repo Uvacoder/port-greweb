@@ -3,17 +3,11 @@ title: 30 minutes to make a multi user real time paint with Play 2 framework, Ca
 author: Gaetan
 layout: post
 permalink: /2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/
-dsq_thread_id:
-  - 607853875
-categories:
-  - Programming
-  - Tutoriels Vidéos
-  - Web
 tags:
   - canvas
-  - featured
+  - javascript
   - playframework
-  - WebSocket
+  - websocket
 ---
 
  [1]: http://greweb.fr:9090/

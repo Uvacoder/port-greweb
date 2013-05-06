@@ -3,21 +3,10 @@ title: CSS3 Transitions
 author: Gaetan
 layout: post
 permalink: /2010/05/css3-transitions-available-on-firefox-3-7/
-suf_pseudo_template:
-  - default
-topsy_short_url:
-  - http://bit.ly/pGfNgZ
-dsq_thread_id:
-  - 463659650
-categories:
-  - Web
 tags:
-  - animation
   - css
-  - css3
-  - firefox
+  - animation
   - transition
-  - Web
 ---
 
  [1]: http://www.w3.org/TR/css3-transitions/

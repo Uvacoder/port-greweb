@@ -3,17 +3,11 @@ title: 'Illuminated.js &#8211; 2D lights and shadows rendering engine for HTML5 
 author: Gaetan
 layout: post
 permalink: /2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/
-dsq_thread_id:
-  - 684240600
-categories:
-  - Programming
-  - Web
 tags:
+  - bbg
   - canvas
-  - featured
   - javascript
   - library
-  - Web
 ---
 
  [1]: http://bit.ly/LZ2dq1

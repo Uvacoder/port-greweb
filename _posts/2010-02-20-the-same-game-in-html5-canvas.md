@@ -3,14 +3,10 @@ title: The same game in HTML5 canvas
 author: Gaetan
 layout: post
 permalink: /2010/02/the-same-game-in-html5-canvas/
-dsq_thread_id:
-  - 463659568
-categories:
-  - Programming
-  - Web
 tags:
+  - gamedev
+  - bbg
   - canvas
-  - html
   - javascript
 ---
 

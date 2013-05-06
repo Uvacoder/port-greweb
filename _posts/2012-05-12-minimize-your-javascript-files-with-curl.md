@@ -3,16 +3,9 @@ title: Minimize your Javascript files with cURL
 author: Gaetan
 layout: post
 permalink: /2012/05/minimize-your-javascript-files-with-curl/
-dsq_thread_id:
-  - 686894197
-categories:
-  - Bash Tips
-  - Web
 tags:
-  - Closure
-  - cURL
   - javascript
-  - WOA
+  - linux
 ---
 
 I’ve always been fascinated by the power of **using existing web applications as external tools**: you don’t need to install anything on your computer but you can **rely on the web**.

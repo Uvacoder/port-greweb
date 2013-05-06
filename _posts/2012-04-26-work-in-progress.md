@@ -3,17 +3,9 @@ title: 'Work in &lt;progress /&gt;'
 author: Gaetan
 layout: post
 permalink: /2012/04/work-in-progress/
-dsq_thread_id:
-  - 665041758
-meta_description:
-  - Native progress bar in the browser
-categories:
-  - Programming
-  - Web
 tags:
-  - html5
+  - html
   - javascript
-  - progress
 ---
 
  [4]: http://greweb.fr/progress/

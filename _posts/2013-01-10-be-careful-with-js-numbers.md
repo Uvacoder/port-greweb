@@ -3,14 +3,9 @@ title: Be careful with JS numbers!
 author: Gaetan
 layout: post
 permalink: /2013/01/be-careful-with-js-numbers/
-dsq_thread_id:
-  - 1018847248
-categories:
-  - Web
 tags:
   - float
   - javascript
-  - number
 ---
 
  [3]: http://wtfjs.com/

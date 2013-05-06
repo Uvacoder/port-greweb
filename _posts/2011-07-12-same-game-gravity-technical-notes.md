@@ -3,17 +3,11 @@ title: 'Same Game Gravity: 6 platforms, 1 codebase'
 author: Gaetan
 layout: post
 permalink: /2011/07/same-game-gravity-technical-notes/
-suf_pseudo_template:
-  - default
-dsq_thread_id:
-  - 463659826
-categories:
-  - Mobile
-  - Web
 tags:
-  - game
-  - html5
-  - Web
+  - mobile
+  - gamedev
+  - bbg
+  - canvas
 ---
 
 see also [Same Game Gravity presentation][1].

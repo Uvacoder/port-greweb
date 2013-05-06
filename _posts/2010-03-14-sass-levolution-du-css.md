@@ -3,15 +3,8 @@ title: 'SASS : l&#039;évolution du CSS pour Play, Rails ou autres'
 author: Gaetan
 layout: post
 permalink: /2010/03/sass-levolution-du-css/
-dsq_thread_id:
-  - 463659593
-categories:
-  - Programming
-  - Web
 tags:
   - css
-  - play
-  - rails
   - sass
 ---
 

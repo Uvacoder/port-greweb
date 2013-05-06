@@ -3,14 +3,11 @@ title: 'Play Painter &#8211; how i&#8217;ve improved the 30 minutes prototyped v
 author: Gaetan
 layout: post
 permalink: /2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/
-dsq_thread_id:
-  - 614708146
-categories:
-  - Programming
-  - Web
 tags:
+  - canvas
   - playframework
-  - WebSocket
+  - websocket
+  - javascript
 ---
 
 One week ago, I’ve released a [technical web experiment][1] featuring **a collaborative real-time Paint-like application I’ve called Play Painter**. It has been made with [Play Framework 2][2] and rely on WebSocket and HTML5 Canvas Javascript APIs.

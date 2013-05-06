@@ -3,13 +3,9 @@ title: 'Play Framework &#8211; Enumerator.outputStream'
 author: Gaetan
 layout: post
 permalink: /2012/11/play-framework-enumerator-outputstream/
-dsq_thread_id:
-  - 924340312
-categories:
-  - Programming
-  - Web
 tags:
   - playframework
+  - iteratee
 ---
 
  [1]: https://github.com/playframework/Play20/commit/0f1ec1479e490f2c8af4cd79dd0b6a14b0ea9f75

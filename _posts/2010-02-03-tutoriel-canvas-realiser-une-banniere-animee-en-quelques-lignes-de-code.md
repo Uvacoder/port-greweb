@@ -3,22 +3,11 @@ title: 'Tutoriel Canvas : Réaliser une bannière animée en quelques lignes de 
 author: Gaetan
 layout: post
 permalink: /2010/02/tutoriel-canvas-realiser-une-banniere-animee-en-quelques-lignes-de-code
-topsy_short_url:
-  - 
-dsq_thread_id:
-  - 463659547
-categories:
-  - Programming
-  - Tutoriels
-  - Web
 tags:
   - animation
-  - banniere
-  - bezier
   - canvas
-  - development
-  - html
   - javascript
+  - bezier
 ---
 
  [1]: /2011/03/html-canvas-pour-les-neophytes

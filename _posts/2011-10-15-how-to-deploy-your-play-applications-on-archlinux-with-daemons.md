@@ -3,19 +3,8 @@ title: How to deploy your play applications on ArchLinux with daemons
 author: Gaetan
 layout: post
 permalink: /2011/10/how-to-deploy-your-play-applications-on-archlinux-with-daemons/
-topsy_short_url:
-  - 
-meta_description:
-  - 'This video shows how to run different instances of Play framework server in the most Linux friendly way: using daemons. Example with ArchLinux, using yaourt, the playframework AUR package and nginx.'
-dsq_thread_id:
-  - 463659739
-categories:
-  - GNU/Linux
-  - Tutoriels Vidéos
-  - Web
 tags:
-  - archlinux
-  - GNU/Linux
+  - linux
   - playframework
 ---
 

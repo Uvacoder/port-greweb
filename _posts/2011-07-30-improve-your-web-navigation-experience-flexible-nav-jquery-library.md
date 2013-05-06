@@ -3,15 +3,8 @@ title: 'Improve your web navigation experience &#8211; Flexible Nav jQuery libra
 author: Gaetan
 layout: post
 permalink: /2011/07/improve-your-web-navigation-experience-flexible-nav-jquery-library/
-topsy_short_url:
-  - 
-dsq_thread_id:
-  - 463659833
-categories:
-  - Web
 tags:
   - javascript
-  - jquery
   - library
   - navigation
 ---

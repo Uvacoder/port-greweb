@@ -3,18 +3,8 @@ title: Automating Web App development for multiple platforms
 author: Gaetan
 layout: post
 permalink: /2011/06/automating-web-app-development-for-multiple-platforms/
-topsy_short_url:
-  - http://bit.ly/iycplx
-dsq_thread_id:
-  - 463659804
-categories:
-  - Mobile
-  - Programming
-  - Web
 tags:
-  - development
-  - maintainability
-  - webapp
+  - linux
 ---
 
  [1]: /2011/06/automating-web-app-development-for-multiple-platforms/#webappbuilder

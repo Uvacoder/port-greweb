@@ -3,15 +3,10 @@ title: 'How I learned Backbone.js, Three.js &#038; GLSL in one week'
 author: Gaetan
 layout: post
 permalink: /2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week/
-dsq_thread_id:
-  - 749974269
-categories:
-  - game development
 tags:
-  - 7dfps
-  - featured
+  - bbg
+  - gamedev
   - GLSL
-  - ThreeJS
   - WebGL
 ---
 

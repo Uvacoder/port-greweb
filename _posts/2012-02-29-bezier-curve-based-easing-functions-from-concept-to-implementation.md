@@ -3,13 +3,6 @@ title: 'Bezier Curve based easing functions &#8211; from concept to implementati
 author: Gaetan
 layout: post
 permalink: /2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/
-topsy_short_url:
-  - 
-dsq_thread_id:
-  - 593414437
-categories:
-  - Programming
-  - Web
 tags:
   - animation
   - bezier

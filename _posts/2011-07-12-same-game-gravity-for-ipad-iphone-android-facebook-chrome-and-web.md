@@ -3,21 +3,11 @@ title: Same Game Gravity for iPad, iPhone, Android, Facebook, Chrome, and Web!
 author: Gaetan
 layout: post
 permalink: /2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/
-suf_pseudo_template:
-  - default
-dsq_thread_id:
-  - 465097247
-categories:
-  - Web
 tags:
-  - android
-  - chrome
-  - facebook
-  - game
-  - html5
-  - ipad
-  - iphone
-  - Web
+  - mobile
+  - gamedev
+  - bbg
+  - canvas
 ---
 
  [1]: http://blog.greweb.fr/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/

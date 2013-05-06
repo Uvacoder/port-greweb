@@ -3,10 +3,6 @@ title: HTML Canvas pour les néophytes
 author: Gaetan
 layout: post
 permalink: /2011/03/html-canvas-pour-les-neophytes/
-dsq_thread_id:
-  - 463659743
-categories:
-  - Tutoriels Vidéos
 tags:
   - canvas
   - html

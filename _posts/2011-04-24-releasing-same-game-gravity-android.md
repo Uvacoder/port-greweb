@@ -3,14 +3,11 @@ title: Releasing Same Game Gravity (Android)
 author: Gaetan
 layout: post
 permalink: /2011/04/releasing-same-game-gravity-android/
-dsq_thread_id:
-  - 463659772
-categories:
-  - Mobile
 tags:
-  - android
-  - game
-  - market
+  - mobile
+  - gamedev
+  - bbg
+  - canvas
 ---
 # 
 

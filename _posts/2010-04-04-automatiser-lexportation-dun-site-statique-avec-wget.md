@@ -3,14 +3,8 @@ title: 'Automatiser l&#039;exportation d&#039;un site statique avec wget'
 author: Gaetan
 layout: post
 permalink: /2010/04/automatiser-lexportation-dun-site-statique-avec-wget/
-dsq_thread_id:
-  - 465092035
-categories:
-  - Tutoriels
-  - Web
 tags:
-  - webmaster
-  - wget
+  - playframework
 ---
 
 Il est préférable d’**utiliser un framework web** même si l’on veut réaliser un **site vitrine simple (statique)**, car l’on bénéficie des avantages du framework notamment de l’héritage (entre autre) des templates, de l’internationalisation, de la configuration des *routes*, du *SASS*, etc.
