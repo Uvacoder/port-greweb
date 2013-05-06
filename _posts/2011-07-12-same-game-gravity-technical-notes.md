@@ -27,12 +27,8 @@ see also [Same Game Gravity presentation][1].
 **It’s often the simplest games which work. Too much complexity is not good.**
 
 [  
-![][4]  
-][4] 
-
- []: http://same.greweb.fr/
-
-
+![](/images/2011/07/gravity_exemple.png)
+][2]
 
 In 2010, I learned how to make mobile web applications. It was also the year of the iPad. Out of interest I tried my same game canvas experiment on the iPad, and was surprised to find that it worked pretty well out of the box! Seeing it run on multiple devices was exciting – and the touch screens offered a new dimension for creating highly intuitive interactions. I mean, today, **even my mum can play Same Game Gravity without any help!** (That’s unfortunately not the case for her desktop)
 
@@ -63,10 +59,26 @@ Desktop version source code is available on [Github][5].
  [6]: https://github.com/gre/same-game-gravity/blob/master/game.html
 
 The HTML code is pretty simple.  
-Basically, there is a **** container which contains different ****. Each section is a view of the game.
+Basically, there is a **container which contains different**. Each section is a view of the game.
 
 For instance here is the game view :  
 
+```html
+<section id="game">
+  <div class="turnleft"></div>
+  <div class="turnright"></div>
+  <div class="gameStatus">
+    <a class="i18n-back back" href="#!/">Back</a>
+    <span class="timeline">
+      <span class="remainingSeconds"><span class="remainingSecondsTime"></span> s</span>
+    </span>
+  </div>
+  <div id="gameContainer">
+    <canvas class="highlight" width="400" height="300"></canvas>
+    <canvas class="main" width="400" height="300"></canvas>
+  </div>
+</section>
+```
 
 In the desktop version, **game.html** is wrapped into **index.html** in an iframe to keep the game independent of the context.
 
@@ -80,6 +92,38 @@ CSS 3 is very rich.
 
 CSS Transitions and CSS Transforms has been used to do view change.  
 
+```css
+/* Pre conditions :
+ * With Javascript: 
+   - A class "current" is setted for the current section view. 
+   - All section after "current" must take a "after" class. 
+ */
+#main.enabletransition > section { /* #main must take "enabletransition" after the DOM load to avoid a first transition */
+  transition-duration: 1s, 0s;  /* transform takes 1s duration, opacity doesn't have transition */
+}
+#main > section {
+  z-index: -1;
+  opacity: 0;
+  transition-delay: 0s, 1s; /* opacity go to 0 in 1s */
+  transition-property: transform, opacity;
+  transform: translateY(-100%); /* go above the page */
+}
+#main > section.current {
+  z-index: 0;
+  opacity: 1;
+  transition-delay: 0s, 0s;
+  transition-transform: translateY(0%); /* go to the bottom */
+}
+#main > section.after { /* same as "#main > section.current ~ section" but without bugs */
+  opacity: 0;
+  transition-delay: 0s, 1s;
+  transform: translateY(100%); /* go below the page */
+}
+ 
+/* Note that this is a part of the css code 
+ * (you need to add -webkit-, -moz-, ... in some properties)
+ */
+```
 
 #### The game core
 
@@ -111,7 +155,40 @@ This file contains all the specific code for the desktop version (it overrides e
 
 ##### Some significant code
 
-
+```javascript
+// Colors.get(nb) : pick nb random colors 
+var Colors = function() {
+  var clrs = [ new Color('#D34040'), new Color('#82D340'), new Color('#40C2D3'), new Color('#8B40D3'), new Color('#D3C840') ];
+  return {
+      get: function(nb) {
+      return clrs
+      .sort(function(){ return Math.random() - 0.5; })
+      .slice(0, nb);
+    }
+  }
+}();
+ 
+/** Game instanciation **/
+ 
+var gridSizeByDifficulty = [ // Size of grid for each difficulty
+  {w:8, h:8},
+  {w:12, h: 12},
+  {w: 16, h: 16}
+];
+var colorNumberByDifficulty = [3, 4, 5]; // Nb of colors for each difficulty
+ 
+var difficulty; // can be 0 (easy), 1 (normal) or 2 (hard)
+currentGame = new game.Game({
+  gridSize: gridSizeByDifficulty[difficulty],
+  colors: colors=Colors.get(colorNumberByDifficulty[difficulty]),
+  container: '#game', // container selector
+  rendererClass: 'GameCanvasRenderer', // The class to use for rendering the game
+  difficulty: difficulty,
+  drawHover: true,
+  globalTimer: new Timer().pause(),
+  keepSquare: true // Keep a square ratio
+});
+```
 
 ### The gravity
 
@@ -170,7 +247,27 @@ Same Game Gravity use its own widget ([source code here][23]).
 
 This widget is very customizable. Here’s an example of the code used to embed the widget anywhere (like in this blog post) :
 
-
+```html
+<script type="text/javascript" src="http://same.greweb.fr/public/javascripts/same.scores.js"></script>
+<script type="text/javascript">
+  new same.Scores({
+    width: '250px',
+    height: '400px',
+    items: 3,
+    period: 'all',
+    platform: ['web', 'mobile', 'tablet'],
+    type: ['hs_hard', 'hs_normal', 'hs_easy'],
+    title: 'Best highscores ever',
+    theme: {
+      bg: 'rgb(218, 236, 244)',
+      color: '#000',
+      scores_bg: 'rgba(255, 255, 255, 0.5)',
+      scores_color: 'rgba(0, 0, 0, 0.8)',
+      link: '#1F98C7'
+    }
+  }).init().fetch();
+</script>
+```
 
 ### Conclusion
 

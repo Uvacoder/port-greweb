@@ -17,26 +17,32 @@ tags:
   - webapp
 ---
 
-In this article, we will explain why we’d choose web technologies to make applications and introduce [**WebAppBuilder**][1], a tool to easily build different instances of an application. We’ll examine the [Same Game Gravity][2] as an example.
-
  [1]: /2011/06/automating-web-app-development-for-multiple-platforms/#webappbuilder
  [2]: http://same.greweb.fr/
+ [3]: https://github.com/gre/WebAppBuilder
+ [4]: http://diveintohtml5.org/
+ [6]: http://www.phonegap.com/
+ [8]: http://mustache.github.com/
+ [9]: http://sass-lang.com
+ [10]: http://compass-style.org
+ [12]: http://mrspeaker.net/
+ [13]: https://github.com/jquery/jquery/tree/master/build
+
+
+In this article, we will explain why we’d choose web technologies to make applications and introduce [**WebAppBuilder**][1], a tool to easily build different instances of an application. We’ll examine the [Same Game Gravity][2] as an example.
+
 
 Using web to develop mobile applications is very **productive** and web technologies are **rich**.
 
 [Fork WebAppBuilder on Github.][3]
 
- [3]: https://github.com/gre/WebAppBuilder
-
-
+<!-- more -->
 
 ## Rich?
 
 New web technologies have become rich with CSS3, HTML5 and new Javascript APIs are now being supported on most of smartphones. CSS3 animations, Web Service usage, local storage, Geolocation, drawing shapes (Canvas),.. are some example of new web features.
 
 I won’t expand more on this topic but invite you to [visit this link][4] for more details.
-
- [4]: http://diveintohtml5.org/
 
 ## Productive?
 
@@ -52,9 +58,7 @@ We are in 2011, the “only desktop application” model is over now, and mobile
 Instances of a single application can be numerous.  
 In fact, an application can be projected in at least 3 axis of instance : The **platform** (mobile, tablet, desktop, …), the **Operating System** (Android, iPhone, webOS) and the **application version** (free version, full version, …).
 
-![][5]
-
- [5]: http://data.greweb.fr/blog/image/webapp/application-axis3.png
+![](/images/2011/application-axis3.png)
 
 That’s pretty expensive to develop X instances of an application. This is a problem for developing the first version and mainly for maintainability : You want to fix bugs and add features once, and only once.
 
@@ -66,7 +70,6 @@ Computers have browsers, mobiles and tablets device have recent browsers.
 
 To make your application development fully independent from the device, firstly you need a great **framework** to bridge your application and the device (like [PhoneGap][6]), secondly you need a great tool to easily **build** all applications from your common source code.
 
- [6]: http://www.phonegap.com/
 
 First of all, let’s see how to organize a web project.
 
@@ -89,9 +92,7 @@ A skeleton directory will contains all the specific code related to the platform
 
 ## WebAppBuilder
 
-![][7]
-
- [7]: http://data.greweb.fr/blog/image/webapp/webappmaker.png
+![](/images/2011/webappmaker.png)
 
 I created **WebAppBuilder : a lightweight Makefile to build your project**. This is a mashup of existing cool stuff like : a small template system (Mustache), SASS with Compass, Javascript minimizer, …
 
@@ -106,10 +107,6 @@ I created **WebAppBuilder : a lightweight Makefile to build your project**. This
 *   Copy and optionally rename resources you want to include (images, fonts, sounds,…).
 *   Error handling and atomicity : if one operation fail, the make fail (javascript syntax error, sass syntax error, …)
 
- [8]: http://mustache.github.com/
- [9]: http://sass-lang.com
- [10]: http://compass-style.org
-
 You must have one Makefile per project skeleton, so you can easily define what to do with the */src* for the related platform/device/OS.
 
 ### Download or Contribute
@@ -122,15 +119,81 @@ I developed these tools during the [Same Game Gravity][2] game development.
 
 A **make** inside my android/ skeleton gives me :
 
-![][11]
-
- [11]: http://data.greweb.fr/blog/image/webapp/webappmaker-term.png
+![](/images/2011/webappmaker-term.png)
 
 And here is the Makefile I use :
 
 #### Android Makefile
 
-
+```makefile
+# Same Game Gravity - Android full version #
+        
+        ###             ~ Web App Builder ~               ###
+        #       a Makefile to compile a web project.        #
+        #  designed for web project with different devices  #
+        #  (mobile, tablet, desktop) but with common code.  #
+        ###        by @greweb  -  http://greweb.fr/       ###
+ 
+# BUILD_DIR : PATH to Web App Builder /build directory (the directory containing all build tools)
+BUILD_DIR = ../build
+ 
+# SRC_DIR : the source directory
+SRC_DIR = ../app
+ 
+# DIST_DIR : the dist directory (ex: assets for android, www for iphone)
+DIST_DIR = assets
+ 
+# RESOURCES : Your assets (images, sounds, fonts... and other static files)
+# You can rename dist file by prefix newname= ( ex: index.html=iphone_version.html )
+RESOURCES = Chewy.ttf logo.png background.jpg pop.mp3 swosh.mp3 gravity_exemple.png
+ 
+# VIEWS : Views will be interpreted by Mustache.js
+# You can pass arguments with JSON format.
+# Example: index.html:"{key1:value1,key2:value2,...}"  <= no spaces!
+VIEWS = index.html=mobile.html:"{versionType:'',version:'1.0',platform:'mobile',android:true,free:false}"
+ 
+### SCRIPTS : all javascripts
+# - You can pass an URL to retrieve
+# - if you want to minimize the JS, prefix with '!'
+# - to mix scripts, concat them with a comma ','
+# - to set the destination name, you can prefix scripts with 'myname.js=' else the first script name is used ( exemple: all.js=util.js,ui.js,main.js ).
+SCRIPTS = game.min.js=!game.js,!game.mobile.js,!md5.js \
+          phonegap.min.js=!phonegap.js,!phonegap.webintent.js \
+          jquery.min.js=http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js,jquery.ba-hashchange.min.js,jquery.tmpl.min.js
+ 
+### STYLES : all styles : CSS or SASS
+# - For .sass files, we compile them to css
+# - Like before, you can mix styles with ',' and you can name your target by prefixing 'name='
+STYLES = game.css=mobile.sass
+ 
+########################################################################
+ 
+ 
+all: welcome clean assets_views assets_scripts assets_styles assets_files
+ 
+welcome:
+	@@${BUILD_DIR}/welcome.sh
+ 
+assets_base: 
+	@@mkdir -p ${DIST_DIR}
+ 
+assets_views: assets_base
+	@@${BUILD_DIR}/compile_views.sh ${SRC_DIR} ${DIST_DIR} ${VIEWS}
+ 
+assets_scripts: assets_base
+	@@${BUILD_DIR}/compile_scripts.sh ${SRC_DIR} ${DIST_DIR} ${SCRIPTS}
+ 
+assets_styles: assets_base
+	@@${BUILD_DIR}/compile_styles.sh ${SRC_DIR} ${DIST_DIR} ${STYLES}
+ 
+assets_files: assets_base
+	@@${BUILD_DIR}/copy_resources.sh ${SRC_DIR} ${DIST_DIR} ${RESOURCES}
+ 
+clean: 
+	@@rm -rf ${DIST_DIR}
+ 
+.PHONY: welcome clean assets_views assets_scripts assets_styles assets_files
+```
 
 ### Configuring your IDE
 
@@ -145,5 +208,3 @@ I use mainly komodo and geany as an IDE. They both have a build system. I recomm
 *   to [mrspeaker][12] for English review.
 *   to [jQuery build system][13] (js minifier)
 
- [12]: http://mrspeaker.net/
- [13]: https://github.com/jquery/jquery/tree/master/build

@@ -18,8 +18,8 @@ Following on from the success of my Same game made in HTML5 Canvas, I’ve decid
 
 It’s now available on Android market.
 
-More infos on .
+More infos on <http://same.greweb.fr>.
 
-
+<iframe width="640" height="360" src="http://www.youtube.com/embed/Qyd69g9hmIY?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
 
 This ball removal puzzle game is made with HTML5 technologies and PhoneGap. Source code will be published within a few months.
