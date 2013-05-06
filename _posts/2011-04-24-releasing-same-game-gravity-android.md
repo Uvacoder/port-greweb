@@ -6,7 +6,6 @@ permalink: /2011/04/releasing-same-game-gravity-android/
 tags:
   - mobile
   - gamedev
-  - bbg
   - canvas
 ---
 # 

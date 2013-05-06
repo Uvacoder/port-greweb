@@ -8,6 +8,7 @@ tags:
   - playframework
   - reactive
   - unix
+  - library
 ---
 
  [1]: http://scala-lang.org

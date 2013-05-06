@@ -4,7 +4,6 @@ author: Gaetan
 layout: post
 permalink: /2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/
 tags:
-  - bbg
   - gamedev
   - blender
   - javascript

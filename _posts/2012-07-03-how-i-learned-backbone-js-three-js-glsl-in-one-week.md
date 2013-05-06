@@ -4,7 +4,6 @@ author: Gaetan
 layout: post
 permalink: /2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week/
 tags:
-  - bbg
   - gamedev
   - GLSL
   - WebGL

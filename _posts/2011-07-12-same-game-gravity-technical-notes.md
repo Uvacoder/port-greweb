@@ -6,7 +6,6 @@ permalink: /2011/07/same-game-gravity-technical-notes/
 tags:
   - mobile
   - gamedev
-  - bbg
   - canvas
 ---
 

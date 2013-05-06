@@ -6,7 +6,6 @@ permalink: /2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-an
 tags:
   - mobile
   - gamedev
-  - bbg
   - canvas
 ---
 

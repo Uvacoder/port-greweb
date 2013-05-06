@@ -4,7 +4,7 @@ author: Gaetan
 layout: post
 permalink: /2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/
 tags:
-  - bbg
+  - gamedev
   - canvas
   - javascript
   - library

@@ -5,7 +5,6 @@ layout: post
 permalink: /2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/
 tags:
   - gamedev
-  - bbg
   - javascript
   - library
   - GLSL

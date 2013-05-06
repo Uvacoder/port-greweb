@@ -5,7 +5,6 @@ layout: post
 permalink: /2010/02/the-same-game-in-html5-canvas/
 tags:
   - gamedev
-  - bbg
   - canvas
   - javascript
 ---
