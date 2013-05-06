@@ -12,7 +12,6 @@ tags:
   - webmaster
   - wget
 ---
-# 
 
 Il est préférable d’**utiliser un framework web** même si l’on veut réaliser un **site vitrine simple (statique)**, car l’on bénéficie des avantages du framework notamment de l’héritage (entre autre) des templates, de l’internationalisation, de la configuration des *routes*, du *SASS*, etc.
 
@@ -38,7 +37,9 @@ Cet article est donc destiné aux particuliers ne voulant pas investir dans un s
 
 Avec **wget** récupérez votre site à la ligne de commande :
 
+```bash
 wget -r -k -np "http://localhost:9000/"
+```
 
 A l’instar d’un moteur de recherche, c’est cette commande qui va s’occuper de **retracer toutes les pages web de votre site**, mais aussi toutes ses ressources (images, css, js, ..). En plus de cela, elle va **préserver le fonctionnement des liens** entre pages. 
 
@@ -58,10 +59,12 @@ préparez les uri pour qu’elles soient de la forme **/{lang}/*/** avec **lang*
 
 #### Exemples de routes
 
+```
 /en/  
 /en/about/  
 /fr/  
 /fr/about/
+```
 
 ### Ajouter des liens dans les templates pour changer de langue
 
@@ -73,20 +76,24 @@ Pour contourner ce problème et ainsi factoriser les fichiers communs, **une sol
 
 #### Solution exemple avec play framework
 
-  
-#{if lang!='en'}  
-  english version  
-#{/if}  
-#{if lang!='fr'}  
-  french version  
-#{/if}  
+```
+<p>
+#{if lang!='en'}
+  <a ADD_HERE_ENGLISH_LINK_ATTRIBUTES>english version</a>
+#{/if}
+#{if lang!='fr'}
+  <a ADD_HERE_FRENCH_LINK_ATTRIBUTES>french version</a>
+#{/if}
+</p>
+```
 
-
-#!/bin/bash  
-# script bash  
-wget -r -k -np "http://localhost:9000/"  
-sed -i s/ADD\_HERE\_ENGLISH\_LINK\_ATTRIBUTES/href="\/en\/"/g $(find . -name "*.html")  
-sed -i s/ADD\_HERE\_FRENCH\_LINK\_ATTRIBUTES/href="\/fr\/"/g $(find . -name "*.html")
+```bash
+#!/bin/bash
+# script bash
+wget -r -k -np "http://localhost:9000/"
+sed -i s/ADD_HERE_ENGLISH_LINK_ATTRIBUTES/href=\"\\/en\\/\"/g $(find . -name "*.html")
+sed -i s/ADD_HERE_FRENCH_LINK_ATTRIBUTES/href=\"\\/fr\\/\"/g $(find . -name "*.html")
+```
 
 ### Préparer une page de redirection
 
@@ -94,11 +101,32 @@ sed -i s/ADD\_HERE\_FRENCH\_LINK\_ATTRIBUTES/href="\/fr\/"/g $(find . -name "*.h
 
 #### Par exemple un script php
 
+```php
+<?php
+$langs = array();
 
+if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+    preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);
+    if (count($lang_parse[1])) {
+        $langs = array_combine($lang_parse[1], $lang_parse[4]);
+        foreach ($langs as $lang => $val) {
+            if ($val === '') $langs[$lang] = 1;
+        }
+        arsort($langs, SORT_NUMERIC);
+    }
+}
 
-## Exemple
+foreach ($langs as $lang => $val) {
+  if (strpos($lang, 'fr') === 0) {
+    header('Location: fr');
+    die();
+  }
+  else if (strpos($lang, 'en') === 0) {
+    header('Location: en');
+    die();
+  }
+}
+header('Location: en');
+?>
+```
 
-Mon [site professionnel][1] est développé et maintenu avec [Play! framework][2] et exporté en suivant ces mêmes astuces.
-
- [1]: http://pro.grenlibre.fr/
- [2]: http://playframework.org/

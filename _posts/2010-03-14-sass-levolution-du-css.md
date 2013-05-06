@@ -14,21 +14,27 @@ tags:
   - rails
   - sass
 ---
-# 
+
+ [1]: http://sass-lang.com/
+ [2]: http://www.playframework.org/
+ [3]: http://compass-style.org/
+ [4]: http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html
 
 **SASS, Syntactically Awesome Stylesheets**, est un langage de feuille de style évolué qui permet de factoriser beaucoup de code css et de rendre son écriture et sa maintenance **rapide et moins contraignante**. Il est compilé en css.
+
+<!-- more -->
 
 ## Pourquoi utiliser SASS ?
 
 Son utilisation a de nombreux avantages par rapport au CSS :
 
-*   sa **simplicité** (pas de crochets, pas de point virgule mais juste de l’indentation)
-*   l’**imbrication** des sélecteurs css (appliquant l’idée DRY : don’t repeat yourself)
-*   l’utilisation de **variables**
-*   l’utilisation d’**opérations élémentaires** (sur les pixels, les couleurs, …)
-*   la **factorisation** du code (au lieu de faire des copier-coller, on peux factoriser le code à travers les “mixins”).
-*   La **réduction** css et la **clarté** du code
-*   La **compression du code** compilé avec la possibilité de tout mettre dans un fichier (via l’héritage) et de minimifier le code css.
+* sa **simplicité** (pas de crochets, pas de point virgule mais juste de l’indentation)
+* l’**imbrication** des sélecteurs css (appliquant l’idée DRY : don’t repeat yourself)
+* l’utilisation de **variables**
+* l’utilisation d’**opérations élémentaires** (sur les pixels, les couleurs, …)
+* la **factorisation** du code (au lieu de faire des copier-coller, on peux factoriser le code à travers les “mixins”).
+* La **réduction** css et la **clarté** du code
+* La **compression du code** compilé avec la possibilité de tout mettre dans un fichier (via l’héritage) et de minimifier le code css.
 
 Ce langage n’est pas difficile à apprendre, cela ressemble au css, avec de nombreuses fonctionnalités intéressantes en plus.
 
@@ -51,34 +57,42 @@ Mais cela ne serait pas intéressant sans les nouveautés suivantes :
 
 Au lieu d’avoir ce type d’arborescence à un niveau :
 
+```sass
 .main .head  
   color: red  
 .main .body  
   color: blue
+```
 
 Nous pouvons factoriser le sélecteur “*.main*” et se ramener à deux niveaux :
 
+```sass
 .main  
   .head  
     color: red  
   .body  
     color: blue
+```
 
 Ce procédé de factorisation basé sur l’esprit **DRY** (Don’t Repeat Yourself) est aussi applicable sur les attributs eux-mêmes :
 
+```sass
 a  
   font:  
     family: serif  
     weight: bold  
     size: 1.2em
+```
 
 sera compilé en css par :
 
+```css
 a {  
   font-family: serif;  
   font-weight: bold;  
   font-size: 1.2em;  
 }
+```
 
 ### Les variables
 
@@ -90,51 +104,63 @@ on utilise le caractère ‘**=**‘ au lieu de ‘**:**‘ pour l’affectation
 
 #### Les couleurs
 
+```sass
 !link_color = red  
 a  
   color = !link_color  
   &:hover  
     color = !link_color #222
+```
 
 A noter que le symbole **&** remplace le sélecteur parent.
 
 Ce qui donne le code compilé suivant :
 
+```css
 a {  
   color: red;  
 }  
 a:hover {  
   color: #ff2222;  
 }
+```
 
 #### Les pixels
 
+```sass
 !margin = 16px  
 .border  
   padding = !margin / 2  
   margin = !margin / 2
+```
 
 donne le code compilé :
 
+```css
 .border {  
   padding: 8px;  
   margin: 8px;  
 }
+```
 
 ### Les “mixins”
 
 Les mixins sont des procédures qui contiennent plusieurs lignes de sass.  
 Il est possible d’utiliser des arguments sur ces mixins.
 
+```sass
 =border-radius(!radius = 5px)  
   border-radius= !radius  
   -moz-border-radius= !radius  
   -webkit-border-radius= !radius  
-  
-#wrapper  
+```
+
+```sass
+#wrapper
    border-radius(10px)  
   > footer  
      border-radius()
+```
 
 Cet exemple est typiquement intéressant car il permet d’utiliser **border-radius** de façon **cross-browser** et avec une ligne de code.
 
@@ -142,6 +168,7 @@ A noter qu’il est possible d’affecter des valeurs par défaut aux mixins.
 
 Le résultat css compilé est le suivant :
 
+```css
 #wrapper {  
   border-radius: 10px;  
   -moz-border-radius: 10px;  
@@ -152,11 +179,13 @@ Le résultat css compilé est le suivant :
   -moz-border-radius: 5px;  
   -webkit-border-radius: 5px;  
 }
+```
 
 ### Exemple complet
 
 Voici un exemple complet de l’utilisation du SASS
 
+```sass
 /* This is just an example */  
   
 /* variables */  
@@ -227,9 +256,11 @@ a
       float: right  
       width = !aside_width  
       padding: 20px
+```
 
 et le résultat du fichier CSS compilé
 
+```css
 /* This is just an example */  
 /* variables */  
 /* mixins */  
@@ -294,6 +325,7 @@ a {
       width: 300px;  
       padding: 20px;  
 }
+```
 
 Le SASS offre **encore plus de possibilités**, notamment l’interpolation, les conditions, les boucles, …  
 Vous trouverez plus d’informations sur la *documentation SASS*.
@@ -306,7 +338,9 @@ Vous trouverez plus d’informations sur la *documentation SASS*.
 
 Pour utiliser SASS, sous linux, installez les packets **ruby** et **rubygems** puis installez **haml** avec la commande :
 
+```bash
 gem install haml
+```
 
 ### Avec le framework java Play!
 
@@ -316,7 +350,9 @@ Grâce au module sass de play framework, le SASS est **compilé à la volée** a
 
 Depuis play 1.1, il suffit de lancer la commande
 
+```bash
 play install sass
+```
 
 Ensuite il faut activer le module dans la configuration de l’application (fichier *conf/application.conf*).
 
@@ -326,7 +362,9 @@ Ensuite il faut activer le module dans la configuration de l’application (fich
 
 Pour activer le plugin SASS sur une application Rails, lancez :
 
+```bash
 haml --rails path/to/rails/app
+```
 
 ### Autrement
 
@@ -339,22 +377,18 @@ Si vous ne voulez pas repartir de zéro dans le design d’un projet, vous pouve
 
 ## Commandes pratiques
 
-*   Pour convertir vos fichier CSS en SASS il vous suffit d’utiliser : css2sass  
+* Pour convertir vos fichier CSS en SASS il vous suffit d’utiliser : `css2sass`  
 
-*   Pour compiler vos fichier SASS en CSS, utilisez : sass   
+* Pour compiler vos fichier SASS en CSS, utilisez: `sass`   
 
 ## Liens
 
-*   [Site du langage SASS][1]
-*   [Site du framework Play!][2]
+* [Site du langage SASS][1]
+* [Site du framework Play!][2]
 
- [1]: http://sass-lang.com/
- [2]: http://www.playframework.org/
 
 ### Aller plus loin
 
-*   [Compass : framework SASS][3]
-*   [Documentation SASS][4]
+* [Compass : framework SASS][3]
+* [Documentation SASS][4]
 
- [3]: http://compass-style.org/
- [4]: http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html
