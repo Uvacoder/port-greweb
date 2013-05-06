@@ -17,13 +17,13 @@ tags:
 ---
 
  [1]: http://bit.ly/LZ2dq1
- [2]: http://demo.greweb.fr/illuminated.js
+ [2]: http://gre.github.io/illuminated.js
  [3]: http://github.com/gre/illuminated.js
  [4]: /2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/#gettingstarted
  [5]: /2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/#underthehood
  [6]: http://en.wikipedia.org/wiki/Canvas_element
 
- [7]: http://demo.greweb.fr/illuminated.js/gettingstarted.html
+ [7]: http://gre.github.io/illuminated.js/gettingstarted.html
 
  [8]: http://en.wikipedia.org/wiki/Ray_tracing_(graphics)
  [9]: /images/2012/05/step11.jpg
@@ -35,10 +35,9 @@ tags:
  [15]: http://en.wikipedia.org/wiki/Tangent_lines_to_circles
 
 
-[
-![](/images/2012/05/illuminatedjs.jpg)
-Click on the image to open it!
-][1]
+[![](/images/2012/05/illuminatedjs.jpg)][1]
+
+[Click on the image to open it!][1]
 
 
 ## Wow! what’s this?
@@ -63,7 +62,7 @@ In this article, we will introduce the basic usages of *Illuminated.js* and APIs
 The library uses [HTML5 Canvas][6] to draw lights and shadows – so you can simply drop it straight into your existing Canvas applications: you just need to add some code in your render function and maintaining a binding between your application logic and the *Illuminated.js* objects.  
 Not using canvas? No worries! In theory, if you have an existing application or game made in full DOM, you could use *Illuminated.js* behind this, playing with z-index.
 
-## <a id="gettingstarted" /> Getting started
+## <a id="gettingstarted"></a> Getting started
 
 ### Basic concepts
 
@@ -154,7 +153,9 @@ DiscObject and PolygonObject are the two available primitive objects.
 
 A “DiscObject” is basically a 2D circlar object. You must define its center **position** and its **radius**:
 
+```javascript
 new DiscObject({ position: new Vec2(80,50), radius: 20 })
+```
 
 #### PolygonObject
 
@@ -162,9 +163,11 @@ PolygonObject also has some derivated classes you can use: **RectangleObject**, 
 
 You can instanciate these different objects like this:
 
+```javascript
 new PolygonObject([ new Vec2(, ), new Vec2(10, 10), ... ]) // an array of points  
 new RectangleObject(topleft, bottomright) // topleft and bottomright positions of the rectangle  
 new LineObject(a, b) // an object defined by the line from a to b.
+```
 
 ### OpaqueObject methods
 
@@ -234,13 +237,13 @@ Both Lighting and DarkMask objects have `compute()` and `render()` methods.
 We think that **you** know the best when to recompute the lights because it’s closely link to the application you are making (we will not check at each time if something has changed, you know it).  
 Call the `compute()` method when something has changed in your scene so we can recompute lights and shadows.
 
-## <a id="underthehood" /> How does it work under the hood?
+## <a id="underthehood"></a> How does it work under the hood?
 
 *Illuminated.js* divides its work into several layers.
 
 ### Real-time example
 
-<iframe src="http://demo.greweb.fr/illuminated.js/howdoesitwork.html" border="0" height="2700" width="450"></iframe>
+<iframe src="http://gre.github.io/illuminated.js/howdoesitwork.html" border="0" height="2700" width="450"></iframe>
 
 ### The art of composing layers
 

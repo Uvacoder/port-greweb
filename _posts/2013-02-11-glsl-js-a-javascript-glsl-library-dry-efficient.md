@@ -16,19 +16,19 @@ tags:
   - WebGL
 ---
 
- [2]: http://greweb.fr/glsl.js/examples/balls
- [3]: http://greweb.fr/glsl.js/examples
- [4]: http://greweb.fr/glsl.js/docs
+ [2]: http://gre.github.io/glsl.js/examples/balls
+ [3]: http://gre.github.io/glsl.js/examples
+ [4]: http://gre.github.io/glsl.js/docs
  [5]: http://github.com/gre/glsl.js
- [6]: http://greweb.fr/glsl.js/test
- [7]: http://greweb.fr/glsl.js/examples/pong/
+ [6]: http://gre.github.io/glsl.js/test
+ [7]: http://gre.github.io/glsl.js/examples/pong/
  [8]: http://glsl.heroku.com
- [13]: http://greweb.fr/glsl.js/examples/helloworld
+ [13]: http://gre.github.io/glsl.js/examples/helloworld
  [15]: http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
  [16]: http://glsl.heroku.com/
- [24]: http://greweb.fr/glsl.js/examples/canvas-text/
- [25]: http://greweb.fr/glsl.js/examples/video/
- [26]: http://greweb.fr/glsl.js/examples/mario_sprites/
+ [24]: http://gre.github.io/glsl.js/examples/canvas-text/
+ [25]: http://gre.github.io/glsl.js/examples/video/
+ [26]: http://gre.github.io/glsl.js/examples/mario_sprites/
 
 
 [![glsl_mario](/images/2013/02/glsl_mario.jpg)][2]

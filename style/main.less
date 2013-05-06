@@ -75,6 +75,12 @@ hr { margin-bottom: 0.2em; }
 small { font-size: .8em; }
 big { font-size: 1.2em; }
 
+* {
+  transition: 200ms;
+  -moz-transition: 200ms;
+  -webkit-transition: 200ms;
+}
+
 /**layout**/
 
 body {
@@ -101,6 +107,7 @@ body > header {
     z-index: 2;
     margin: 20px 0;
     margin-right: 20px;
+    margin-left: 20px;
   }
   canvas.visualizer {
     position: absolute;
@@ -115,6 +122,7 @@ body > header {
       width: auto;
       max-width: 350px;
       margin-top: none;
+      margin-left: none;
     }
   } 
 }
@@ -209,7 +217,7 @@ a {
   &:hover {
     text-decoration: underline;
   }
-  &:hover, &:active {
+  &:hover, &:active, &:focus {
     color: #7ad;
   }
 }
@@ -315,7 +323,7 @@ article {
       .tag {
         margin-left: 2px;
         text-decoration: none;
-        &:hover {
+        &:hover, &:active, &:focus {
           text-decoration: none;
           color: #147;
         }
@@ -330,13 +338,13 @@ article {
       font-size: 1.6em;
       color: #3B7FB0;
       border-bottom: 2px solid #3B7FB0;
-      a {
-        color: #3B7FB0;
+      a, a:hover, a:focus, a:active {
+        color: inherit;
         text-decoration: none;
       }
-      a:hover {
+      &:hover {
         color: #147;
-        text-decoration: none;
+        border-bottom-color: #147;
       }
     }
   }
