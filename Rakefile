@@ -6,8 +6,15 @@ require 'shellwords'
 # Change your GitHub reponame
 GITHUB_REPONAME = "gre/gre.github.io"
 
+task :default => [:generate]
+
+desc "Generate stylesheets from LESS"
+task :style do
+  system "lessc -x style/main.less style/main.css"
+end
+
 desc "Generate blog files"
-task :generate do
+task :generate => [:style] do
   Jekyll::Site.new(Jekyll.configuration({
     "source"      => ".",
     "destination" => "_site"
