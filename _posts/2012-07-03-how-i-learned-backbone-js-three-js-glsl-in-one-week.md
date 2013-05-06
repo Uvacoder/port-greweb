@@ -18,7 +18,7 @@ tags:
  [1]: http://youcanmakevideogames.com/
  [2]: http://7dfps.org/
  [3]: http://www.ludumdare.com/
- [4]: http://dta.greweb.fr/
+ [4]: http://gre.github.io/dta
  [8]: http://caniuse.com/#search=webgl
  [12]: http://www.egonelbre.com/js/jsfx/
  [16]: http://www.opengl.org/documentation/glsl/
