@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Step 5 - canvas banner tutorial by grenlibre.fr</title>
+  </head>
+  <body>
+    <canvas id="tuto" width="500" height="100" style="border: 1px solid;"></canvas>
+    <p><a href="javascript:window.close();">Fermer</a></p>
+    <script language="javascript">
+      var canvas = document.getElementById('tuto');
+      var ctx = canvas.getContext('2d');
+      
+      ctx.strokeStyle = 'rgba(80,150,240,0.5)';
+      ctx.lineWidth = 5;
+      var i = 0;
+      var cycle = function() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        var offset = i/20;
+        var y = (Math.sin(offset)+1)*canvas.height/2;
+        var cpy1 = (Math.cos(offset)+0.5)*canvas.height;
+        var cpy2 = canvas.height - cpy1;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.bezierCurveTo(canvas.width/3, cpy1, 2*canvas.width/3, cpy2, canvas.width, y);
+        ctx.stroke();
+        i++;
+      };
+      setInterval(cycle, 30);
+    </script>
+    <p style="text-align: center; border-top: 10px; font-size: .7em;">Canvas banner tutorial by <a href="http://grenlibre.fr/">grenlibre.fr</a></p>
+  </body>
+</html>

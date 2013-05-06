@@ -170,6 +170,7 @@ body > footer {
 article {
   padding: 20px;
   overflow: hidden;
+  margin-bottom: 50px;
 }
 
 article > header {
@@ -177,7 +178,7 @@ article > header {
 }
 
 article .entry-content {
-
+  clear: both;
 }
 
 nav.pagination {
@@ -211,7 +212,7 @@ a {
     text-decoration: underline;
   }
   &:hover, &:active, &:focus {
-    color: #7ad;
+    color: #369;
   }
 }
 
@@ -228,9 +229,14 @@ body > header {
   h1 {
     font-family: 'Fredericka the Great', sans-serif;
     font-size: 3em;
-    a, a:hover, a:active, a:focus {
+    a {
       color: #fff;
       text-decoration: none;
+    }
+    a:hover, a:active, a:focus {
+      color: #fff;
+      text-decoration: none;
+      text-shadow: 0em 0em 0.1em #fff;
     }
   }
 
@@ -358,6 +364,11 @@ article {
       line-height: 1em;
       background: #fff;
       white-space: nowrap;
+    }
+  }
+  .excerpt {
+    p {
+      margin-bottom: 0.5em;
     }
   }
   hr {
