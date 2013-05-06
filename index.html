@@ -25,14 +25,14 @@ title: "@GreWeb &bull; embrace standard web technologies for web, games and mobi
 <nav class="pagination">
   {% if paginator.previous_page %}
     {% if paginator.previous_page == 1 %}
-    <a href="/">Previous</a>
+    <a href="/" class="previous">Previous</a>
     {% else %}
-    <a href="/page{{paginator.previous_page}}">Previous</a>
+    <a href="/page{{paginator.previous_page}}" class="previous">Previous</a>
     {% endif %}
   {% endif %}
   <span class="page_number ">Page: {{paginator.page}} of {{paginator.total_pages}}</span>
   {% if paginator.next_page %}
-    <a href="/page{{paginator.next_page}}" class="next ">Next</a>
+    <a href="/page{{paginator.next_page}}" class="next">Next</a>
   {% endif %}
 </nav>
 

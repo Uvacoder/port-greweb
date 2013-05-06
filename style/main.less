@@ -75,12 +75,6 @@ hr { margin-bottom: 0.2em; }
 small { font-size: .8em; }
 big { font-size: 1.2em; }
 
-* {
-  transition: 200ms;
-  -moz-transition: 200ms;
-  -webkit-transition: 200ms;
-}
-
 /**layout**/
 
 body {
@@ -187,7 +181,6 @@ article .entry-content {
 }
 
 nav.pagination {
-
 }
 
 body>header:after, 
@@ -352,16 +345,29 @@ article {
     margin-top: 1em;
     padding-top: 0.5em;
     border-top: 2px dashed #59D;
-    text-align: right;
+    position: relative;
     .comments {
-      float: left;
-      opacity: 0.5;
+      opacity: 0.8;
+      font-style: italic;
     }
+    .continue-reading {
+      position: absolute;
+      top: -0.5em;
+      right: 0em;
+      font-size: 1em;
+      line-height: 1em;
+      background: #fff;
+      white-space: nowrap;
+    }
+  }
+  hr {
+    clear: both;
   }
   h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
     margin: 1em 0 0.5em 0;
     line-height: 1.5em;
+    clear: both;
   }
   h1 {
     font-size: 1.6em;
@@ -391,7 +397,9 @@ article {
   img {
     height: auto;
     &.thumbnail-left {
+      clear: left;
       float: left;
+      margin-bottom: 1em;
       max-width: 45%;
       margin-right: 2%;
     }
@@ -439,7 +447,15 @@ div.archives {
 
 nav.pagination {
   text-align: center;
-  margin: 0.4em;
+  padding: 0.4em;
+  background: #fff;
+  font-size: 1.2em;
+  .next {
+    float: right;
+  }
+  .previous {
+    float: left;
+  }
 }
 
 article .entry-content {

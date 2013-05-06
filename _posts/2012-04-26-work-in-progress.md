@@ -48,11 +48,11 @@ It is today supported by Firefox 9 , Chrome, Opera and IE10.
 
 ### On Mac OS / Chrome:
 
-![](/images/2012/04/Capture-d’écran-2012-04-26-à-14.59.37.png)
+![](/images/2012/04/progress_mac.png)
 
 ### On IE 6:
 
-![](/images/2012/04/Capture-d’écran-2012-04-26-à-15.20.32.png)
+![](/images/2012/04/progress_ie.png)
 
 ## Let’s see some cases:
 

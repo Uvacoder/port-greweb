@@ -35,10 +35,13 @@ A map editor is not always needed for tile based games, because the map can be s
 
  [12]: http://greweb.fr/blazing-race/maps/converter/
 
-<img src="/images/2012/04/woarpc001.jpg" alt="" class="thumbnail-left" />
+<br style="clear:both" />
 
+<img src="/images/2012/04/woarpc001.jpg" alt="" class="thumbnail-left" />
 **Non-tile based games**, which can be called “polygon based games” are more complex.  
 In such game, like a *Worms* or a *Sonic*, it’s totally crazy to write the map by hand (objects positions, polygons coordinates, …). The alternative, is not to use predefined maps, but on-the-fly generated maps which doesn’t fit every games.  
+
+<br style="clear:both" />
   
 [Here are more detailed work on these different game designs][4].
 

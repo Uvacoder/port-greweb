@@ -17,10 +17,11 @@ tags:
   - javascript
 ---
 
-<img src="/images/2012/02/Capture-d’écran-2012-02-29-à-11.26.01.png" class="thumbnail-left" />
+<img src="/images/2012/02/bezier_transition_editor.png" class="thumbnail-left" />
 
 Many animation libraries are today using **easing functions** – functions of time returning a progression percentage value. This is required to perform such cool effects:
-<iframe src="/demo/simple-easing-animation/"></iframe>
+
+<iframe src="/demo/simple-easing-animation/" height="50" width="50%"></iframe>
 
 But most of these libraries implement a huge collection of functions. We will see how we can generalize them with bezier curves.
 
@@ -60,7 +61,9 @@ The two points P1 and P2 are called **handles** and you can (exclusively) contro
 
 Try to interact with the handles:  
 
-<iframe src="http://greweb.fr/bezier-easing/" frameborder="0" width="560" height="400"></iframe>
+<iframe src="/demo/bezier-easing/" frameborder="0" width="560" height="400"></iframe>
+
+## Implementation
 
 Ok, so, this bezier curve concept is great but how can I implement it?
 

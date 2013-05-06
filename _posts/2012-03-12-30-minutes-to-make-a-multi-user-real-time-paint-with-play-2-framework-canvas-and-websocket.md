@@ -40,6 +40,6 @@ Let’s see how to implement this from scratch in about 30 minutes…
 
 [or try the demo below…][1]
 
-<iframe frameborder="0" src="http://greweb.fr:9090/" width="550" height="400" style="overflow: hidden"></iframe>
+<iframe frameborder="0" src="http://greweb.fr:9090/" width="550" height="501" style="overflow: hidden; max-width: 550px"></iframe>
 
 [Fork me on Github.][6]

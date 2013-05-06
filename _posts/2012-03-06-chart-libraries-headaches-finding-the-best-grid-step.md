@@ -24,12 +24,11 @@ tags:
 
 If you have ever made a chart library in your life, you’ve probably asked yourself how to find the best scale for the grid in order to have **nice values to display in the axis**.
 
-
 Most of the time, **data ranges are unknown**, hence we need to **adapt the grid step** to provide the best display.
 
 ## Check this out
 
-<iframe src="http://greweb.fr/grid-utils/" frameborder="0" width="525" height="140"></iframe>
+<iframe src="/demo/grid-utils/" frameborder="0" width="525" height="140"></iframe>
 
 Let’s explain the algorithm…
 
