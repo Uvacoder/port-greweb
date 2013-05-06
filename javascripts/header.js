@@ -32,7 +32,6 @@
   });
   resize();
 
-
   window.addEventListener("mousemove", function (e) {
     var o = header.getBoundingClientRect();
     mousex = e.clientX + window.scrollX - o.left;
@@ -45,47 +44,64 @@
     return x*x*(3 - 2*x);
   }
   function ellipse (x, y, w, h) { return x*x*w + y*y*h; }
+  function mix (x, y, a) { return x*(1-a) + y*a; }
 
   var width = 1000;
   var height = 90;
   var W = 100;
   var H = 9;
-  var DIST1 = 300 * 300;
+  var DIST1 = 250 * 250;
   var DIST2;
-
 
   var w, h;
   var start = +new Date();
   var t;
   function update() {
-    t = +new Date()-start;
+    t = (+new Date()-start);
     w = width/W;
     h = height/H;
     DIST2 = 80 + 60 * Math.sin( (+new Date() - start) / 500 );
     DIST2 *= DIST2;
   }
 
+  var seed = Math.random();
+  console.log("header seed="+seed);
+
   function getRadiusFor (x, y) {
     var ax = (x+.5)*w;
     var ay = (y+.5)*h;
+    var intensityPhase = (1+Math.cos(t/(1000+200*seed)))/2;
+    var freqPhase = (1+Math.sin(t/(9876-1000*seed)))/2;
+    var speedPhase = (1+Math.cos(seed+t/2432+2000*seed))/2;
+    var intensity = 2+2*smoothstep(0, W, x)*intensityPhase;
+    var freq = 1/5 + (0.2*seed)*freqPhase;
+    var speed = -0.01*(0.8+0.5*seed+0.5*speedPhase);
     var mouse = smoothstep(0, 1, 1- ellipse(ax-(mousex || W/2), ay-(mousey || H/2), 1, 1)/DIST1);
-    var curve1 = smoothstep(0.5, 1, 1-2*Math.abs(smoothstep(0, H, y+(0.5+Math.cos(x/5+t/200)))-0.5));
+    var curve1 = smoothstep(0.5, 1, 1-2*Math.abs(smoothstep(0, H, y+(0.5+intensity*Math.cos(x*freq+t*speed)))-0.5));
+    var noisePhase = smoothstep(0.5, 1, Math.sin(t/(2647+1000*seed)));
+    var noise = Math.random();
+
     var undertext = Math.max(0, Math.min(1, 1-ellipse(ax-130, ay-50, 1, 3)/DIST2));
-    return w * Math.max(0, 0.1 + 0.1*mouse + 0.4*curve1 + -0.2*undertext);
+    return w * Math.max(0, mix(0.1 + 0.15*mouse + 0.4*curve1 + -0.2*undertext, 0.4*noise, 0.8*noisePhase));
   }
 
   function getColor (bg) {
-    var h = 200+20*Math.cos(t/1000), 
-        s = 50, 
-        l = bg ? 40 : 50;
+    var h = 200+seed*55*Math.cos(t/(4678+2000*seed)), 
+        s = Math.floor(50+20*seed), 
+        l = Math.floor((bg ? 40 : 50)*(1+0.5*(seed-0.5)));
     h = Math.floor(constraint(0, 255, h));
     if (!bg && t%5000 < 1000)
       l += 10*smoothstep(0, 100, t%100);
     return 'hsl('+h+','+s+'%,'+l+'%)';
   }
  
+  var OPACITY_TRANSITION_TIME = 10000;
   function render () {
     if (!(window.scrollY < 140)) return;
+    if (t < OPACITY_TRANSITION_TIME) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    ctx.globalAlpha = smoothstep(0, OPACITY_TRANSITION_TIME, t);
     ctx.fillStyle = getColor(true);
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = getColor(false);
