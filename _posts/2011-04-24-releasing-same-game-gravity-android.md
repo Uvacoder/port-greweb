@@ -18,7 +18,7 @@ Following on from the success of my Same game made in HTML5 Canvas, I’ve decid
 
 It’s now available on Android market.
 
-More infos on <http://same.greweb.fr>.
+More infos on <http://gre.github.io/same-game-gravity>.
 
 <iframe width="640" height="360" src="http://www.youtube.com/embed/Qyd69g9hmIY?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
 

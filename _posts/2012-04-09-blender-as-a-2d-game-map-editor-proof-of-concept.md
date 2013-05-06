@@ -31,9 +31,9 @@ A map editor is not always needed for tile based games, because the map can be s
  [4]: http://higherorderfun.com/blog/2012/05/20/the-guide-to-implementing-2d-platformers/
  [5]: http://www.masswerk.at/JavaPac/JS-PacMan2.html
  [6]: http://impactjs.com/documentation/weltmeister
- [7]: http://greweb.fr/blazing-race
+ [7]: http://gre.github.io/blazing-race
 
- [12]: http://greweb.fr/blazing-race/maps/converter/
+ [12]: http://gre.github.io/blazing-race/maps/converter/
 
 <br style="clear:both" />
 

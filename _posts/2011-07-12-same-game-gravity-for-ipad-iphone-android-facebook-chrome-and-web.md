@@ -21,11 +21,11 @@ tags:
 ---
 
  [1]: http://blog.greweb.fr/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/
- [4]: http://same.greweb.fr/
+ [4]: http://gre.github.io/same-game-gravity
  [5]: http://itunes.apple.com/us/app/same-game-gravity-for-ipad/id446790701
  [6]: http://itunes.apple.com/us/app/same-game-gravity/id445606743
  [7]: http://market.android.com/details?id=fr.gaetanrenaudeau.samegame.free
- [8]: http://same.greweb.fr/game
+ [8]: http://gre.github.io/same-game-gravity
  [9]: http://apps.facebook.com/samegamegravity/
  [10]: https://chrome.google.com/webstore/detail/eibjpmiiheipmgfhffjpdmojoagccijb
 

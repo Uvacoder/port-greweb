@@ -22,7 +22,7 @@ see also [Same Game Gravity presentation][1].
 
 2 years ago, I started to developed the [Same Game][2] as an HTML Canvas experiment. I’ve enjoyed developing this game, mostly because playing with HTML5 Canvas is so easy. Recently I’ve seen a nice increase in the user base (now around 250 visitors a day) – despite it being perhaps the simplest games I’ve ever developed. Simplicity is good, but my increase in users is thanks to the power of HTML5: The Same Game is available for 6 different platforms. And I can pump out new builds for them all in around 15 minutes. Here’s how…
 
- [2]: http://same.greweb.fr/
+ [2]: http://gre.github.io/same-game-gravity
 
 **It’s often the simplest games which work. Too much complexity is not good.**
 

@@ -18,7 +18,7 @@ tags:
 ---
 
  [1]: /2011/06/automating-web-app-development-for-multiple-platforms/#webappbuilder
- [2]: http://same.greweb.fr/
+ [2]: http://gre.github.io/same-game-gravity
  [3]: https://github.com/gre/WebAppBuilder
  [4]: http://diveintohtml5.org/
  [6]: http://www.phonegap.com/
