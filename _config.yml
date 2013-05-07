@@ -6,4 +6,4 @@ url: http://greweb.me
 
 tags:
   template: _layouts/archive
-  title: "@GreWeb - {tag}"
+  title: "{tag}"

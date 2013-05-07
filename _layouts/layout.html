@@ -11,7 +11,14 @@
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ page.title }}</title>
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="{{ page.title }}">
+    {% if page.description %}<meta name="twitter:description" content="{{page.description}}">{% endif %}
+    <meta name="twitter:creator" content="@greweb">
+    {% if page.thumbnail %}<meta name="twitter:image:src" content="{{ page.thumbnail }}">{% endif %}
+
+    <title>@GreWeb - {{ page.title }}</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Fredericka+the+Great' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/style/main.css" />
     <link rel="image_src" href="{{post.thumbnail}}" />
