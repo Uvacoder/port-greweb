@@ -1,5 +1,7 @@
 ---
 title: Same Game Gravity for iPad, iPhone, Android, Facebook, Chrome, and Web!
+description: Same Game Gravity is today available on iPad, iPhone, Android, Web, Facebook Apps and Chrome Web Store.
+thumbnail: /images/2011/07/promo.png
 author: Gaetan
 layout: post
 permalink: /2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/

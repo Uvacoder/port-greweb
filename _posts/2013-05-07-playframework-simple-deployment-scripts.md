@@ -1,5 +1,6 @@
 ---
 title: 'Playframework simple deployment scripts'
+description: 'Playframework simple deployment scripts'
 author: Gaetan
 layout: post
 tags:

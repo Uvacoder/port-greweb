@@ -1,5 +1,7 @@
 ---
 title: 'Tutoriel Canvas : Réaliser une bannière animée en quelques lignes de code'
+thumbnail: /images/2010/animated_banner.png
+description: Ce tutoriel vise à présenter canvas comme une librairie très simple d’utilisation et haut niveau grâce au langage javascript.
 author: Gaetan
 layout: post
 permalink: /2010/02/tutoriel-canvas-realiser-une-banniere-animee-en-quelques-lignes-de-code

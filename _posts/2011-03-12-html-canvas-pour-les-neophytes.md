@@ -1,5 +1,6 @@
 ---
 title: HTML Canvas pour les néophytes
+description: Cette vidéo de 20 minutes présente les possibilités du Canvas à travers quelques démos et l’implémentation pas à pas d’un exemple basique.
 author: Gaetan
 layout: post
 permalink: /2011/03/html-canvas-pour-les-neophytes/

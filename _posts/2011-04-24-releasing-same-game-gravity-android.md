@@ -1,5 +1,6 @@
 ---
 title: Releasing Same Game Gravity (Android)
+description: Following on from the success of my Same game made in HTML5 Canvas, I’ve decided to extend it to a (web) mobile game.
 author: Gaetan
 layout: post
 permalink: /2011/04/releasing-same-game-gravity-android/

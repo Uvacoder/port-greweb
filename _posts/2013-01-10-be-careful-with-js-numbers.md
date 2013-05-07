@@ -1,5 +1,6 @@
 ---
 title: Be careful with JS numbers!
+description: Javascript doesn’t have integer type but lets you think it has. In Javascript, all numbers are floating numbers and are prone to floating point approximation.
 author: Gaetan
 layout: post
 permalink: /2013/01/be-careful-with-js-numbers/

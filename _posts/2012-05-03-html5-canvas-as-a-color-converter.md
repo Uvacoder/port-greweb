@@ -1,6 +1,8 @@
 ---
 title: HTML5 Canvas as a color converter
 author: Gaetan
+description: We can implement an anythingToRGBA converter in 10 lines of Javascript!
+thumbnail: /images/2012/05/color-alpha-options.png
 layout: post
 permalink: /2012/05/html5-canvas-as-a-color-converter/
 tags:

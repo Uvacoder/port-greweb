@@ -1,5 +1,6 @@
 ---
 title: Minimize your Javascript files with cURL
+description: use Google Closure Compiler web service to minimize a Javascript file with only cURL.
 author: Gaetan
 layout: post
 permalink: /2012/05/minimize-your-javascript-files-with-curl/

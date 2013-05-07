@@ -1,5 +1,7 @@
 ---
 title: Zound, a PlayFramework 2 audio streaming experiment using Iteratees
+description: Zound uses an audio generator (JSyn, an audio synthesizer), encode the output and stream it all using Play Iteratees to pipe everything in real-time.
+thumbnail: /images/2012/07/ZOUND.png
 author: Gaetan
 layout: post
 permalink: /2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/

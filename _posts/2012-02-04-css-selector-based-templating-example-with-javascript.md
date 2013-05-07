@@ -1,5 +1,7 @@
 ---
 title: CSS-selector-based templating system for scalable JavaScript applications
+description: In this article, we will focus on the power of CSS as a descriptive language, current template system approach and their problems with modularity and extensibility, and try to mix both features from the concept to a concrete implementation.
+thumbnail: /images/2012/02/218px-Mir_diagram-fr.svg_.png
 author: Gaetan
 layout: post
 permalink: /2012/02/css-selector-based-templating-example-with-javascript/

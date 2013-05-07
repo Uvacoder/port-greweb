@@ -1,5 +1,7 @@
 ---
 title: 'Same Game Gravity: 6 platforms, 1 codebase'
+thumbnail: /images/2011/07/gravity_exemple.png
+description: The Same Game is available for 6 different platforms. And I can pump out new builds for them all in around 15 minutes. Here’s how…
 author: Gaetan
 layout: post
 permalink: /2011/07/same-game-gravity-technical-notes/

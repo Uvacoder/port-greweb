@@ -1,5 +1,6 @@
 ---
 title: 'Improve your web navigation experience &#8211; Flexible Nav jQuery library'
+description: Flexible Nav is a small jQuery library which add a smart navigation bar on the right of the page. It improves a web page navigation and helps to visualize different sections of a document, an article,.. any web page.
 author: Gaetan
 layout: post
 permalink: /2011/07/improve-your-web-navigation-experience-flexible-nav-jquery-library/

@@ -1,5 +1,7 @@
 ---
 title: 30 minutes to make a multi user real time paint with Play 2 framework, Canvas and WebSocket.
+description: "[VIDEO] I will show you how to implement a multi user paint using latest web technologies like Play framework (version 2), HTML5 Canvas and WebSocket."
+thumbnail: /images/2012/03/playpainter_teaser2.png
 author: Gaetan
 layout: post
 permalink: /2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/

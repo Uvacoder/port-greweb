@@ -4,8 +4,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="author" content="Gaëtan Renaudeau" />
-    <meta name="description" content="@GreWeb - embrace standard web technologies for web, games and mobile apps" />
-    <meta name="keywords" content="html5,css3,web,playframework,mobile,bbg,videos,tutorial,programming,javascript,jquery,websocket,webworkers,canvas" />
+    <meta name="description" content="{{ page.description }}" />
+    <meta name="keywords" content="{% for tag in site.tags %}{{tag | first}},{% endfor %}" />
     
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -16,12 +16,14 @@
     <meta name="twitter:title" content="{{ page.title }}">
     {% if page.description %}<meta name="twitter:description" content="{{page.description}}">{% endif %}
     <meta name="twitter:creator" content="@greweb">
-    {% if page.thumbnail %}<meta name="twitter:image:src" content="{{ site.url }}{{ page.thumbnail }}">{% endif %}
+    {% if page.thumbnail %}
+    <meta name="twitter:image:src" content="{{ site.url }}{{ page.thumbnail }}">
+    <link rel="image_src" href="{{ site.url }}{{ page.thumbnail }}">
+    {% endif %}
 
     <title>@GreWeb - {{ page.title }}</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Fredericka+the+Great' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/style/main.css" />
-    <link rel="image_src" href="{{post.thumbnail}}" />
     <link rel='shortcut icon' href='/favicon.png' />
   </head>
   <body>

@@ -1,5 +1,7 @@
 ---
 title: 'Play Painter &#8211; how i&#8217;ve improved the 30 minutes prototyped version'
+description: One week ago, I’ve released a web experiment featuring a collaborative Paint-like application made with Play Framework 2 and relying on WebSocket and HTML5 Canvas. Here is how I've improved it.
+thumbnail: /images/2012/03/twitt_playpainter.png
 author: Gaetan
 layout: post
 permalink: /2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/

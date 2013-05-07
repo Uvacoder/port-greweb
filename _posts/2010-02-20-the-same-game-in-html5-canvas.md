@@ -1,5 +1,6 @@
 ---
 title: The same game in HTML5 canvas
+thumbnail: /images/2010/same_game_screenshot.png
 author: Gaetan
 layout: post
 permalink: /2010/02/the-same-game-in-html5-canvas/

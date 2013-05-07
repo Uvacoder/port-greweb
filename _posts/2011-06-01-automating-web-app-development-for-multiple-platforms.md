@@ -1,5 +1,7 @@
 ---
 title: Automating Web App development for multiple platforms
+description: In this article, we will explain why we’d choose web technologies to make applications and introduce WebAppBuilder, a tool to easily build different instances of an application. We’ll examine the Same Game Gravity as an example.
+thumbnail: /images/2011/webappmaker.png
 author: Gaetan
 layout: post
 permalink: /2011/06/automating-web-app-development-for-multiple-platforms/

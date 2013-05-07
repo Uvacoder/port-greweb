@@ -1,5 +1,6 @@
 ---
 title: 'PlayCLI: Play Iteratees + UNIX pipe'
+description: PlayCLI is a new Scala library to work with UNIX commands and Play-Iteratees (a scala implementation of Iteratees facilitating the handling of data streams reactively)
 author: Gaetan
 layout: post
 permalink: /2013/01/playcli-play-iteratees-unix-pipe/
