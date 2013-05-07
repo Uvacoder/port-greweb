@@ -87,7 +87,7 @@ this.set("myVector2", { x: 1.3, y: 2.4 });
 // ... see also this.sync() and this.syncAll()
 ```
 
-* * *
+<!-- more -->
 
 More technically, **glsl.js** is a subset* of a WebGL library which focus on **making the GLSL (OpenGL Shading Language) easy and accessible** for vizualisation and game purposes (2D or 3D).
 
@@ -113,8 +113,6 @@ However, using Chrome Beta, I’m able to run my HTML5 game at 60fps on my Nexus
 <iframe width="640" height="360" src="http://www.youtube.com/embed/EzTCdjpdTfk?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
 
 *Enough talking, let’s see some examples now…*
-
-<!-- more -->
 
 ### [][11]Hello World Example
 
