@@ -11,7 +11,7 @@ tags:
 
  [1]: http://gre.github.io/flexible-nav/demo
  [3]: https://github.com/gre/flexible-nav
- [4]: javascript:(function(){window.flexibleNavBase='http://lib.greweb.fr/flexible-nav/';var%20a=document.getElementsByTagName('head')[0],b=document.createElement('script');b.type='text/javascript';b.src=flexibleNavBase+'bookmarklet.min.js';a.appendChild(b);})();%20void%200
+ [4]: javascript:(function(){window.flexibleNavBase='http://gre.github.io/flexible-nav/lib/';var%20a=document.getElementsByTagName('head')[0],b=document.createElement('script');b.type='text/javascript';b.src=flexibleNavBase+'bookmarklet.min.js';a.appendChild(b);})();%20void%200
 
 ## [Demo][1]
 

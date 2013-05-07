@@ -9,7 +9,7 @@ tags:
   - canvas
 ---
 
- [1]: http://blog.greweb.fr/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/
+ [1]: /2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/
  [4]: http://gre.github.io/same-game-gravity
  [5]: http://itunes.apple.com/us/app/same-game-gravity-for-ipad/id446790701
  [6]: http://itunes.apple.com/us/app/same-game-gravity/id445606743
@@ -20,7 +20,7 @@ tags:
 
 see also [Same Game Gravity Technical Notes][1].
  
-# <http://same.greweb.fr>
+# [Click to play][4]
 
 ![](/images/2011/07/promo.png)
 

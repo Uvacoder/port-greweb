@@ -10,6 +10,15 @@ tags:
   - javascript
 ---
 
+ [1]: /images/2012/02/Capture-d’écran-2012-02-29-à-11.26.01.png "Bezier example"
+ [2]: /images/2012/02/TimingFunction.png
+ [3]: http://13thparallel.com/archive/bezier-curves/
+ [4]: http://en.wikipedia.org/wiki/Newton%27s_method
+ [5]: http://en.wikipedia.org/wiki/Dichotomic_search
+ [6]: http://sliderjs.org/
+ [7]: http://en.wikipedia.org/wiki/Inventor's_paradox
+ [8]: /2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/ "Bezier Curve based easing functions – from concept to implementation"  
+
 <img src="/images/2012/02/bezier_transition_editor.png" class="thumbnail-left" />
 
 Many animation libraries are today using **easing functions** – functions of time returning a progression percentage value. This is required to perform such cool effects:
@@ -102,12 +111,3 @@ I have now found **a common way to describe easing functions for both CSS-based 
 
 This example has shown that sometimes, finding a larger solution for a problem is more interesting than having specific solutions.  
 **This is called the [Inventor’s paradox][7].**
-
- [1]: /images/2012/02/Capture-d’écran-2012-02-29-à-11.26.01.png "Bezier example"
- [2]: /images/2012/02/TimingFunction.png
- [3]: http://13thparallel.com/archive/bezier-curves/
- [4]: http://en.wikipedia.org/wiki/Newton%27s_method
- [5]: http://en.wikipedia.org/wiki/Dichotomic_search
- [6]: http://sliderjs.org/
- [7]: http://en.wikipedia.org/wiki/Inventor's_paradox
- [8]: http://blog.greweb.fr/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/ " Bezier Curve based easing functions – from concept to implementation"  

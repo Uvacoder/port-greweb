@@ -12,12 +12,12 @@ tags:
 
 One week ago, I’ve released a [technical web experiment][1] featuring **a collaborative real-time Paint-like application I’ve called Play Painter**. It has been made with [Play Framework 2][2] and rely on WebSocket and HTML5 Canvas Javascript APIs.
 
- [1]: http://blog.greweb.fr/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/
+ [1]: /2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/
  [2]: http://playframework.org/
  [4]: https://github.com/playframework/Play20/wiki/Iteratees
  [5]: https://github.com/gre/playpainter/blob/master/scala/app/controllers/Application.scala
  [6]: http://github.com/gre/playpainter
- [7]: http://greweb.fr:9090/
+ [7]: http://playpainter.greweb.fr/
  [8]: https://github.com/gre/playpainter/issues/1
  [9]: https://twitter.com/dbathily
 
@@ -164,7 +164,7 @@ The application has been improved in many other ways.
 
 ## The demo is still online!
 
-[**greweb.fr:9090**][7]
+**[playpainter.greweb.fr][7]**
 
 ## Future
 

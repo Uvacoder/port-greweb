@@ -9,13 +9,33 @@ tags:
   - canvas
 ---
 
-see also [Same Game Gravity presentation][1].
+ [1]: /2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/
+ [2]: http://gre.github.io/same-game-gravity
+ [4]: /2011/06/automating-web-app-development-for-multiple-platforms/
+ [5]: https://github.com/gre/same-game-gravity
+ [6]: https://github.com/gre/same-game-gravity/blob/master/game.html
+ [7]: https://github.com/gre/same-game-gravity/blob/master/game.css
+ [8]: https://github.com/gre/same-game-gravity/blob/master/game.js
+ [9]: https://github.com/gre/same-game-gravity/blob/master/game.js#L324
+ [10]: https://github.com/gre/same-game-gravity/blob/master/game.js#L687
+ [11]: https://github.com/gre/same-game-gravity/blob/master/game.js#L850
+ [12]: https://github.com/gre/same-game-gravity/blob/master/game.desktop.js
+ [13]: https://github.com/gre/same-game-gravity/blob/master/game.desktop.js#L137
+ [14]: http://docs.phonegap.com/phonegap_accelerometer_accelerometer.md.html
+ [15]: http://dev.w3.org/geo/api/spec-source-orientation.html
+ [16]: http://twitter.com/42loops
+ [17]: https://github.com/peutetre/test-mobile-safari/blob/master/devicemotionevent.html
+ [18]: /images/2011/07/c-rotation.png
+ [19]: https://github.com/gre/same-game-gravity/blob/master/game.desktop.js#L31
+ [20]: https://github.com/gre/same-game-gravity/blob/master/index.css#L35
+ [21]: http://playframework.org/
+ [22]: /images/2011/07/same_game_gravity_schema.jpg
+ [23]: http://same.greweb.fr/public/javascripts/same.scores.js
 
- [1]: http://blog.greweb.fr/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/
+see also [Same Game Gravity presentation][1].
 
 2 years ago, I started to developed the [Same Game][2] as an HTML Canvas experiment. I’ve enjoyed developing this game, mostly because playing with HTML5 Canvas is so easy. Recently I’ve seen a nice increase in the user base (now around 250 visitors a day) – despite it being perhaps the simplest games I’ve ever developed. Simplicity is good, but my increase in users is thanks to the power of HTML5: The Same Game is available for 6 different platforms. And I can pump out new builds for them all in around 15 minutes. Here’s how…
 
- [2]: http://gre.github.io/same-game-gravity
 
 **It’s often the simplest games which work. Too much complexity is not good.**
 
@@ -37,7 +57,6 @@ But, many of my friends don’t have Android phones!
 
 The Same Game Gravity is now available for iPad, iPhone, Android, Facebook, Chrome Store and desktop browsers. That’s a lot of platforms, with a lot of APIs to learn – and potentially a LOT of work in maintenance. But thankfully I didn’t have to go off learning Objective-C and Java Android, or keep track of arm-fulls of repositories! All the platforms are supported from **a single codebase**: thanks to the power and awesomeness of JavaScript, HTML, and CSS – combined with a nifty tool I developed [WebAppBuilder][4] to easily build each instance.
 
- [4]: /2011/06/automating-web-app-development-for-multiple-platforms/
 
 **I added a cool scoring system that spreads via multiple social networks simultaneously and easily – and now I have a truly cross-platform game!**
 
@@ -45,13 +64,11 @@ The Same Game Gravity is now available for iPad, iPhone, Android, Facebook, Chro
 
 Desktop version source code is available on [Github][5].
 
- [5]: https://github.com/gre/same-game-gravity
 
 #### The HTML
 
 (see [game.html][6])
 
- [6]: https://github.com/gre/same-game-gravity/blob/master/game.html
 
 The HTML code is pretty simple.  
 Basically, there is a **container which contains different**. Each section is a view of the game.
@@ -81,7 +98,6 @@ In the desktop version, **game.html** is wrapped into **index.html** in an ifram
 
 (see [game.css][7])
 
- [7]: https://github.com/gre/same-game-gravity/blob/master/game.css
 
 CSS 3 is very rich.
 
@@ -124,7 +140,6 @@ CSS Transitions and CSS Transforms has been used to do view change.
 
 (see [game.js][8])
 
- [8]: https://github.com/gre/same-game-gravity/blob/master/game.js
 
 Code is organized in different javascript “classes”.
 
@@ -134,19 +149,14 @@ The main components are :
 *   [game.GameCanvasRenderer][10] is a game renderer (graphic part of the game) based on HTML Canvas element. It contains different functions called by **game.Game**.
 *   [game.Game][11] contains all the game logic, the game loop and bind DOM events (touch, click, …).
 
- [9]: https://github.com/gre/same-game-gravity/blob/master/game.js#L324
- [10]: https://github.com/gre/same-game-gravity/blob/master/game.js#L687
- [11]: https://github.com/gre/same-game-gravity/blob/master/game.js#L850
 
 #### game.desktop.js: a game instance for the desktop
 
 (see [game.desktop.js][12])
 
- [12]: https://github.com/gre/same-game-gravity/blob/master/game.desktop.js
 
 This file contains all the specific code for the desktop version (it overrides existing classes). But it mainly contains the [game controller][13] handling different views and using all game classes.
 
- [13]: https://github.com/gre/same-game-gravity/blob/master/game.desktop.js#L137
 
 ##### Some significant code
 
@@ -193,35 +203,25 @@ The game gravity was maybe the hardest part of the game development.
 
 I needed to find ways to access to the device accelerometer. For Android I used [PhoneGap Accelerometer][14]. But on iPhone I wasn’t able to get PhoneGap’s accelerometer.getCurrentAcceleration to work properly, so I used DeviceMotion event supported by iOS 4.2 . (see [DeviceOrientation spec][15]).
 
- [14]: http://docs.phonegap.com/phonegap_accelerometer_accelerometer.md.html
- [15]: http://dev.w3.org/geo/api/spec-source-orientation.html
-
 (A big thanks to [@42loops][16] for that: [devicemotionevent.html][17])
 
- [16]: http://twitter.com/42loops
- [17]: https://github.com/peutetre/test-mobile-safari/blob/master/devicemotionevent.html
 
 ![Device orientation schema][18]
 
- [18]: /images/2011/07/c-rotation.png
 
 #### CSS Transforms and Transitions for the desktop version
 
 Computers don’t have an Accelerometer. *Except maybe some macbook but I’m not sure people would like to turn macbook in 360°!* but the gravity concept is crucial to the game. I ended up implementing “gravity” via the arrow keys.  
 The game is entirely rotated with [CSS Transforms][19] and animated with [CSS Transitions][20].
 
- [19]: https://github.com/gre/same-game-gravity/blob/master/game.desktop.js#L31
- [20]: https://github.com/gre/same-game-gravity/blob/master/index.css#L35
 
 ### The score system
 
 I’ve written a web service with [Play! framework][21] to receive scores or retrieve them from Twitter, validate them and spread them with a json API and widgets.
 
- [21]: http://playframework.org/
 
 ![tweet example][22]
 
- [22]: /images/2011/07/same_game_gravity_schema.jpg
 
 **This web service will be available soon for game developers.**
 
@@ -237,8 +237,6 @@ If a player has played a few different games using this web scores service, we c
 #### The Same Game Gravity Widget
 
 Same Game Gravity use its own widget ([source code here][23]).
-
- [23]: http://same.greweb.fr/public/javascripts/same.scores.js
 
 This widget is very customizable. Here’s an example of the code used to embed the widget anywhere (like in this blog post) :
 
@@ -278,6 +276,5 @@ Want to checkout the code or contribute to the game i18n? Just fork the [game re
 #### Thanks
 
 Big thanks to all game testers. Friends and colleagues, thank you very much!  
-Special thanks to @mrspeaker for English help ![:)][24] 
+Special thanks to @mrspeaker for English help !
 
- [24]: http://blog.greweb.fr/wp-includes/images/smilies/icon_smile.gif

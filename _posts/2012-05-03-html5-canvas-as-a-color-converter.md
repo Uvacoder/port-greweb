@@ -9,7 +9,7 @@ tags:
   - color
 ---
 
- [2]: http://demo.greweb.fr/illuminated.js/
+ [2]: http://gre.github.io/illuminated.js/
  [3]: https://github.com/bgrins/spectrum
  [4]: http://www.w3.org/TR/css3-color/
 

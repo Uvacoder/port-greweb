@@ -95,19 +95,8 @@ More properties are available to specify more deeply transition effects. Retriev
 
 Here are some CSS transition examples.
 
-### Box effects
-
-[![A box with color, text, shapes transformation.](http://blog.greweb.fr/wp-content/uploads/2010/05/box11.png)](http://greweb.fr/demo/css3/transition/box1/)
-
-### Letters
-
-[![Letters animation.](http://greweb.fr/demo/css3/transition/letters/letters.png)](http://greweb.fr/demo/css3/transition/letters/)
-
-### Slider  
-
-[![Image slider.](http://greweb.fr/demo/css3/transition/slider/slider.png)](http://greweb.fr/demo/css3/transition/slider/) 
-
-### Navigation bar  
-
-[![Navigation bar.](http://greweb.fr/demo/css3/transition/navbar/screenshot.png)](http://greweb.fr/demo/css3/transition/navbar/)
+* [A box with color, text, shapes transformation.](/demo/css3/transition/box1/)
+* [Letters animation.](/demo/css3/transition/letters/)
+* [Image slider.](http://sliderjs.org/)
+* [Navigation bar.](/demo/css3/transition/navbar/)
 

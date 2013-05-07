@@ -13,17 +13,17 @@ tags:
 
  [1]: http://scala-lang.org
  [2]: http://www.playframework.org/documentation/2.0/Iteratees
- [3]: http://greweb.fr/playcli/api
+ [3]: http://gre.github.io/playCLI-examples/api
  [4]: http://github.com/gre/playCLI
  [5]: http://github.com/gre/playCLI-examples
- [6]: http://blog.greweb.fr/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/
+ [6]: /2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/
  [7]: http://mandubian.com/2012/08/27/understanding-play2-iteratees-for-normal-humans/
- [8]: http://greweb.fr/playcli/api/#enumerate(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator[Array[Byte]]
+ [8]: http://gre.github.io/playCLI-examples/api/#enumerate(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator[Array[Byte]]
  [9]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Enumerator
- [10]: http://greweb.fr/playcli/api/#pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]
+ [10]: http://gre.github.io/playCLI-examples/api/#pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]
  [11]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Enumeratee
 
- [12]: http://greweb.fr/playcli/api/#consume(command:scala.sys.process.ProcessBuilder,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Iteratee[Array[Byte],Int]
+ [12]: http://gre.github.io/playCLI-examples/api/#consume(command:scala.sys.process.ProcessBuilder,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Iteratee[Array[Byte],Int]
  [13]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Iteratee
  [14]: http://www.scala-lang.org/api/current/index.html#scala.sys.process.package
  [15]: http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Done$
@@ -33,7 +33,7 @@ tags:
 
 > **TL;DR.** PlayCLI is a new [Scala][1] library to work with UNIX commands and [Play-Iteratees][2] (a scala implementation of Iteratees facilitating the handling of data streams reactively). Here’s an overview:
 
-<iframe src="http://greweb.fr/playcli/embedder.html#index.html" frameborder="0" width="550" height="452"></iframe>
+<iframe src="http://gre.github.io/playCLI-examples/embedder.html#index.html" frameborder="0" width="550" height="452"></iframe>
 
 ## Links
 

@@ -13,7 +13,7 @@ tags:
  [2]: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html
  [3]: http://www.mrspeaker.net/dev/parcycle/
  [4]: http://en.inforapid.org/
- [5]: http://greweb.fr/demo/same/
+ [5]: http://gre.github.io/same-game-gravity
  [6]: http://fizz.bloom.io/ 
  [7]: http://easeljs.com/
  [8]: http://processingjs.org/ 

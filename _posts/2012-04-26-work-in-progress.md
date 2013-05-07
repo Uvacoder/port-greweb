@@ -8,8 +8,6 @@ tags:
   - javascript
 ---
 
- [4]: http://greweb.fr/progress/
-
 **Did you know browsers now have a built-in HTML tag for making progress bar?** 
 
 <progress style="width: 50%">(progress is not supported)</progress>
@@ -110,8 +108,6 @@ req.addEventListener("load", function (e) {
 req.open("GET","resource.dat",true);
 req.send();
 ```
-
-**[See it in action here.][4]** 
 
 It is quite easy to extend my code to support multiple files to download.
 

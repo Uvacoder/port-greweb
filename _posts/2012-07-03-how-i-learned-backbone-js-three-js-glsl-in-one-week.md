@@ -41,7 +41,7 @@ This is the result:
 
 and you can play it here:
 
-[http://dta.greweb.fr/][4]
+**[Play the game][4]**
 
 <!-- more -->
 
