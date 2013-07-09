@@ -4,11 +4,14 @@ description: 'This article is the first of a series of small articles on the Q J
 author: Gaetan
 layout: post
 tags:
+ - AWOP
  - javascript
  - promise
+ - Q
  - library
 ---
 
+[0]: /tags/AWOP/
 [1]: http://github.com/kriskowal/q
 [2]: http://github.com/gre/qimage
 [3]: https://github.com/kriskowal
@@ -20,7 +23,7 @@ tags:
 [9]: http://wiki.commonjs.org/wiki/Promises/A
 [10]: http://tritarget.org/blog/2012/11/28/the-pyramid-of-doom-a-javascript-style-trap/
 
-# A World Of Promises, episode 1
+# [A World Of Promises][0], episode 1
 
 *This article is the first of a series of small articles 
 on the Q Javascript library and its eco-system.
