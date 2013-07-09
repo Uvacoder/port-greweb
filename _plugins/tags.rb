@@ -43,7 +43,6 @@ module Jekyll
       end
     end
 
-
     module SitePatch
       def tags_config
         @tags_config ||= Configuration.new(self.config['tags'] || {})
@@ -74,6 +73,10 @@ module Jekyll
         template << '.html' if File.extname(template).empty?
 
         @template ||= Pathname.new(site.source).join(template)
+      end
+
+      def uses_relative_permalinks
+        false
       end
 
       def url
