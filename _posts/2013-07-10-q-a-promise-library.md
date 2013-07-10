@@ -1,6 +1,7 @@
 ---
 title: 'Qep1.: Q, a Promise library'
 description: 'This article is the first of a series of small articles on the Q Javascript library and its eco-system. It is a brief introduction to Q Promises.'
+thumbnail: /images/2013/07/promise_then_thumbnail.jpg
 author: Gaetan
 layout: post
 tags:
@@ -11,7 +12,7 @@ tags:
  - library
 ---
 
-[0]: /tags/AWOP/
+[0]: /pages/a-world-of-promises/
 [1]: http://github.com/kriskowal/q
 [2]: http://github.com/gre/qimage
 [3]: https://github.com/kriskowal
@@ -27,7 +28,7 @@ tags:
 
 *This article is the first of a series of small articles 
 on the Q Javascript library and its eco-system.
-It is a brief introduction to Q Promises.*
+This article is a brief introduction to Q Promises.*
 
 <img src="/images/2013/07/promise_then_thumbnail.jpg" alt="" class="thumbnail-left" />
 
@@ -195,4 +196,7 @@ getFlickrJson("Paris", function (imagesMeta) {
 Next episode, we will show you how to create your own Promises with *Deffered* objects.
 We will introduce **Qimage**, a simple Image loader wrapped with Q.
 
+---
 
+Special Kudos to <a href="http://twitter.com/42loops">@42loops</a> & <a href="http://twitter.com/bobylito">@bobylito</a>
+for bringing Q in my developer life :-P

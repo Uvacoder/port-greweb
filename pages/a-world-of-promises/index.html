@@ -1,0 +1,26 @@
+---
+layout: layout
+---
+
+<div class="archives archives-with-thumbnail">
+  <header>
+  <h3>A World Of Promises</h3>
+  <blockquote>
+    <strong>A World Of Promises</strong> is a series of articles 
+    on the <a href="http://github.com/kriskowal/q">Q</a> Javascript library and its eco-system.
+  </blockquote>
+  </header>
+  <ul>
+    {% for post in site.posts reversed %}
+      {% if post.tags contains "AWOP" %}
+      <li>
+        <a class="post" href="{{ post.url }}">
+          <img class="thumbnail" src="{{ post.thumbnail }}" alt="" />
+          <span class="title">{{ post.title }}</span>
+        </a>
+      </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+

@@ -1,7 +1,8 @@
 ---
 published: false
-title: 'Qep3.: Zanimo.js, a promise-based animation library'
+title: 'Qep4.: Zanimo.js, a promise-based animation library'
 description: 'Zanimo.js, a promise-based animation library'
+thumbnail: /images/2013/07/zanimo_animation_thumbnail.png
 author: Gaetan
 layout: post
 tags:
@@ -13,7 +14,7 @@ tags:
  - library
 ---
 
- [0]: /tags/AWOP/
+ [0]: /pages/a-world-of-promises/
  [1]: http://t.co/OeSukzxv3F
  [2]: http://github.com/42loops/Zanimo.js
  [3]: http://twitter.com/42loops

@@ -454,6 +454,43 @@ div.archives {
       }
     }
   }
+
+  blockquote {
+    margin: 1.2em;
+    font-style: italic;
+    position: relative;
+    font-size: 1.2em;
+    line-height: 1.5em;
+    padding-left: 1em;
+    border-left: 4px solid #ddd;
+    cite {
+      font-style: italic;
+      &:before {
+        content: '\2014'; 
+        padding-right: .3em; 
+        padding-left: .3em;
+      }
+    }
+  }
+
+  &.archives-with-thumbnail {
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    a.post {
+      margin: 0;
+      .title {
+        font-size: 1.5em;
+      }
+    }
+    .thumbnail {
+      height: 80px;
+      width: 80px;
+      vertical-align: middle;
+    }
+  }
 }
 
 nav.pagination {
