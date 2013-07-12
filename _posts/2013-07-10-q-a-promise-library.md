@@ -147,11 +147,14 @@ we can properly **handle the error in one row** because one of the following ste
 
 This is called **propagation** and is exactly how **exceptions** work.
 
-See how **Promise Error Handling** looks like **Exception Handling**:
+**Promise Error Handling** really looks like **Exception Handling**.
 
-***N.B.***: *the following code is not possible in Javascript,
-where we can't properly make synchronous (blocking) functions,
-but this shows how close the Promise style is.*
+If it would be possible to have two methods:
+
+* `getFlickrJsonSync` is a `(search: String) => Array of ImageMeta`.
+* `loadImageSync` is a `(imageMeta: ImageMeta) => DOM Image`.
+
+Then, the blocking code would look like this:
 
 ```javascript
 try {
@@ -163,6 +166,8 @@ try {
   displayError(e);
 }
 ```
+
+*...which is very close to Promise style.*
 
 **Q Promises also unify Exceptions and Rejected Promises**:
 throwing an exception in any Q callback will result in a rejected Promise.
