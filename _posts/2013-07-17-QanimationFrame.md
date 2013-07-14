@@ -64,10 +64,12 @@ function goodRenderFunction() {
 
 More information on `requestAnimationFrame` can be found [here][3] or [here][4].
 
-We will now talk about another interesting benefit of that function.
-
 ### ...for waiting a DOM update
+
+We will now focus on another interesting benefit of that function:
+
+TODO
 
 ## QanimationFrame
 
-
+TODO
