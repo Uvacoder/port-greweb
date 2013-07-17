@@ -47,7 +47,8 @@ It takes one argument in parameters which is **the function to call on next repa
 In that example, the `render` function can contains any Javascript code which updates
 some graphics either using Canvas or DOM.
 
-A good practice is to always compute time-relative animation and not assuming the frame rate will be constant.
+A good practice is to always **compute time-relative** animations and 
+never assume the framerate to be constant.
 
 ```javascript
 function badRenderFunction() {
@@ -77,24 +78,24 @@ Instead of using `requestAnimationFrame` for a render loop,
 **you can use it only once** in order to **wait for the next DOM update**.
 
 There is a lot of use-cases where you need to wait for the next DOM update 
-but most of the code we see on the internet is using a `setTimeout` with an arbitrary time
+and `requestAnimationFrame` is perfect for that.
+
+Most of the code you can see on the internet rely on using a `setTimeout` with an arbitrary time
 given in second parameters *(sometimes 30, sometimes 0 !?)*.
-This seems wrong because you will never know if the repaint has 
+This is, in my humble opinion, a wrong approach because you will never know if the repaint has 
 really been performed.
-
-`requestAnimationFrame` fits that need!
-
 
 ## QanimationFrame
 
-`QanimationFrame` is a function which takes a DOM Element in parameter and return a 
-Promise of that "ready" DOM element.
+`QanimationFrame` is a function which takes a **DOM Element** in parameter and return a 
+**Promise of that "ready" DOM element**.
 
 **`QanimationFrame (elt: DOM Element) => Promise[DOM Element]`**
 
 **N.B.:** Even if `requestAnimationFrame` doesn't have anymore a second *DOM element* parameter,
 I found it quite cool that you can give it as argument and retrieve it back to manipulate it.
 It also makes the function more composable because it behaves like an identity Promise function.
+We will also see benefits when using with other DOM Promise libraries.
 
 ### Basic example
 
@@ -128,6 +129,8 @@ height.then(function(height){
   console.log("height is "+height);
 });
 ```
+
+There is of-course a lot of more examples and use-cases of that library.
 
 ## Next episode
 
