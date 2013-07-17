@@ -1,6 +1,6 @@
 ---
 title: 'Qep3.: QanimationFrame'
-description: 'TODO'
+description: 'This third article on Q is a little parenthesis to the Qep articles series, featuring the requestAnimationFrame Javascript function and its general usage, and QanimationFrame, its Promisified version used as a "wait for DOM to be ready" API.'
 thumbnail: /images/2013/07/qanimationframe.jpg
 author: Gaetan
 layout: post
