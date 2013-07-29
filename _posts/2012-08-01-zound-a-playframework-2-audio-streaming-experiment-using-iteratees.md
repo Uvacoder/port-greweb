@@ -9,6 +9,7 @@ tags:
   - audio
   - iteratee
   - playframework
+  - hackday
 ---
 
 ![ZOUND](/images/2012/07/ZOUND.png)
