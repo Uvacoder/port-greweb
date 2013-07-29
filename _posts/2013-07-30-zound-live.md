@@ -112,14 +112,19 @@ I found Backbone.js especially good when linking all parts together and especial
 A lot of features has been inspired from existing software like *SunVox* or *Renoise*.
 However, our version uses 100% web technologies and add collaborative and real time aspects.
 
+<img src="/images/2013/07/sunvox.png" style="max-width: 300px" />
+
 ### Tracker
 
 The application has a [tracker][tracker] where you can put notes.
 
-### Audio
+<img src="/images/2013/07/tracker.png" style="max-width: 300px" />
+
+### Modular Audio
 
 The application integrates a [modular music](http://en.wikipedia.org/wiki/Modular_software_music_studio) concepts.
 
+<img src="/images/2013/07/nodeeditor.png" />
 
 ## More to come!
 
