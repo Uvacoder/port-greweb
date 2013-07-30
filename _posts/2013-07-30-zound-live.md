@@ -1,6 +1,6 @@
 ---
 title: 'ZOUND live project initiated'
-description: 'Last week, I initiated ZOUND live during our monthly Hackday at Zenexity, following my previous "ZOUND" experiment but being much more ambitious this time: using both the Audio API, the new MIDI API and electronic music software experience, we start our own web collaborative audio modular tracker.'
+description: 'Last week, I initiated ZOUND live, following my previous "ZOUND" experiment but being much more ambitious this time: using both the Audio API, the new MIDI API and electronic music software experience, we start our own web collaborative audio modular tracker.'
 thumbnail: /images/2013/07/nanokontrol.jpg
 author: Gaetan
 layout: post
@@ -81,9 +81,9 @@ but I never succeed to make it working. Today, the state of the API seems still 
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 Well, that was already too late for the Hackday,
-Fortunately we used a polyfill which relies on a Java applet to access MIDI devices, it is a laggy polyfill though...
+Fortunately we fallbacked on an alternative which relies on a Java applet to access MIDI devices, it is a laggy polyfill though...
 
-**Lesson learned:** nightly feature is nightly feature, never assume features you add via flags are stable *(I never did, it was a Hackday afterall!)*.
+**Lesson learned:** nightly feature is nightly feature, never assume features you add via flags are stable *(I never did, but it was a Hackday afterall!)*.
 
 BTW, cheers to <a href="https://twitter.com/toyoshim">@toyoshim</a> who is implementing the MIDI API in Chrome :-)
 
@@ -91,21 +91,33 @@ BTW, cheers to <a href="https://twitter.com/toyoshim">@toyoshim</a> who is imple
 
 The [Web Audio API][webaudioapi] is *a high-level JavaScript API for processing and synthesizing audio in web applications*.
 
-Awesome thing with that API, it is already an audio modular API, so it isn't so hard to build a modular audio application on top of it!
+Awesome thing with that API, it is already an **modular audio API**, so it isn't so hard to build a modular audio application on top of it!
 
 ### Playframework
 
-[Playframework](http://playframework.com/) has been used for broadcasting events 
-between clients via WebSocket and synchronize everything on the interface.
+[Playframework](http://playframework.com/) has been used for **broadcasting events 
+between clients via WebSocket and synchronize everything on the interface**.
 It is only broadcasting and does not save the song yet.
 
 ### Backbone.js
 
-[Backbonejs](backbonejs.org) was used for the models, views and its nice event system.
+[Backbonejs](backbonejs.org) was used for the **models**, **views** and its nice **event system**.
 It was a good library for prototyping and architecture the different parts of the application.
 
-I found Backbone.js especially good when linking all parts together and especially for the network logic:
+I found Backbone.js especially good when linking all parts together and especially for the network logic.
+This leads to a very reactive manner of programming:
+
 <script src="https://gist.github.com/gre/6107277.js"></script>
+
+We will probably refactor that code to make it less spaghetti 
+by using the Backbone.js syntax for multiple events binding:
+
+```javascript
+network.on({
+  "foo": function () {...},
+  "bar": function () {...}
+});
+```
 
 ## Inspiration
 
@@ -131,7 +143,7 @@ The application integrates a [modular music](http://en.wikipedia.org/wiki/Modula
 We today have a **first version of a working collaborative tracker with basic modular audio features**:
 
 - MIDI note support + MIDI control assignation allowing to change module properties.
-- a unique tracker with a 32 line loop and 23 tracks.
+- a unique tracker with a 32 lines loop and 23 tracks.
 - Synchronisation of everything: the tracker and modules for all connected clients.
 - off-mode allowing one user to prepare a track which is muted for other users.
 - play/pause and record mode!
