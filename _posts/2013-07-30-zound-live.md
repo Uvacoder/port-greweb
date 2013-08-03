@@ -104,20 +104,10 @@ This leads to a very reactive style of programming:
 
 <script src="https://gist.github.com/gre/6107277.js"></script>
 
-We will probably refactor that code to make it less spaghetti 
-by using the Backbone.js syntax for multiple events binding:
-
-```javascript
-network.on({
-  "foo": function () {...},
-  "bar": function () {...}
-});
-```
-
 ## The team
 
-This project has been started during our monthly Hackday at [Zenexity][zenexity],
-First I want to thank my 6 awesome coworkers for being part of the project:
+**This project has been started during our monthly Hackday at [Zenexity][zenexity],
+ I want to thank my 6 awesome coworkers for being part of the project:**
 
 * [@mrspeaker](http://twitter.com/mrspeaker) for his awesome electronic music knowledge.
 * [@bobylito](http://twitter.com/bobylito) for his brilliant ideas and his JavaScript skills.
@@ -128,10 +118,13 @@ First I want to thank my 6 awesome coworkers for being part of the project:
 
 This was actually my first real project managment and it was quite cool!
 
-I bootstraped a PoC one week before the Hackday because when working on such a team
-you need a ready to go architecture and a basic UI,
-then I had to define goals to achieve for the Hackday 
-and we fulfilled it just in time!
+**Hackday is only one day** and such an ambitious project is hard to achieve one in a row,
+the project architecture needed to be a bit ready and having a PoC working before the Hackday. Also I wanted everyone to have fun by experimenting with the Audio API parts and not to be blocked on boring parts.
+
+As a team manager, I also had to define goals to achieve for the Hackday.
+
+Woo, I realize that's **not an easy task to manage a team when running out of time!**
+But fortunately, I think we fulfilled it just in time!
 
 We ended the Hackday with a **Real Time demonstration of our application** with 4 people interacting together
 with MIDI controllers.
