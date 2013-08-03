@@ -18,8 +18,8 @@ tags:
 
 <img src="/images/2013/07/nanokontrol.jpg" alt="" class="thumbnail-left" />
 
-Last week, I initiated **ZOUND live**
-following my previous ["ZOUND"][zound] experiment but being much more ambitious this time:
+Last week, I initiated, with my [Zenexity][zenexity] Hackday team, **"ZOUND live"**
+following the previous ["ZOUND"][zound] experiment but being much more ambitious this time:
 using both the **Audio API**, the *new* **MIDI API** and electronic music software experience,
 we start our own **web collaborative audio modular tracker**.
 
