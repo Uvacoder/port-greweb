@@ -124,6 +124,7 @@ the project architecture needed to be a bit ready and having a PoC working befor
 As a team manager, I also had to define goals to achieve for the Hackday.
 
 Woo, I realize that's **not an easy task to manage a team when running out of time!**
+
 But fortunately, I think we fulfilled it just in time!
 
 We ended the Hackday with a **Real Time demonstration of our application** with 4 people interacting together
