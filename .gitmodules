@@ -1,0 +1,6 @@
+[submodule "demo/bezier-easing"]
+	path = demo/bezier-easing
+	url = https://gist.github.com/1926947.git
+[submodule "demo/grid-utils"]
+	path = demo/grid-utils
+	url = https://gist.github.com/1987311.git
