@@ -20,7 +20,10 @@ This article will explain to you how FM Synthesis works with **interactive demos
 In the meantime, all demos are implemented with the brand new **Web Audio API**, 
 so feel free to hack the code for your own purpose.
 
-For the context, I've implemented a very first FM in [ZOUND live][zoundarticle], giving much more powerful Synthesizers (see in the following video).
+This article will also introduce some Audio concepts like **LFO**, **Envelope** and **Finetuning**.
+
+I've recently implemented a very first FM in [ZOUND live][zoundarticle] - *a HTML5 collaborative audio tracker*,
+giving much more powerful Synthesizers (see in the following video).
 
 <iframe width="640" height="480" src="//www.youtube.com/embed/El4JvaDWQUM" frameborder="0" allowfullscreen></iframe>
 [*(here is the implementation of that FM)*][zoundfm]
@@ -43,13 +46,14 @@ The result of that modulation differs depending on each oscillator **frequency**
 ***N.B.*** *Our interactive demos in this article will always play a sound and visualize it (waveform / spectrum analyzer). 
 You will have different kind of controls depending on each specific aspect I want to picture.*
 
-*The demos should work on Chrome. __However if you get an AudioContext failure, please reload the page__ (you probably won't be have to start them all in one row).*
+*The demos should work on Chrome. __However if you get an AudioContext failure, please reload the page__ (you may not be able to start them all in one row).*
 
 ### LFO
 
 **Low-Frequency Oscillation (LFO)** is very used in electronic music for making rythmic audio effects.
-LFO is a specific subset of a oscillator in a sense that **its oscilation frequency is under 
-the human audible range (20 Hz)** and is then not really used as an audio signal but as an effect controller.
+
+LFO is simply a specific subset of a oscillator in a sense that **its oscilation frequency is under 
+the human audible range (20 Hz)** and is then not generally used as an audio signal but as an effect controller.
 
 For instance the frequency / the amplitude of an oscillator, or in the following example the frequency of the cut-off filter:
 
@@ -62,7 +66,7 @@ let's see what happens if our **FM Modulator is an LFO**,
 <iframe width="100%" height="310" src="http://fiddle.jshell.net/greweb/FvnJx/10/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/greweb/FvnJx/10/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
 
-Observe the Carrier graphs and how the waveform is regulary compressed and decompressed. If you increase the Modulator frequency, it will speed up this effect.
+Observe in the Carrier graphs how **the waveform is regulary compressed and decompressed**. If you increase the Modulator frequency, it will speed up this effect. A real FM is about speeding up that effect up to the audible range...
 
 ***N.B.*** *With _Web Audio API_ (more generally with any modular synthesizers) we can easily control any module parameter with an LFO:*
 
@@ -84,7 +88,7 @@ even if it only modulate the frequency of the actual synthesizer.
 However, it's completely different than playing the two synthesizers directly into the output,
 again the modulator influence the frequency of the carrier and is not directly pipe into the output audio signal.
 
-*There is especially cool sound produced when the Modulator frequency is closed to the Carrier frequency.*
+*There is especially cool sound produced when the Modulator frequency is closed to the Carrier frequency. For more infos, see the <u>Finetuning</u> section.*
 
 
 ### Frequency ratios: harmonic or dissonant sounds
@@ -105,18 +109,18 @@ Now we can release a bit less restrictions by also allowing frequencies multiple
 <a href="http://jsfiddle.net/greweb/DFSwN/7/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
 
 
-*Eventually you could even allow more liberty using multiple of `carrier freq / 12`, because an octave is equally divided by 12 in the [Chromatic scale](http://en.wikipedia.org/wiki/Chromatic_scale).*
+*Eventually you could even allow more freedom using multiple of `carrier freq / 12`, because an octave is equally divided by 12 in the [Chromatic scale](http://en.wikipedia.org/wiki/Chromatic_scale).*
 
 ### Mixing the power of the Modulator effect
 
-A very interesting part of the job is also to change the **amplitude of the modulator**. So far, we used a full amplitude modulating the carrier frequency from 0 to 2-times its original frequency.
-
-We can easily change that range to any (technically using a GainNode). 
+A very interesting part of the job is also to change the **amplitude of the modulator**. So far, we used a full amplitude modulating the carrier frequency from 0 to 2-times its original frequency which produces a quite rough sound.
 
 Try to change the modulator amplitude on the following demo:
 
 <iframe width="100%" height="310" src="http://fiddle.jshell.net/greweb/DAT5S/4/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/greweb/DAT5S/4/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
+
+Technically, we can easily control that range to any by changing the gain of the Modulator with a `GainNode` which is just a tool to scale the amplitude of a signal.
 
 ### Envelope
 
@@ -125,24 +129,36 @@ Now, we need to add an **Envelope** for automating that amplitude change you jus
 An envelope in electronic music will generally look like this:
 
 [![](/images/2013/08/500px-ADSR_parameter.svg.png)](http://en.wikipedia.org/wiki/File:ADSR_parameter.svg)
+
 An Envelope corresponds to a **note lifespan**.
 It is the minimum required for making our Synth.
 
-Basically, **we automate that amplitude through time for each note triggered** (our next demo will have a melody).
+We will generally **automate that amplitude through time for each note triggered**.
 
-This Envelope can be done both for the Modulator and the Carrier, and  
-we can use two completely different envelopes to obtain different sound effects.
+Here is a demo.
+Play, try to hold and release a note, and observe how the Spectrum Analyzer is moving:
 
-Here is a demo playing a melody with different envelopes,
-Play and see how the Spectrum Analyzer is moving:
+<iframe width="100%" height="400" src="http://fiddle.jshell.net/greweb/tyEKr/8/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+<a href="http://jsfiddle.net/greweb/tyEKr/8/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
 
-<iframe width="100%" height="400" src="http://fiddle.jshell.net/greweb/tyEKr/3/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
-<a href="http://jsfiddle.net/greweb/tyEKr/3/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
+**Two different envelopes** has been used: one for the **Modulator** and one for the **Carrier** which produce **different sound effects in a note lifespan**.
 
 *We won't make an interactive demo for changing these envelope parameters,
-but you can try them in the ZOUND project (or see the video).*
+but you can try them in the ZOUND project (or see again the video).*
 
 ### Finetuning
+
+Another interesting effect occurs **when the frequency of the Modulator is very close to the frequency of the Carrier**.
+In the following example, we have set both oscillators to the same frequency but we expose a "detune" parameter which allows to change a bit the frequency of the Modulator.
+
+<iframe width="100%" height="400" src="http://fiddle.jshell.net/greweb/X95S6/3/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+<a href="http://jsfiddle.net/greweb/X95S6/3/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
+
+You can slightly notice that a sound is regulary looping like if it was an LFO effect. You can also visualize it on the graph.
+
+This effect corresponds to the **[phase](http://tinyurl.com/nzkus8) change between both oscillators**: it regulary change from **"in-phase"** state (where it have exactly the same sine waveform at the same time) to a desynchronize **"out-of-phase"** (because of the small detune), and then slightly go to the next "in-phase" step. More the frequencies are close, more it takes time to oscillate from phase to phase.
+
+This effect is especially awesome when you start mixing multiple synths together and finetune a bit each one so they don't sound exactly on the same frequency.
 
 ### Modulating the Modulator
 
@@ -158,9 +174,20 @@ for more powerful effects:
 
 ![](/images/2013/08/fm_multiple.png)
 
+> Be careful when playing with stack of modulators, it is quite easy to have saturated or noisy sounds.
+
+As an example, I made this experiment which randomly takes different frequencies and amplitude for a stack of 5 modulators:
+
+[**-> http://jsfiddle.net/greweb/s2MMR/19/ <-**](http://jsfiddle.net/greweb/s2MMR/19/)
+
+Careful! this experiment is a bit crazy! but it shows how different patterns can be when playing with FM.
+
+<!-- TODO soon...
+## Last demo, polished FMs playing a famous song...
+
+As a last demo example, and in a more readable & simple code, here is a polished example of FM.
+-->
 
 ----
 
-**If you are interested by ZOUND live, [fork it on Github][zoundrepo].**
-
-More to come, stay tuned!
+Also, **If you are interested by ZOUND live, [fork it on Github][zoundrepo].**
