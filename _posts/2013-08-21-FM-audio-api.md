@@ -33,7 +33,7 @@ giving much more powerful Synthesizers (see in the following video).
 
 ## Dive into Frequency Modulation Synthesis
 
-As said previous, FM is about **piping an Oscillator (the <u>Modulator</u>) into the frequency of another Oscillator (the <u>Carrier</u>)**.
+As mentioned previously, FM is about **piping an Oscillator (the <u>Modulator</u>) into the frequency of another Oscillator (the <u>Carrier</u>)**.
 
 The Modulator oscillation only affects the oscillation frequency of the Carrier but is not directly an audio signal.
 
@@ -44,7 +44,7 @@ The result of that modulation differs depending on each oscillator **frequency**
 [![](/images/2013/08/Frequencymodulationdemo-td.png)](http://en.wikipedia.org/wiki/File:Frequencymodulationdemo-td.png)
 
 ***N.B.*** *Our interactive demos in this article will always play a sound and visualize it (waveform / spectrum analyzer). 
-You will have different kind of controls depending on each specific aspect I want to picture.*
+You will have different kind of controls depending on each specific aspect I want to illustrate.*
 
 *The demos should work on Chrome. __However if you get an AudioContext failure, please reload the page__ (you may not be able to start them all in one row).*
 
@@ -83,10 +83,10 @@ Now, if we increase the frequency to the hearing range, here is what happens:
 <a href="http://jsfiddle.net/greweb/x4CWR/5/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
 
 
-It sounds that **the Modulator once reach that audible barrier kind of becomes a second audible synthesizer**,
+It's as if that **once the Modulator reaches that audible barrier, it kind of becomes a second audible synthesizer**,
 even if it only modulate the frequency of the actual synthesizer.
 However, it's completely different than playing the two synthesizers directly into the output,
-again the modulator influence the frequency of the carrier and is not directly pipe into the output audio signal.
+again the modulator influence the frequency of the carrier and is not directly piped into the output audio signal.
 
 *There is especially cool sound produced when the Modulator frequency is closed to the Carrier frequency. For more infos, see the <u>Finetuning</u> section.*
 
@@ -95,15 +95,15 @@ again the modulator influence the frequency of the carrier and is not directly p
 
 One thing you may also have notice in the previous example is that most of the generated sounds was quite dissonant, non harmonic.
 
-Now, if we add more restrictions and only **snap the possible modulator frequency frequencies** 
+Now, if we add more restrictions and only **snap the possible modulator frequencies** 
 to a **multiple of the carrier frequency**, here is what happens:
 
 <iframe width="100%" height="310" src="http://fiddle.jshell.net/greweb/Euezv/7/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/greweb/Euezv/7/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
 
-This harmonic result is due a simple fact in music: **Mutiplying a note frequency by 2 is equivalent to Increasing that note by one octave,** meaning the note has the same tone but is one-octave higher. (and vice versa for the division). *BTW, you may have notice that fact by repetition of peaks in the previous example Spectrum Visualization.*
+This harmonic result is due a simple fact in music: **Mutiplying a note frequency by 2 is equivalent to Increasing that note by one octave,** meaning the note has the same tone but is one-octave higher. (and vice versa for the division). *BTW, you may have noticed that fact by repetition of peaks in the previous example Spectrum Visualization.*
 
-Now we can release a bit less restrictions by also allowing frequencies multiple of `carrier frequency / 4`, which means allowing to increase/decrease by an **octave**, a **semi-octave** or a **quarter-of-octave**. 
+Now we can release some restrictions by also allowing frequencies multiple of `carrier frequency / 4`, which means allowing to increase/decrease by an **octave**, a **semi-octave** or a **quarter-of-octave**. 
 
 <iframe width="100%" height="310" src="http://fiddle.jshell.net/greweb/DFSwN/7/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/greweb/DFSwN/7/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
@@ -136,7 +136,7 @@ It is the minimum required for making our Synth.
 We will generally **automate that amplitude through time for each note triggered**.
 
 Here is a demo.
-Play, try to hold and release a note, and observe how the Spectrum Analyzer is moving:
+Play, try to hold and release a note (using the Play button or SPACE), and observe how the Spectrum Analyzer is moving:
 
 <iframe width="100%" height="400" src="http://fiddle.jshell.net/greweb/tyEKr/8/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/greweb/tyEKr/8/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
