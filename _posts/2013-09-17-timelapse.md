@@ -1,6 +1,6 @@
 ---
 title: 'Making a rhythm game with bleeding-edge web'
-description: ''
+description: 'While continuing to experiment with Web Audio API and GLSL, I've made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped).'
 thumbnail: /images/2013/09/timelapse.png
 author: Gaetan
 layout: post
@@ -38,6 +38,8 @@ what was my game mecanism ideas and show you some interesting parts with **scree
 However, *Chrome* is recommended 
 (*Firefox Aurora* also supports it but audio is a bit wrong, but Mozilla devs should improve this [soon](https://twitter.com/padenot/status/375924494537195520)).
 Today, it works on *Android Chrome Beta* on a Nexus 4, unfortunately with some clicks in the audio (Web Audio API is bleeding-edge).
+
+<!-- more -->
 
 ## Experimenting with stuff
 
