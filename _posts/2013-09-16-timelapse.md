@@ -24,11 +24,11 @@ tags:
 <img src="/images/2013/09/timelapse.png" alt="" class="thumbnail-left" />
 
 While continuing to experiment with [Web Audio API][webaudioapi] and [GLSL][glsl.js],
-I've made **[Timelapse][entry]**, a game for [js13kgames][js13kgames], an HTML5 game competition 
-where entries must be less than 13 kb zipped.
+I've made **[a game called Timelapse][entry]** for [js13kgames][js13kgames]
+(an HTML5 game competition where entries must be less than 13 kb zipped).
 
 This article is a **postmortem overview of my game development** which will try to explain
-what was my game mecanism ideas and show you some interesting part with **screenshots, audios and source code snippets**.
+what was my game mecanism ideas and show you some interesting parts with **screenshots, audios and source code snippets**.
 
 ## The Game
 
@@ -63,8 +63,8 @@ I started my graphics by forking [this very interesting glow effect](http://glsl
 
 ## Prototyping the game ideas
 
-Then I start to really think about the game I could do, 
-I sketched some game mecanisms and thinking about the gameplay.
+Then I started to really think about the game I could do, 
+I sketched some game mecanisms and thought about the gameplay.
 
 My game was designed to be a **one-button** [DDR](https://en.wikipedia.org/wiki/Dance_Dance_Revolution)-like **rhythm game**
 with the main idea that **the user controls the speed** *(the BPM, beats per minute)* of the song.
@@ -82,15 +82,18 @@ During the freestyle section, each action gives a score, also each riff (holding
 
 <img src="/images/2013/09/highscores.png" style="max-width: 300px; width: 50%" />
 
-I also had to find a game end, I first thought about trying to make the game harder and harder but it was hard to make
+I also had to find a game end, I first thought about trying to make the game harder and harder but it wasn't trivial to make
 because I wanted to keep my *"player is free to take any speed he wants"* idea.
 
-So I choose to **limit the game time by one minute**, 
-which makes my game a psychedelic rush game if you want a good score: A good strategy to make a good score is to first start the song inertia as fast as possible (but less fast than the gameover threshold), and then keep the rhythm.
+Instead, I chose to **limit the game time by one minute**, 
+which makes my game a psychedelic rush game if you want a good score: 
+A good strategy to make a good score is to first speed up the song inertia as fast as possible, and then keep the rhythm on an high BPM.
+
+> That mecanism is interesting because it is also harder to make precise scores on higher speed, it can even be risky (reaching the BPM limit, failing some beats), the player has to find the speed it fits the most!
 
 ## The game experience
 
-I wanted my game experience to be both on the graphics and on the audio aspects:
+I wanted my game experience to be both on the **graphics** and on the **audio** aspects:
 you have both a feedback on your actions with the graphics using a color (
 <span style="color:#0F0">green=good</span>,
 <span style="color:#CC0">yellow=meh</span>,
@@ -141,9 +144,9 @@ Another **very** important brick of the Audio graph is the **Compressor**.
 The [Web Audio API][webaudioapi] have a built-in Compressor with some parameters.
 
 A compressor dynamically adapts the input sound to a normalized output. It ensures the output is not distorted (saturated because amplitude is too high) or inaudible because too low.
-In other words, it consists of dynamically raise the volume if the input is lower (or decrease the volume if the input is higher) that a given rate.
+In other words, it consists of dynamically raise the volume if the input is lower, and decrease the volume if the input is higher, that a given rate.
 
-Here is the global setup I've used as an output of for all different sounds of the song:
+Here is the global audio setup I've used as an output for all different sounds of the song:
 
 ```javascript
   var out = ctx.createGain(); // My global output
@@ -157,16 +160,17 @@ Here is the global setup I've used as an output of for all different sounds of t
 
 ### Ambiant sounds
 
-I've used a soft sine Oscillator and a Noise generator (protected by a lowpass Filter) for the ambiant sound.
+I've used a soft **sine Oscillator** and some **Noise generator** (protected by a bandpass Filter) for the **ambiant sound**.
+That gives more depth to the song.
 
 It was also used to give more audio feedback on the gameplay:
 
-* The Noise will be louder if the player is in danger (BPM is too slow or too fast).
-* The Oscillator frequency follows the BPM (goes higher in frequency with the song speed).
-* The Oscillator is fastly detune on each user action, and especially if the user tap too early it will produce a "bip" like you can hear in the following Soundcloud.
-* Finally, the BPM also affects the frequency of a LFO which oscillate the volume of the Noise to make a helicopter-like sound.
+* The **Oscillator frequency follows the BPM** (goes higher in frequency with the song speed).
+* The BPM also affects the **frequency of a LFO** which oscillate the **volume of the Noise** to make an **helicopter-like sound**.
+* The Oscillator is fastly **detuned on each user action**, and especially if the user tap too early it will produce a "bip" like you can hear in the following Soundcloud.
+* Finally, a second noise passed into a highpass filter will be louder if the player is in danger (BPM is too slow or too fast). *(we won't show the code for this one)*
 
-I have muted all other sounds to make you hear only the ambiant sound when speeding up the song up to a game over:
+I have muted all other sounds to make you hear only the ambiant sound when speeding up the song up to a gameover:
 
 <iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110774935"></iframe>
 
@@ -174,6 +178,7 @@ The Noise component:
 
 ```javascript
   function Noise () {
+    // Here we loop on a 2s noise buffer, it is more efficient that generating on the fly
     var bufferSize = 2 * ctx.sampleRate,
     noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate),
     output = noiseBuffer.getChannelData(0);
@@ -189,7 +194,7 @@ The Noise component:
 
     var filter = ctx.createBiquadFilter();
     gain.connect(filter);
-    filter.type = "lowpass";
+    filter.type = "lowpass"; // Generally lowpass, but can be overrided
 
     this.white = whiteNoise;
     this.gain = gain;
@@ -238,7 +243,7 @@ Here is some code I used for making the ambiant sound:
 
 ### NOTES
 
-To easily define melodies, I defines "NOTES", a map of `note -> frequency`. 
+To easily define melodies, I first define "NOTES", a map of `note -> frequency`. 
 For instance `NOTES.A4` is `440` Hz:
 
 ```javascript
@@ -246,7 +251,7 @@ var NOTES = (function () {
   var notes = {};
   var toneSymbols = "CcDdEFfGgAaB";
   function noteToFrequency (note) {
-    return Math.pow(2, (note-69)/12)*440;
+    return Math.pow(2, (note-69)/12)*440; // Beauty of audio math!
   };
   for (var octave = 0; octave < 8; ++octave) {
     for (var t = 0; t < 12; ++t) {
@@ -404,7 +409,8 @@ Finally, here is "meloNote", the function which triggers one melody note.
   }
 ```
 
-> **N.B.** The metallic parameter is a parameter from 0 to 1 to give a more metallic sound. It changes the modulator intensity.
+> **N.B.** The metallic parameter is a parameter from 0 to 1 to give a more metallic sound. 
+It changes the modulator intensity. In fact, that 3/4 ratio on the FM is the reason metallic sound.
 
 This function is called each tick with a new note:
 
@@ -424,7 +430,7 @@ function tick (i, time) {
 
 ### Repeater of freestyle part
 
-A repeater with random delay add crazyness in the freestyle section. The delay time is randomly changed each time you hold the key so it gives cool feedback.
+A **"repeater" with random delay add crazyness in the freestyle section**. The delay time is randomly changed each time you hold the key so it gives cool feedback.
 
 <iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110612559"></iframe>
 
@@ -538,6 +544,36 @@ Here is the Kicker implementation:
   };
 ```
 
+And finally, here is my "kick" method called each time a user press the key:
+
+```javascript
+  kick: function (t, errorRate) {
+    errorRate = errorRate * errorRate * errorRate;
+    var freq = mix(100, 120, errorRate);
+    var speed = mix(0.2, 0.3, errorRate) * 100 / vars.bpm;
+    var kick = new Kicker(freq, 0.01, speed, speed);
+    kick.volume = 1.5;
+    kick.osc.type = "sine";
+    var filter = ctx.createBiquadFilter();
+    filter.frequency.value = mix(200, 300, errorRate);
+    filter.Q.value = 10 + 10 * errorRate;
+    kick.out.connect(filter);
+    filter.connect(drumOut.inp);
+    setTimeout(function () {
+      filter.disconnect(drumOut.inp);
+    }, 1000);
+    kick.trigger(t);
+
+    var snare = new Snare(0.5, 1000, 10);
+    snare.out.connect(drumOut.inp);
+    setTimeout(function () {
+      snare.out.disconnect(drumOut.inp);
+    }, 1000);
+    snare.trigger(t);
+
+    E.pub("kick", t);
+  }
+```
 
 
 ### Stereo Drumbox
@@ -548,8 +584,7 @@ The effect can be very weak to hear, so I made in the following audio example 2 
 
 <iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110622238"></iframe>
 
-The drumbox is piped using that previous Stereo system,
-the concept is to use one repeater for the left and another for the right both with different values.
+All sounds from the drumbox (snare, hihat, kick) is piped into "drumOut", which have that Stereo system.
 
 Here is the code of the "drumOut" (the output where goes all Drum Box sounds):
 
@@ -557,12 +592,169 @@ Here is the code of the "drumOut" (the output where goes all Drum Box sounds):
   var drumOut = (function () {
     // using the second example delay effect (listen to the soundcloud sound)
     var left = new Repeater(0.1, 0.5);
-    var right = new Repeater(0.2, 0.7);
-    right.gain.gain.value = 0.8;
+    var right = new Repeater(0.2, 0.7); // Playing with different values for stereo effects
+    right.gain.gain.value = 0.8; // move the drum a bit to the left
     return new Stereo(left, right);
   }());
   drumOut.out.connect(out);
 ```
+
+## The GLSL shader
+
+Here is the GLSL code I used for the game, the final version is a bit crazy because I incrementally add features to it!
+All the graphics are defined here!
+
+```glsl
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+#define BPM_MIN 30.0
+#define BPM_MAX 150.0
+
+uniform vec2 resolution;
+uniform float time;
+uniform float kick;
+uniform float kickSpeed;
+uniform float bpm;
+uniform float lvl;
+
+uniform bool dubstepAction;
+uniform float useraction;
+uniform float successState;
+
+uniform float dubloading;
+uniform bool dubphase;
+uniform float pulseOpenFrom;
+uniform float pulseOpenTo;
+
+const vec2 center = vec2(0.5, 0.5);
+
+const float PI = 3.14159265359;
+const float PI_x_2 = 6.28318530718;
+
+const vec3 COLOR_NEUTRAL = vec3(0.1, 0.2, 0.7);
+const vec3 COLOR_SUCCESS = vec3(0.0, 0.7, 0.1);
+const vec3 COLOR_ERROR = vec3(0.7, 0.0, 0.05);
+
+float expInOut (float a) {
+  return 0.0==a ? 0.0 : 1.0==a ? 1.0 : 1.0 > (a *= 2.0) ? 0.5 * pow(1024.0,a-1.0):0.5*(-pow(2.0,-10.0*(a-1.0))+2.0);
+}
+
+float random (vec2 pos) {
+  return fract(sin(dot(pos.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+vec3 random3 (vec2 pos) {
+  return vec3(
+    random(pos),
+    random(pos*3.),
+    random(pos*13.)
+  );
+}
+
+float distanceRadius (float a, float b) {
+  float d = mod(distance(a, b), PI_x_2);
+  return d < PI ? d : PI_x_2 - d;
+}
+
+float spiralDistance (vec2 v, float r) {
+  float d = length(v);
+  float a = (PI + atan(v.x, v.y))/PI_x_2;
+  float n = log(d/r)+a;
+  return distance(1.0, 2.0 * smoothstep(0.0, 1.0, fract(n)));
+}
+
+float bpmToSec (float bpm) {
+  return 60. / bpm;
+}
+
+float circlePulse (
+  vec2 v, float kickForce,
+  float kickGlitchFreq, float kickGlitchAmp,
+  float thin, float pulseAngle, bool dubphase,
+  float waveFreq, float waveAmp, float waveDuration,
+  float bullForce
+) {
+  float angle = atan(-v.x, -v.y);
+  float clock = distanceRadius(0.0, angle) / PI;
+  float distAngle = distanceRadius(angle, PI_x_2 * pulseAngle) / PI;
+  float f = mix(1.0, smoothstep(-1.0, 1.0, cos(kickGlitchFreq * (clock+0.1*angle+kickForce))), kickGlitchAmp);
+  float r = mix(0.35, 0.2, kickForce*f);
+  float sc = smoothstep(1.0-waveDuration, 1.0, distAngle);
+  float intensity = 0.1+0.05*sc;
+  r /= mix(0.95, 1.0, waveAmp*sc*cos(angle*waveFreq));
+  float a = mod(PI_x_2+atan(v.x, v.y), PI_x_2)/PI_x_2;
+  float ring = abs(length(v)-r) - 0.03*bullForce*(!dubphase ? 
+    smoothstep(1.0-1.5*waveDuration, 1.0, clock) : 
+    (
+    a < pulseOpenFrom ? smoothstep(0.05, 0.0, distance(a, pulseOpenFrom)) : 
+    a > pulseOpenTo ? smoothstep(0.05, 0.0, distance(a, pulseOpenTo)) : 
+    1.0
+    )
+  );
+  float value = smoothstep(0.0, intensity, ring);
+  float returnValue = 1.0/sqrt(abs(value))/1.0 * pow(thin, 2.);
+  if ( length(v) < r) {
+    float sr = PI;
+    float s = spiralDistance(v, sr);
+    float a = (PI + atan(v.x, v.y))/PI_x_2;;
+    float v = 
+      smoothstep(0.02, 0., distanceRadius(PI+pulseAngle*PI_x_2, a*PI_x_2)/PI) *
+      smoothstep(0.2, 0., s);
+    returnValue += v * 2.0;
+    s = 1.0 - pow(smoothstep(0.0, 0.3, s), 0.3);
+    returnValue += s;
+  }
+  float centerIntensity = dubphase ? 0.1 : 0.1*dubloading;
+  if (centerIntensity > 0.0) {
+    float s = bpmToSec(bpm);
+    float c = mix(1.0, 10.0, mod(time, s)/s) * smoothstep(centerIntensity, 0.0, length(v));
+    returnValue += c;
+  }
+  return returnValue;
+}
+
+void main (void) {
+  vec3 c = vec3(0.0);
+  vec2 p = gl_FragCoord.xy / resolution;
+  float sec = bpmToSec(bpm);
+  float statePower = smoothstep(0.8, 0.0, time-useraction);
+  float colorPower = dubstepAction ? 1.0 : statePower;
+  float cPulse = circlePulse(
+    p - center,
+    smoothstep(kickSpeed, 0.0, time-kick),
+    20.0,
+    0.5,
+    0.5 + 0.5 * smoothstep(smoothstep(0.6, 1.0, statePower), 0.0, distance(smoothstep(0.8, 1.0, statePower), distance(p, center))),
+    mod((time-kick)/sec, 1.0),
+    dubphase,
+    1.2*sqrt(bpm) + 4.0*statePower,
+    2.0,
+    min(0.5, bpm / 800.0),
+    1.0 - statePower
+  );
+  vec3 mainColor = mix(
+    COLOR_NEUTRAL,
+    mix(COLOR_ERROR, COLOR_SUCCESS, successState),
+    colorPower);
+  
+  c += cPulse * mainColor;
+
+  c = clamp(
+    c,
+    vec3(0.05, 0.05, 0.05),
+    vec3(1.0, 1.0, 1.0)
+  );
+
+  float bpmLight = smoothstep(BPM_MIN, BPM_MAX, bpm);
+  c = mix(c * (0.5 * random(p + time) + 0.5 * random(floor(p * 100.) + 0.01*time) - 0.5 * random(floor(p * 10.) + time)), c, min(1.0, 15.0*bpmLight));
+
+  c *= 0.1 + max(0.95, 100.0*(bpmLight-0.85));
+
+  gl_FragColor = vec4(c, 1.0);
+}
+```
+
 
 ## Bonus
 
