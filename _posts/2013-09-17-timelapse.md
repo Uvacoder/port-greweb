@@ -1,6 +1,6 @@
 ---
 title: 'Making a rhythm game with bleeding-edge web'
-description: 'While continuing to experiment with Web Audio API and GLSL, I've made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped).'
+description: "While continuing to experiment with Web Audio API and GLSL, I've made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped)."
 thumbnail: /images/2013/09/timelapse.png
 author: Gaetan
 layout: post
