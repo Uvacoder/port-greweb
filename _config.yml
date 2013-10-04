@@ -3,6 +3,8 @@ pygments: true
 permalink: /:year/:month/:title
 paginate: 10
 url: http://greweb.me
+name: "@Greweb"
+description: "embrace standard web technologies for web, games and mobile apps"
 
 tags:
   template: _layouts/archive
