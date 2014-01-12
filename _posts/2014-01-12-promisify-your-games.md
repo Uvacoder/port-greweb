@@ -1,6 +1,6 @@
 ---
 title: 'Promisify your games'
-description: ''
+description: 'a game showcase using Q Promise as first-class citizen and driven with CSS3 Animations via Zanimo.'
 thumbnail: /images/2014/01/ld28.png
 author: Gaetan
 layout: post
