@@ -31,8 +31,8 @@ Welcome to the world where coding the bad way is satisfying!
 Panzer Dragoon 1k
 ---
 
-- [The Official JS1K Entry][demo]
-- [The Entry Source Code][source]
+- **[Play the JS1K entry][demo]**
+- [Source Code][source]
 
 Panzer Dragoon Original Game
 ---
