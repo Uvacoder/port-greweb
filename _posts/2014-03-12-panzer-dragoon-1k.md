@@ -11,8 +11,7 @@ tags:
  - canvas
 ---
 
-
-[demo]: http://bl.ocks.org/gre/9504494
+[demo]: http://js1k.com/2014-dragons/demo/1790
 [source]: https://gist.github.com/gre/9504494
 [jscrush]: http://www.iteral.com/jscrush/
 [jscrush-npm]: https://github.com/gre/jscrush/
@@ -28,6 +27,19 @@ and a few tricks I've used for my entry ["Panzer Dragoon 1k"][demo] ([source][so
 Welcome to the world of hacks, tricks and getting-things-done-at-any-price.
 You will turn the worst JavaScript practices and ugliest JavaScript facts to your advantage.
 Welcome to the world where coding the bad way is satisfying!
+
+Panzer Dragoon 1k
+---
+
+- [The Official JS1K Entry][demo]
+- [The Entry Source Code][source]
+
+Panzer Dragoon Original Game
+---
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/peoRBj9U-jI" frameborder="0" allowfullscreen></iframe>
+
+<!-- more -->
 
 JS1K
 ===
