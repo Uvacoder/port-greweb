@@ -21,6 +21,8 @@ tags:
  [7]: http://en.wikipedia.org/wiki/Inventor's_paradox
  [8]: /2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/ "Bezier Curve based easing functions – from concept to implementation"  
 
+> **EDIT 2014:** This article ends up in an updated library available on [NPM](http://npmjs.org/package/bezier-easing) (`bezier-easing`) and available on [Github](https://github.com/gre/bezier-easing). It has been used by Apple for the [mac-pro page](http://www.apple.com/mac-pro/) and by [Velocity.js](http://velocityjs.org/). You can also find its usage in the [glsl-transition examples](http://greweb.me/glsl-transition/example/).
+
 <img src="/images/2012/02/bezier_transition_editor.png" class="thumbnail-left" />
 
 Many animation libraries are today using **easing functions** – functions of time returning a progression percentage value. This is required to perform such cool effects:
@@ -109,6 +111,9 @@ Now we can just alias some classic easing function – like CSS does.
 <script src="https://gist.github.com/1926947.js?file=EasingFunctions.json"></script>
 
 I’m working on the next version of [Slider.JS][6] which relies on 3 different technologies for image transitions: **CSS Transitions**, **Canvas** and **GLSL shaders (from WebGL)**.  
+
+---
+
 I have now found **a common way to describe easing functions for both CSS-based and Javascript-based animations**!
 
 This example has shown that sometimes, finding a larger solution for a problem is more interesting than having specific solutions.  
