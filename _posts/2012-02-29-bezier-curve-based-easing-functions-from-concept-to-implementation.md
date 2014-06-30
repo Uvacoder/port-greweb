@@ -82,8 +82,8 @@ function B3(t) { return 3*t*(1-t)*(1-t) }
 function B4(t) { return (1-t)*(1-t)*(1-t) }  
 function getBezier(percent,C1,C2,C3,C4) {  
   var pos = new coord();  
-  pos.x = C1.x*B1(percent) %2B C2.x*B2(percent) %2B C3.x*B3(percent) %2B C4.x*B4(percent);  
-  pos.y = C1.y*B1(percent) %2B C2.y*B2(percent) %2B C3.y*B3(percent) %2B C4.y*B4(percent);  
+  pos.x = C1.x*B1(percent) + C2.x*B2(percent) + C3.x*B3(percent) + C4.x*B4(percent);  
+  pos.y = C1.y*B1(percent) + C2.y*B2(percent) + C3.y*B3(percent) + C4.y*B4(percent);  
   return pos;  
 }
 ```
@@ -101,7 +101,7 @@ What we can learn from it is:
 *   Then, it use two different implementation strategies: One use the [Newton’s method][4] and the other is just a [dichotomic search][5] (binary subdivision).
 *   A **criteria** based on the **slope** give the best strategy to take.
 
-These sub-optimizations probably make the difference for the C%2B%2B version but are not really relevant for the JavaScript implementation. Moreover, I have only used the Newton’s method algorithm.  
+These sub-optimizations probably make the difference for the C++ version but are not really relevant for the JavaScript implementation. Moreover, I have only used the Newton’s method algorithm.  
 And this is the code:
 
 <script src="https://gist.github.com/1926947.js?file=KeySpline.js"></script>
