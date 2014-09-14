@@ -10,7 +10,7 @@ task :default => [:generate]
 
 desc "Generate stylesheets from LESS"
 task :style do
-  system "lessc -x style/main.less style/main.css"
+  system "lessc -x style/main.less > style/main.css"
 end
 
 desc "Generate blog files"
