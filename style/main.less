@@ -118,7 +118,7 @@ body > header {
       margin-top: none;
       margin-left: none;
     }
-  } 
+  }
 }
 
 body > nav {
@@ -184,10 +184,10 @@ article .entry-content {
 nav.pagination {
 }
 
-body>header:after, 
-body>nav:after, 
-body>footer:after, 
-body #content>article:after, 
+body>header:after,
+body>nav:after,
+body>footer:after,
+body #content>article:after,
 body nav.pagination:after,
 #sidebar:after,
 #main:after,
@@ -371,7 +371,7 @@ article {
       margin-bottom: 0.5em;
     }
   }
-  hr {
+  hr, br {
     clear: both;
   }
   h1, h2, h3, h4, h5, h6 {
@@ -405,7 +405,15 @@ article {
   img, video, iframe[src*="youtube.com"],  iframe[src*="greweb.me"], iframe[src*="greweb.fr"] {
     max-width: 100%;
   }
-  img {
+  figure {
+    padding: 5px;
+    border: 1px solid #999;
+    figcaption {
+      color: #999;
+      font-style: italic;
+    }
+  }
+  img, figure {
     height: auto;
     &.thumbnail-right {
       clear: both;
@@ -413,7 +421,7 @@ article {
       margin-bottom: 1em;
       max-width: 45%;
       margin-left: 2%;
-    }    
+    }
     &.thumbnail-left {
       clear: both;
       float: left;
@@ -433,8 +441,8 @@ article {
     cite {
       font-style: italic;
       &:before {
-        content: '\2014'; 
-        padding-right: .3em; 
+        content: '\2014';
+        padding-right: .3em;
         padding-left: .3em;
       }
     }
@@ -473,8 +481,8 @@ div.archives {
     cite {
       font-style: italic;
       &:before {
-        content: '\2014'; 
-        padding-right: .3em; 
+        content: '\2014';
+        padding-right: .3em;
         padding-left: .3em;
       }
     }
@@ -805,4 +813,3 @@ p pre code, li pre code {
 .highlight code {
     background: #000;
 }
-
