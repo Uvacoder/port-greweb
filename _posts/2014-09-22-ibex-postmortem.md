@@ -72,7 +72,7 @@ The way the cell value is determined is through a set of rules.
 
 #### 2D cellular automaton
 
-<figure class="thumbnail-right">
+<figure class="thumbnail-left">
   <img src="/images/2014/09/Gospers_glider_gun.gif" />
   <figcaption>
     <a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life">Conway's Game of Life</a>,
@@ -88,15 +88,24 @@ It is important to understand that these rules are applied in parallel for __all
 
 <br />
 
+<figure class="thumbnail-right">
+  <img src="/images/2014/09/ibex-experiment2.png" />
+  <figcaption>
+    Early version with 4 elements and simple rules:
+    Water falls in Air, Fire grows in Air, Water extinguishes Fire, Earth drops Water + creates Fire
+  </figcaption>
+</figure>
+
 **A 2D cellular automaton rule:**
 
 ![](/images/2014/09/ibex-rule-2d.png)
 
-<figure class="thumbnail-right">
-  <img src="/images/2014/09/ibex-experiment2.png" />
+#### The elements
+
+<figure>
+  <img src="/images/2014/09/ibex-screenshot1.png" />
   <figcaption>
-    Early version of a cellular automaton with 4 elements and simple rules:
-    Water falls in Air, Fire grows in Air, Water extinguishes Fire, Earth drops Water and creates Fire.
+    The different elements gameplay.
   </figcaption>
 </figure>
 
@@ -106,7 +115,10 @@ these 4 elements as primary elements of the cellular automaton.
 Each elements also have secondary elements that can be created from each other interactions:
 **Source, Volcano, Grass, WindLeft, WindRight**.
 
-That is, there is a total of 9 possible values for a cell in my cellular automaton.
+- The **Volcano** is lava growing in the Earth. It creates Fire (when there is Air).
+- The **Source** is water infiltrating in the Earth. It drops Water (when there is Air).
+- The **Grass** (or Forest) grows on Earth with Water. It is a speed bonus for ibex but it propagates fire very fast. It also stop the water from flowing.
+- The **Wind** (left or right wind) is created randomly in Air. It have effects on Water and Fire propagation and also on ibex speed.
 
 <br />
 
@@ -117,7 +129,9 @@ That is, there is a total of 9 possible values for a cell in my cellular automat
   </figcaption>
 </figure>
 
-With the 9 previous cells and 9 possible values per cell, there is a LOT of possible rules.
+To summary, there is 9 possible elements,
+and rules are determined from the 9 previous cells:
+This makes a LOT of possible rules.
 However, the rules involved here remain simple and with just a few rules.
 
 > That is the big thing about cellular automaton: very simple rules but incredible variety of results.
@@ -147,17 +161,18 @@ TODO image
 However, to avoid seeing some (well known) patterns in my result I added some randomness in my rules.
 **With randomness, the results are incredibly powerful.**
 
-In the following video, notice how cool and realist the fire propagation can result
+In the following video, notice how cool the fire propagation can result
 by varying the propagation randomness factor.
 
-TODO: video of fire propagation with various randomness.
+<iframe width="640" height="420" src="//www.youtube.com/embed/mF-MNHk7u4s" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 
 #### Weights in rules
 
 **More powerful rules can also be reached by using weights**:
 you can affect a weight for each neighbor cell to give more or less importance to them.
 
-Let's take a look at the Fire/Grass propagation rule:
+
+TODO water/fire example + code
 
 ...
 
@@ -167,6 +182,7 @@ Let's take a look at the Fire/Grass propagation rule:
 Here are some examples of rules which handle interaction between elements:
 
 TODO schema with different elements interactions
+
 
 #### Limiting the grass growing
 
