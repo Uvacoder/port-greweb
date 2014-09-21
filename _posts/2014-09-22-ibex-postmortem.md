@@ -141,24 +141,25 @@ The first kind describes how two (or more!) elements interact each other.
 The second kind describes the way an element evolve.
 Some rules will also mix them both.
 
-Here are some simple "propagation rules":
+Here are some simple "propagation rule" examples:
 
 **Earth remain Earth**
 
-TODO image
+![](/images/2014/09/ibex-rule-earth.png)
 
 **Water falls**
 
-TODO image
+![](/images/2014/09/ibex-rule-water1.png)
 
 **Fire grows**
 
-TODO image
+![](/images/2014/09/ibex-rule-fire1.png)
 
+These rules produce very elementary result, we will now see how we can improve them.
 
 #### Randomness in rules
 
-However, to avoid seeing some (well known) patterns in my result I added some randomness in my rules.
+To avoid seeing some (well known) patterns in the simulation I added some randomness in my rules.
 **With randomness, the results are incredibly powerful.**
 
 In the following video, notice how cool the fire propagation can result
@@ -171,10 +172,84 @@ by varying the propagation randomness factor.
 **More powerful rules can also be reached by using weights**:
 you can affect a weight for each neighbor cell to give more or less importance to them.
 
+**Combine Randomness and Weights and you get a very powerful simulation.**
 
-TODO water/fire example + code
+Here is the final example of the Water and Fire interactions:
 
-...
+**Fire grows**:
+
+![](/images/2014/09/ibex-rule-fire2.png)
+
+How it looks like in GLSL:
+
+```glsl
+// Fire grow / Fire + Water
+if (
+  -0.05 * float(NW==W) + -0.40 * float(NN==W) + -0.05 * float(NE==W) + // If water drop...
+  -0.50 * float(WW==W) + -0.50 * float(CC==W) + -0.50 * float(EE==W) + // ...or water nearby.
+   0.35 * float(SW==F) +  0.90 * float(SS==F) +  0.35 * float(SE==F)   // Fire will move up and expand a bit.
+ >= 0.9 - 0.6 * RAND // The sum of matched weights must be enough important, also with some randomness
+) {
+  r = F;
+}
+```
+
+**Water falls**:
+
+![](/images/2014/09/ibex-rule-water2.png)
+
+TODO explain: water when falling creates hole, diverge a bit, and is slowed down by fire
+
+Here are all rules which creates Water:
+
+```glsl
+if (
+// Water drop / Water + Fire
+  between(
+    0.3 * float(NW==W) +  0.9 * float(NN==W) +  0.3 * float(NE==W) +
+    0.1 * float(WW==W) + -0.3 * float(CC==F) +  0.1 * float(EE==W) +
+                         -0.3 * float(SS==F)  
+    ,
+    0.9 - 0.6 * RAND,
+    1.4 + 0.3 * RAND
+  )
+
+  || // Water flow on earth rules
+
+  !prevIsSolid &&
+  RAND < 0.98 &&
+  ( (WW==W||NW==W) && SW==E || (EE==W||NE==W) && SE==E )
+
+  || // Occasional rain
+  !prevIsSolid &&
+  p.y >= SZ.y-1.0 &&
+  rainRelativeTime < 100.0 &&
+  between(
+    p.x -
+    (rand(vec2(SD*0.7 + TI - rainRelativeTime)) * SZ.x) // Rain Start
+    ,
+    0.0,
+    100.0 * rand(vec2(SD + TI - rainRelativeTime)) // Rain Length
+  )
+
+  || // Source creates water
+  !prevIsSolid && (
+    0.9 * float(NW==S) +  1.0 * float(NN==S) +  0.9 * float(NE==S) +
+    0.7 * float(WW==S) +                        0.7 * float(EE==S)
+    >= 1.0 - 0.3 * RAND
+  )
+) {
+  r = W;
+}
+```
+
+#### More in the code
+
+The rules are all implemented in a GLSL fragment shader:
+[logic.frag](https://github.com/gre/js13k-2014/blob/master/src/shaders/logic.frag)
+
+This fragment shader takes in input the previous world state (as an uniform texture)
+and computes a new state by applying the rules.
 
 #### Summary of the game rules
 ...
