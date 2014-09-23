@@ -445,7 +445,7 @@ where x and y is the cell position and N is a variable value (random but constan
 In other word, a forest can grow if the cell at N step under it is not a forest.
 This extra rule just adds a constraint on the max height that a forest can have.
 
-<figure class="thumbnail-right">
+<figure>
   <figcaption>A Grass can be created if the (x,y-N) cell is not a Grass.</figcaption>
   <img src="/images/2014/09/ibex-rule-forest-specific.png" />
 </figure>
