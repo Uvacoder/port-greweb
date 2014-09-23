@@ -326,9 +326,8 @@ vec2 p = gl_FragCoord.xy;
 vec2 S_ = p + 0.001 * time;
 ```
 
-Note that the position of the current pixel itself is used for the seed + adding the time.
-It produces variable randomness over time and for each pixel.
-
+Note that **the current pixel position** itself AND **the time** are both used for initializing the seed.
+It produces **variable randomness over time and for each pixel**.
 
 Let's now see other examples where randomness can be very powerful.
 
