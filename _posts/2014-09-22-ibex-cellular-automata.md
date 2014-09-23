@@ -173,9 +173,7 @@ Also if you want to **query the world from JavaScript**,
 you need to use `gl.readPixels` and then decode data in JavaScript.
 
 I'll explain this a bit later in another article.
-
-
-### The elements
+Let's now go back to the Cellular Automaton used in IBEX.
 
 <figure>
   <img src="/images/2014/09/ibex-screenshot1.png" />
@@ -183,6 +181,8 @@ I'll explain this a bit later in another article.
     The different elements gameplay.
   </figcaption>
 </figure>
+
+### The elements
 
 The game theme was "Four Elements: **Water, Air, Earth, Fire**", so I've used
 these 4 elements as primary elements of the cellular automaton.
@@ -334,15 +334,13 @@ Let's now see other examples where randomness can be very powerful.
 
 ### The Water and Fire interactions
 
-**Fire grows**:
+**Fire grows and diverge**:
 
 ![](/images/2014/09/ibex-rule-fire2.png)
-
 
 - the "left" and the "right" columns in this rule allows **divergence** in the way fire grows:
 Instead of growing straight up, **the fire can also move a bit left or a bit right**.
 A lower weight for these side columns make the fire diverge a bit less than a "triangle" propagation.
-
 
 Here is the GLSL code:
 
@@ -358,7 +356,7 @@ if (
 }
 ```
 
-**Water falls**:
+**Water falls, diverge and create holes**:
 
 ![](/images/2014/09/ibex-rule-water2.png)
 
