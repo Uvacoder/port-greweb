@@ -14,10 +14,10 @@ tags:
  [submission]: http://js13kgames.com/entries/ibex
  [github]: http://github.com/gre/js13k-2014
  [cellular]: http://en.wikipedia.org/wiki/Cellular_automaton
- [wolfram]: FIXME
- [ankos]: FIXME
+ [wolfram]: http://en.wikipedia.org/wiki/Stephen_Wolfram
+ [ankos]: https://www.wolframscience.com/
  [gol]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
- [cavelikegen]: www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
+ [cavelikegen]: http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
  [logicfrag]: https://github.com/gre/js13k-2014/blob/master/src/shaders/logic.frag
 
 
@@ -231,7 +231,7 @@ The first kind describes how two (or more!) elements interact each other.
 The second kind describes the way an element evolve.
 Some rules will also mix them both.
 
-### some simple "propagation rule"
+### Some simple "propagation rule"
 
 **Earth stays:**
 an Earth is returned if there was an Earth before.
@@ -263,7 +263,7 @@ Let's take a look at a simple example:
 > N.B.: only the "sum" is considered in the rule:
 if an element matches, we sum the weight of the cell, otherwise "zero".
 
-**This example is actually an weighted version of [the cave rule you can find here][cavelikegen]:**
+**This example is actually a weighted version of [the cave rule you can find here][cavelikegen]:**
 
 <figure>
   <figcaption>
