@@ -50,7 +50,7 @@ in his interesting book [A new Kind of Science][ankos].
   <img src="/images/2014/09/elementary-automaton.png" />
   <figcaption>
     <a href="http://mathworld.wolfram.com/ElementaryCellularAutomaton.html">
-      Some elementary automata.
+      elementary automata.
     </a>
   </figcaption>
 </figure>
@@ -60,7 +60,7 @@ the cell value is determined from the **previous and the 2 adjacent cells** (lef
 value and where the value can only be **0 or 1** (white or black / true or false).
 The way the cell value is determined is through a set of rules.
 
-> In elementary cellular automaton, there is a total of 8 rules, which means 256 possible cellular automata.
+> In an elementary cellular automaton, there is a total of 8 rules, which means 256 possible cellular automata.
 
 ### 2D cellular automaton
 
