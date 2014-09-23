@@ -93,7 +93,7 @@ It is important to understand that these rules are applied in parallel for __all
 ![](/images/2014/09/ibex-rule-2d.png)
 
 What I've found is that
-**the WebGL an the GLSL language works well to implement a cellular automaton**.
+**the WebGL and the GLSL language works well to implement a cellular automaton**.
 
 The GLSL paradigm is what I like to call [functional rendering](/2013/11/functional-rendering/):
 It is, to simplify, a function **`(x,y) => (r,g,b,a)`**:
