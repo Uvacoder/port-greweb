@@ -7,6 +7,7 @@ layout: post
 tags:
  - gamedev
  - js13k
+ - GLSL
 ---
 
  [gamepost]: /2014/09/ibex
