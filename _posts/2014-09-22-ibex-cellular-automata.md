@@ -333,7 +333,7 @@ Let's now see other examples where randomness can be very powerful.
 
 ### The Water and Fire interactions
 
-**Fire grows and diverge**:
+**Fire grows and diverges**:
 
 ![](/images/2014/09/ibex-rule-fire2.png)
 
@@ -355,7 +355,7 @@ if (
 }
 ```
 
-**Water falls, diverge and create holes**:
+**Water falls, diverges and creates holes**:
 
 ![](/images/2014/09/ibex-rule-water2.png)
 
@@ -376,7 +376,7 @@ the water does not visually "expand" contrary to the fire.
 <br />
 
 Here are all rules which creates Water:
-in this rules you can also notice how **the Water flow on Earth** and how
+in this rules you can also notice how **the Water flows on Earth** and how
 the **occasional rain** is implemented.
 
 ```glsl
