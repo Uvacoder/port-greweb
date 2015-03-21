@@ -131,7 +131,7 @@ vec4 encode (int value) {
 int get (int x, int y) {
   vec2 uv = (gl_FragCoord.xy + vec2(x, y)) / size;
   return (uv.x < 0.0 || uv.x >= 1.0 || uv.y < 0.0 || uv.y >= 1.0) ? 0 :
-    int(floor(.5 + 256.0 * texture2D(state, uv).r));
+    decode(texture2D(state, uv).r);
 }
 
 void main () {
