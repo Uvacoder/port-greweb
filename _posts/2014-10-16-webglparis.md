@@ -1,5 +1,5 @@
 ---
-title: '[FR] My webglparis talk'
+title: '[FR] webglparis talk: GLSL.io initiative and WebGL Transitions'
 description: "A talk I did at webglparis to present GLSL.io and GLSL Transitions initiative."
 author: Gaetan
 layout: post
