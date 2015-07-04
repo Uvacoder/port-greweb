@@ -9,6 +9,8 @@ tags:
  - vdom
 ---
 
+*^ Sorry guys, you may have notice the blog post date is wrong. I won't change the URL, but thanks to how time works, this will be fixed in one month anyway :-D*
+
 [ReactEurope](https://twitter.com/chantastic/status/616608931037646850) conference
 was to me incredibly [inspiring](https://twitter.com/chantastic/status/616670658911715328) and [promising](https://twitter.com/chantastic/status/616995607043903488).
 Yersterday got tons of news and tweets from JavaScript community.
@@ -63,7 +65,7 @@ and in the worse cases: **you can almost always find easy solutions to optimize 
 
 ### DX
 
-React has an incredible Developer eXperience (that people seem to call DX now!) that can [help you improving UX](https://twitter.com/greweb/status/617258379183005696) and the ability to [measure Performances](https://facebook.github.io/react/docs/perf.html) and [optimize them](https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate) when you reach bottlenecks.
+React has an incredible Developer eXperience (that people seem to call DX nowadays!) that can [help you improving UX](https://twitter.com/greweb/status/617258379183005696) and the ability to [measure Performances](https://facebook.github.io/react/docs/perf.html) and [optimize them](https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate) when you reach bottlenecks.
 
 You can easily figure out which component is a bottleneck in the Component tree as shown in following screenshot.
 
