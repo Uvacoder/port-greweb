@@ -45,7 +45,7 @@ that I'm going to detail a bit at the end of this article.
 
 I don't think Virtual DOM claims to be faster than doing Vanilla DOM, and that's not really the point. **The point is productivity.**
 You can write very well optimized code in Vanilla DOM but this might require **a lot of expertise**
-and a lot of time even for an experienced team *(time that should be spend focusing on making your product)*.
+and a lot of time even for an experienced team *(time that should be spent focusing on making your product)*.
 
 When it comes to adding new features and refactoring old ones, this goes worse.
 Without a well constrained framework or paradigm, things does not scale far, are time consuming and introduce bugs,...
