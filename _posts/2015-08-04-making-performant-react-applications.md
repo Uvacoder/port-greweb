@@ -167,7 +167,7 @@ That would probably be premature optimization for this example.
 
 ## Wrap Up
 
-To my mind, generic benchmarks has always tends to be biased and does not represent use-cases reality unless you are really covering your application itself.
+To my mind, generic benchmarks always tends to be biased and does not represent use-cases reality unless you are really covering your application itself.
 
 The TimelineGrid component optimization explained in this article is a very specific and well chosen example,
 but it is one counter-example for such a benchmark.
