@@ -21,7 +21,7 @@ Specifically, we don’t need Javascript to manage animation with **setInterval*
 
 In this article, I will try to explain why and how using css3-transition with some examples.
 
-<!-- more -->
+<!--more-->
 
 ## Why ?
 

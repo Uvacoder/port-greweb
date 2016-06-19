@@ -44,7 +44,7 @@ I think [Promises][promise] contains very interesting advantages in a game devel
 * [Play the Game][game].
 
 
-<!-- more -->
+<!--more-->
 
 ## FP in game development
 

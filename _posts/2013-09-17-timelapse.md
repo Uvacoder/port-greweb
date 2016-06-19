@@ -39,7 +39,7 @@ However, *Chrome* is recommended
 (*Firefox Aurora* also supports it but audio is a bit wrong, but Mozilla devs should improve this [soon](https://twitter.com/padenot/status/375924494537195520)).
 Today, it works on *Android Chrome Beta* on a Nexus 4, unfortunately with some clicks in the audio (Web Audio API is bleeding-edge).
 
-<!-- more -->
+<!--more-->
 
 ## Experimenting with stuff
 

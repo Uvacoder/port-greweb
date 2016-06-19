@@ -17,7 +17,7 @@ A few weeks ago, [we’ve introduced][1] a new feature in [Play Framework][2]: t
 
 **Now, let’s see how easy it is to serve a big Zip generated on-the-fly without memory load with Play Framework.**
 
-<!-- more -->
+<!--more-->
 
 ## The Zip generation example
 

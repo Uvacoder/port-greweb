@@ -20,7 +20,7 @@ And today, as an example, we will use [Google Closure Compiler web service][1] t
 
  [1]: https://developers.google.com/closure/compiler/docs/api-ref
 
-<!-- more -->
+<!--more-->
 
 **cURL** is a CLI swiss army knife of transferring data and it is perfect for testing, debugging and consuming web services.
 

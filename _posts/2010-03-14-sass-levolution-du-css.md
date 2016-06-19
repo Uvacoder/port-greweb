@@ -15,7 +15,7 @@ tags:
 
 **SASS, Syntactically Awesome Stylesheets**, est un langage de feuille de style évolué qui permet de factoriser beaucoup de code css et de rendre son écriture et sa maintenance **rapide et moins contraignante**. Il est compilé en css.
 
-<!-- more -->
+<!--more-->
 
 ## Pourquoi utiliser SASS ?
 

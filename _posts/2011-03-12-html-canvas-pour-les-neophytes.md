@@ -26,7 +26,7 @@ Elle est destinée à des développeurs débutant dans l’utilisation de Canvas
 
 *Dans la suite de l’article : les liens et codes de la vidéo …*
 
-<!-- more -->
+<!--more-->
 
 ## Liens
 

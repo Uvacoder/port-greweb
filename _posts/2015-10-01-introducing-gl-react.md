@@ -14,7 +14,7 @@ tags:
 
 <iframe src="http://greweb.me/reactmeetup7" width="600" height="400" frameborder="0"></iframe>
 
-<!-- more -->
+<!--more-->
 
 ## Abstract
 

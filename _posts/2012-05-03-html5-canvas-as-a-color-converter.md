@@ -47,7 +47,7 @@ Nope!
 All of these are color formats are supported by CSS and also Canvas.  
 **So, why not just re-using what the browser can do?**
 
-<!-- more -->
+<!--more-->
 
 
 ## How?

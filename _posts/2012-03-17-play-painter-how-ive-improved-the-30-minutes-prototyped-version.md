@@ -31,7 +31,7 @@ Explanation…
 
 <blockquote class="twitter-tweet" lang="fr"><p>Thanks guys for testing playpainter! but you are breaking my server :D <a href="http://t.co/F62qwk1i" title="http://twitter.com/greweb/status/179194592481116160/photo/1">twitter.com/greweb/status/…</a></p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/status/179194592481116160">12 mars 2012</a></blockquote>
 
-<!-- more -->
+<!--more-->
 
 ## In brief
 

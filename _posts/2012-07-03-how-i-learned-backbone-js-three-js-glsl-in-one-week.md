@@ -45,7 +45,7 @@ and you can play it here:
 
 **[Play the game][4]**
 
-<!-- more -->
+<!--more-->
 
 ## Overview of a one week game development
 

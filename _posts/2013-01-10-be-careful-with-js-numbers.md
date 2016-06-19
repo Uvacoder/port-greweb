@@ -53,7 +53,7 @@ Because 10000000000000001 can’t exist in Javascript with approximations, 10000
 
 Conclusion, *Program termination proof* sounds hard to reach in Javascript!
 
-<!-- more -->
+<!--more-->
 
 ## How many numbers in a 1000 range?
 

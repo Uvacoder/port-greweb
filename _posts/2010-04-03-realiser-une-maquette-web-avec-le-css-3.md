@@ -27,7 +27,7 @@ Il n’est ainsi plus nécessaire de recourir à des images pour réaliser des *
 
 L’avenir du CSS3 nous promet encore plus : il est d’ores et déjà possible sur certains navigateurs d’effectuer des **animations**, des **transitions**, des **effets de reflets**,… sans devoir recourir au *javascript*, au *canvas* ou, pire encore, au *flash*.
 
-<!-- more -->
+<!--more-->
 
 ## Généralités
 

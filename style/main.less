@@ -1,3 +1,8 @@
+@fontDefault: Roboto, Arial, sans-serif;
+@fontBlock: "Arapey", serif;
+@fontCode: "Monoid", monospace;
+@fontTitle: "Fredericka the Great", sans-serif;
+
 /**reset**/
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
@@ -39,6 +44,24 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
+@font-face {
+  font-family: Monoid;
+  font-style: normal;
+  font-weight: 400;
+  src: url("./Monoid/Monoid-Regular.ttf");
+}
+@font-face {
+  font-family: Monoid;
+  font-style: italic;
+  src: url("./Monoid/Monoid-Italic.ttf");
+}
+@font-face {
+  font-family: Monoid;
+  font-style: normal;
+  font-weight: bold;
+  src: url("./Monoid/Monoid-Bold.ttf");
+}
+
 /**default styles**/
 article {
   p, blockquote, ul, ol { margin-bottom: 1.5em; }
@@ -69,9 +92,9 @@ em, dfn { font-style: italic; }
 strong, dfn { font-weight: bold; }
 del, s { text-decoration: line-through; }
 abbr, acronym { border-bottom: 1px dotted; cursor: help; }
-pre, code, tt { font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace; }
+pre, code, tt { font-family: @fontCode; }
 sub, sup { line-height: 0; }
-hr { margin-bottom: 0.2em; }
+hr { margin: 2em 0; border: none; border-top: 1px solid #eee; }
 small { font-size: .8em; }
 big { font-size: 1.2em; }
 
@@ -80,7 +103,9 @@ big { font-size: 1.2em; }
 body {
   max-width: 1000px;
   margin: 0 auto;
-  line-height: 1.4em;
+  font-family: @fontDefault;
+  font-size: 14px;
+  line-height: 1.5em;
 }
 
 body > header {
@@ -109,20 +134,24 @@ body > header {
     left: 0;
     z-index: 1;
   }
+  nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+    font-family: @fontCode;
+    padding-left: 10px;
+    a {
+      margin-right: 10px;
+    }
+  }
 }
 @media only screen and (max-width: 520px) {
   body > header {
     h2 {
-      width: auto;
-      max-width: 350px;
-      margin-top: none;
-      margin-left: none;
+      display: none;
     }
   }
-}
-
-body > nav {
-  padding: 10px 20px;
 }
 
 body > footer {
@@ -217,7 +246,7 @@ a {
 }
 
 html, body {
-  font-family: "Droid Sans", sans-serif;
+  font-family: @fontDefault;
   background: #000;
   color: #fff;
 }
@@ -227,30 +256,23 @@ body > header {
   color: #fff;
 
   h1 {
-    font-family: 'Fredericka the Great', sans-serif;
+    font-family: @fontTitle;
     font-size: 3em;
-    a {
-      color: #fff;
-      text-decoration: none;
-    }
-    a:hover, a:active, a:focus {
-      color: #fff;
-      text-decoration: none;
-      text-shadow: 0em 0em 0.1em #fff;
-    }
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+  a:hover, a:active, a:focus {
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0em 0em 0.1em #fff;
   }
 
   h2 {
-    font-size: 1em;
+    font-size: 12px;
     text-transform: uppercase;
-  }
-}
-
-body > nav {
-  background: #fff;
-  a {
-    text-decoration: none;
-    margin-right: 10px;
   }
 }
 
@@ -317,7 +339,7 @@ article {
       margin-right: 10px;
     }
     .tags {
-      font-family: monospace;
+      font-family: @fontCode;
       float: right;
       .tag {
         margin-left: 2px;
@@ -376,7 +398,7 @@ article {
   }
   h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
-    margin: 1em 0 0.5em 0;
+    margin: 2em 0 1em 0;
     line-height: 1.5em;
     clear: both;
   }
@@ -436,10 +458,11 @@ article {
   }
   blockquote {
     margin: 1.2em;
-    font-style: italic;
     position: relative;
+    font-family: @fontBlock;
+    color: #888;
     font-size: 1.2em;
-    line-height: 1.5em;
+    line-height: 1.3em;
     padding-left: 1em;
     border-left: 4px solid #ddd;
     cite {
@@ -450,6 +473,9 @@ article {
         padding-left: .3em;
       }
     }
+  }
+  a:hover > code {
+    border-color: #000;
   }
 }
 
@@ -559,7 +585,7 @@ figure.code .highlight pre, .gist-file .highlight pre, pre .highlight pre {
 .gist article {
   background: #fff;
   margin-bottom: 0;
-  font-family: "Droid Sans", sans-serif;
+  font-family: @fontDefault;
 }
 html .gist .gist-file {
     margin-bottom: 1.8em;
@@ -599,7 +625,8 @@ p pre code, li pre code {
     border: none;
 }
 .pre-code, html .gist .gist-file .gist-syntax  pre, .highlight code {
-    font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace !important;
+    font-family: @fontCode !important;
+    font-size: 12px;
     overflow: scroll;
     overflow-y: hidden;
     display: block;
@@ -648,7 +675,7 @@ p pre code, li pre code {
 }
 .pre-code .cs, html .gist .gist-file .gist-syntax  pre .cs, .highlight code .cs {
     color: #666666 !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
     font-style: italic !important;
 }
 .pre-code .err, html .gist .gist-file .gist-syntax  pre .err, .highlight code .err {
@@ -666,7 +693,7 @@ p pre code, li pre code {
 }
 .pre-code .ow, html .gist .gist-file .gist-syntax  pre .ow, .highlight code .ow {
     color: #a5c261 !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
 }
 .pre-code .gd, html .gist .gist-file .gist-syntax  pre .gd, .highlight code .gd {
     color: #e6e1dc !important;
@@ -697,21 +724,21 @@ p pre code, li pre code {
 }
 .pre-code .gs, html .gist .gist-file .gist-syntax  pre .gs, .highlight code .gs {
     color: #e6e1dc !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
 }
 .pre-code .gu, html .gist .gist-file .gist-syntax  pre .gu, .highlight code .gu {
     color: #6c71c4 !important;
 }
 .pre-code .kc, html .gist .gist-file .gist-syntax  pre .kc, .highlight code .kc {
     color: #cc7833 !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
 }
 .pre-code .kd, html .gist .gist-file .gist-syntax  pre .kd, .highlight code .kd {
     color: #6d9cbe !important;
 }
 .pre-code .kp, html .gist .gist-file .gist-syntax  pre .kp, .highlight code .kp {
     color: #cc7833 !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
 }
 .pre-code .kr, html .gist .gist-file .gist-syntax  pre .kr, .highlight code .kr {
     color: #cc7833 !important;
@@ -739,18 +766,18 @@ p pre code, li pre code {
 }
 .pre-code .ne, html .gist .gist-file .gist-syntax  pre .ne, .highlight code .ne {
     color: #6d9cbe !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
 }
 .pre-code .nf, html .gist .gist-file .gist-syntax  pre .nf, .highlight code .nf {
     color: #6d9cbe !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
 }
 .pre-code .nn, html .gist .gist-file .gist-syntax  pre .nn, .highlight code .nn {
     color: #e6e1dc !important;
 }
 .pre-code .nt, html .gist .gist-file .gist-syntax  pre .nt, .highlight code .nt {
     color: #6d9cbe !important;
-    font-weight: bold !important;
+    font-weight: normal !important;
 }
 .pre-code .nx, html .gist .gist-file .gist-syntax  pre .nx, .highlight code .nx {
     color: #da4939 !important;

@@ -30,7 +30,7 @@ Let’s see how to implement this from scratch in about 30 minutes…
 
 <iframe width="640" height="360" src="http://www.youtube.com/embed/NHEbm-WEbRw?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
 
-<!-- more -->
+<!--more-->
 
 [and read how I’ve improved this initial version…][5]
 

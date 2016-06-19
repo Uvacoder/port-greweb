@@ -48,7 +48,7 @@ tags:
 "fr.greweb" %% "playcli" % "0.1"
 ```
 
-<!-- more -->
+<!--more-->
 
 ## Why PlayCLI
 

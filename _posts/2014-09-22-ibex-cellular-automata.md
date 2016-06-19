@@ -37,7 +37,7 @@ and computed efficiently in a GLSL shader.
 
 <iframe width="50%" height="220" src="//www.youtube.com/embed/nqD2qIy4auU" frameborder="0" allowfullscreen></iframe>
 
-<!-- more -->
+<!--more-->
 
 ## Cellular automata ruled world
 

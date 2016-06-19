@@ -29,7 +29,7 @@ giving much more powerful Synthesizers (see in the following video).
 [*(here is the implementation of that FM)*][zoundfm]
 
 
-<!-- more -->
+<!--more-->
 
 ## Dive into Frequency Modulation Synthesis
 

@@ -25,7 +25,7 @@ This video shows how to run different instances of [Play framework][1] server in
 *   [Play framework Archlinux documentation][4]
 *   [Play framework AUR package][2]
 
-<!-- more -->
+<!--more-->
 
 # Abstract summary
 

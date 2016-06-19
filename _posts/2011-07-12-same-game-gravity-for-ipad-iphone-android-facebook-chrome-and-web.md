@@ -39,7 +39,7 @@ see also [Same Game Gravity Technical Notes][1].
 
 Same Game Gravity is a mind-bending ball removal puzzle game where you try to remove all of the balls from the board. Balls can only be removed when they are grouped with more balls of the same color. The balls are influenced by gravity. On mobile, you change gravity by rotating your mobile, on desktop you have arrows.
 
-<!-- more -->
+<!--more-->
 
 ## The game gravity
 

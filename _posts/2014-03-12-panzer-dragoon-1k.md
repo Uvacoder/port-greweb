@@ -39,7 +39,7 @@ Panzer Dragoon Original Game
 
 <iframe width="640" height="480" src="//www.youtube.com/embed/peoRBj9U-jI" frameborder="0" allowfullscreen></iframe>
 
-<!-- more -->
+<!--more-->
 
 JS1K
 ===

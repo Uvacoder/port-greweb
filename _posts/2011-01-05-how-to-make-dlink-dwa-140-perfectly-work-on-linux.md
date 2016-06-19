@@ -13,7 +13,7 @@ I’m using ArchLinux and I finally make my DWA-140 B2 Wifi USB adaptor work !
 
 If you have the same problem, you can read this article to fix it !
 
-<!-- more -->
+<!--more-->
 
 **My conf**:
 

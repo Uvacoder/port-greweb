@@ -1,5 +1,9 @@
+excerpt_separator: "<!--more-->"
+gems: [jekyll-paginate, jekyll-less, jekyll/tagging]
+tag_page_layout: archive
+tag_page_dir: tag
 markdown: redcarpet
-pygments: true
+highlighter: "pygments"
 permalink: /:year/:month/:title
 paginate: 10
 url: http://greweb.me

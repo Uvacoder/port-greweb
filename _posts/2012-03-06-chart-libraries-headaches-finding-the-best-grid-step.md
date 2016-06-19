@@ -23,7 +23,7 @@ Most of the time, **data ranges are unknown**, hence we need to **adapt the grid
 
 Let’s explain the algorithm…
 
-<!-- more -->
+<!--more-->
 
 ## About scientific notation
 

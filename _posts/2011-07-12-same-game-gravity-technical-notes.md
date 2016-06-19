@@ -45,7 +45,7 @@ see also [Same Game Gravity presentation][1].
 ![](/images/2011/07/gravity_exemple.png)
 ][2]
 
-<!-- more -->
+<!--more-->
 
 In 2010, I learned how to make mobile web applications. It was also the year of the iPad. Out of interest I tried my same game canvas experiment on the iPad, and was surprised to find that it worked pretty well out of the box! Seeing it run on multiple devices was exciting – and the touch screens offered a new dimension for creating highly intuitive interactions. I mean, today, **even my mum can play Same Game Gravity without any help!** (That’s unfortunately not the case for her desktop)
 

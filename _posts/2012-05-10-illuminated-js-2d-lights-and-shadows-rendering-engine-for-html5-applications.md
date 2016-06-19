@@ -50,7 +50,7 @@ In this article, we will introduce the basic usages of *Illuminated.js* and APIs
 *   [Technical notes – how does it work?][5]
 
 
-<!-- more -->
+<!--more-->
 
 
 ## How can I use it?

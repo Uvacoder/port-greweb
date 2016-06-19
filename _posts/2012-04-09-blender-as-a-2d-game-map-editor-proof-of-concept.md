@@ -41,7 +41,7 @@ In such game, like a *Worms* or a *Sonic*, it’s totally crazy to write the map
 
 **Making the game engine** is one thing, but **designing the game levels** can be one big work too and **we need tools to make it easier**.
 
-<!-- more -->
+<!--more-->
 
 ## Tile based game maps
 

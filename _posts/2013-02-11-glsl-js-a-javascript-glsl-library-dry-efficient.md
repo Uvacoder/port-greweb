@@ -89,7 +89,7 @@ this.set("myVector2", { x: 1.3, y: 2.4 });
 // ... see also this.sync() and this.syncAll()
 ```
 
-<!-- more -->
+<!--more-->
 
 More technically, **glsl.js** is a subset* of a WebGL library which focus on **making the GLSL (OpenGL Shading Language) easy and accessible** for vizualisation and game purposes (2D or 3D).
 

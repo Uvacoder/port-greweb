@@ -47,7 +47,7 @@ For more information on the subject, I highly recommend reading
 the article ["You're Missing the Point of Promises"][5] 
 and [the Q implementation design README][6].
 
-<!-- more -->
+<!--more-->
 
 ## What is a Promise
 

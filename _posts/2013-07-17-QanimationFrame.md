@@ -26,7 +26,7 @@ tags:
 featuring the `requestAnimationFrame` Javascript function and its general usage,
 and [QanimationFrame][1], its Promisified version used as a "wait for DOM to be ready" API.*
 
-<!-- more -->
+<!--more-->
 
 ## `requestAnimationFrame`
 

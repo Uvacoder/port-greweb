@@ -70,7 +70,7 @@ Using [@mrspeaker][7]‘s audio synthesis expertise, we started creating a synth
 
 Thanks to the Play framework goodness, **this audio stream can be both consumed by the web page with an HTML audio tag, and with a stream player such as VLC!** Ok, that’s the project – let’s have a closer look at some of the concepts…
 
-<!-- more -->
+<!--more-->
 
 
 ## What is sound?

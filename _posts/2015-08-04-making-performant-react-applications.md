@@ -41,7 +41,7 @@ Currently, I am able to render the whole application at 60 FPS and this is still
 Well, more exactly, this would not have been possible without some optimizations
 that I'm going to detail a bit at the end of this article.
 
-<!-- more -->
+<!--more-->
 
 ## The point is productivity
 

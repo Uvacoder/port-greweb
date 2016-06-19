@@ -38,7 +38,7 @@ Il vous apprendra à réaliser une animation similaire à la bannière <del>actu
 
 Il est volontairement ordonnancé de manière didactique, si vous maitriser les concepts, n’hésitez pas à avancer.
 
-<!-- more -->
+<!--more-->
 
 ## Code de base (skeleton template)
 

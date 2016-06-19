@@ -18,7 +18,7 @@ tags:
 
 In this article, we will focus on the power of **CSS as a descriptive language**, current template system approach and their problems with **modularity** and **extensibility**, and try to mix both features from the **concept** to a **concrete implementation**.
 
-<!-- more -->
+<!--more-->
 
 <br style="clear: both" />
 

@@ -28,7 +28,7 @@ Using web to develop mobile applications is very **productive** and web technolo
 
 [Fork WebAppBuilder on Github.][3]
 
-<!-- more -->
+<!--more-->
 
 ## Rich?
 

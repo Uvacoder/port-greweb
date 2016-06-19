@@ -22,7 +22,7 @@ A progress tag will be displayed on recent browsers with a OS-native progress ba
 
 It is today supported by Firefox 9 , Chrome, Opera and IE10.  
 
-<!-- more -->
+<!--more-->
 
 ## Example
 

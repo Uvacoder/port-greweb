@@ -31,7 +31,7 @@ Many animation libraries are today using **easing functions** – functions of t
 
 But most of these libraries implement a huge collection of functions. We will see how we can generalize them with bezier curves.
 
-<!-- more -->
+<!--more-->
 
 
 For instance, we use to do this:
