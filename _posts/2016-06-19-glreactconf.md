@@ -98,7 +98,7 @@ In [`gl-react`][gl-react], we have the **exact same problem to resolve**: [`gl-r
 One other key point of React is that it's a **thin wrapper on top of DOM**. React focus on translating **imperative API => functional API** with the most minimal & generic way, meaning that React won't hide you what the DOM elements are about *(same as React Native tries just to be on top of real Native components)*.
 
 We tried to follow this principle as well when wrapping (Open/Web)**GL**:
-we want to hides the complex and imperative part of GL but just expose the great functional parts that are the **Fragment Shaders** and the **Framebuffers**.
+we want to hide the complex and imperative part of GL but just expose the great functional parts that are the **Fragment Shaders** and the **Framebuffers**.
 
 ## Hardcoding the vertex part of the pipeline
 
@@ -382,7 +382,7 @@ So all possible composition of previous examples will just work
 <br />
 
 `gl-react` makes composition efficient using OpenGL Framebuffers.
-This approach encourages you to wrong small and generic shaders (instead of one monolithic and specific shader).
+This approach encourages you to write small and generic shaders (instead of one monolithic and specific shader).
 
 > For this composition to work correctly, the components must be created with `GL.createComponent` or directly be `GL.Node` components.
 
