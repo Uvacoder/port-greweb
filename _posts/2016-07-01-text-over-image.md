@@ -4,7 +4,7 @@ author: Gaetan
 layout: post
 tags:
   - react
-  - webgl
+  - opengl
   - gl-react
 ---
 
