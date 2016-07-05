@@ -4,7 +4,7 @@ tag_page_layout: archive
 tag_page_dir: tag
 markdown: redcarpet
 highlighter: "pygments"
-permalink: /:year/:month/:title
+permalink: /:year/:month/:title/
 paginate: 10
 url: http://greweb.me
 name: "@Greweb"
