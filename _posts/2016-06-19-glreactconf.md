@@ -476,7 +476,7 @@ And like **BlurV**, it is implementing a 4-pass blur, so it will pipe 4 times a 
 
 > Have I lost you? Don't worry, we will show in a few section what the big picture scene looks like.
 
-### How gl-react transform your Surface and effects stack
+### <a name="dedup"></a> How gl-react transform your Surface and effects stack
 
 We have just overviewed how deep a GL effects stack can be: going down into each individual component that itself use many other components can ends a with a pretty big tree. That's true for any React application actually, but React is still performant.
 
