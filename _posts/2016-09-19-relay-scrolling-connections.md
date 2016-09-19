@@ -199,6 +199,10 @@ export default class InfiniteScrollable extends Component {
   };
 
   render () {
+    // you might want to render a spinner?
+    // children might be a function?
+    // etc..
+    // these are some variations we could have from this starting point
     return this.props.children;
   }
 }
