@@ -211,4 +211,4 @@ export default class InfiniteScrollable extends Component {
 
 This is a **possible implementation** of this problem. You might want to add more things based on your need, for instance you could automatically renders a loading spinner, and many needs might vary. Please try it, fork it, give feedback :)
 
-It is also possible to implement it as a High Order Component (HOC): https://github.com/facebook/relay/issues/1377.
+It is also possible to implement it as a High Order Component (HOC): [https://github.com/facebook/relay/issues/1377](https://github.com/facebook/relay/issues/1377).
