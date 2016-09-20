@@ -1,5 +1,6 @@
 ---
 title:  Relay, scrolling connections
+description: implement a component handling the scroll of a list to pull more data of a Graphql Connection with Relay
 author: Gaetan
 layout: post
 tags:
@@ -11,11 +12,13 @@ tags:
 [Relay-spec]: https://facebook.github.io/relay/docs/graphql-relay-specification.html#content
 
 
-[Relay][Relay] doesn't solve for you how you should render your components. Relay is "universal" and don't even assume it runs on a browser context. Relay focuses only on providing an abstraction to work with GraphQL, the same way React focuses only on the rendering part. Each library solves one single problem at a time *(and hell, each are complex enough problem to solve already)*.
+[Relay][Relay] doesn't solve for you how you should render your components. Relay is "universal" and doesn't even assume it will be running in a browser context. It focuses only on providing an abstraction to work with GraphQL – the same way React focuses only on rendering. Each library solves one single problem at a time *(and hell, both are complex enough problem to solve already)*.
 
-These libraries being very generic, it's now up to the community to solve the "more specific". Just search on NPM and you can find tons of React libraries already, some might help you to solve part of the problem you want to solve?
+Because these libraries are very generic, it's now up to the community to solve the "more specific" parts. Just search on NPM and you can find tons of React libraries already, some might help you to solve part of the problem you want to solve.
 
-This article shows one use-case: **implementing a component handling the scroll of a list to pull more data** of a GraphQL connection with Relay.
+This article demonstrates one use-case: **implementing a component handling the scroll of a list to pull more data** of a GraphQL connection with Relay.
+
+<!--more-->
 
 ## Usage
 
@@ -209,6 +212,6 @@ export default class InfiniteScrollable extends Component {
 ```
 
 
-This is a **possible implementation** of this problem. You might want to add more things based on your need, for instance you could automatically renders a loading spinner, and many needs might vary. Please try it, fork it, give feedback :)
+This is a **possible implementation** of this problem. You might want to add more things based on your needs. For instance you could automatically render a loading spinner... or a million other things! Please try it, fork it, give feedback :)
 
 It is also possible to implement it as a High Order Component (HOC): [https://github.com/facebook/relay/issues/1377](https://github.com/facebook/relay/issues/1377).
