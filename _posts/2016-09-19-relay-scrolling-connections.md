@@ -138,7 +138,7 @@ export default class InfiniteScrollable extends Component {
 
   resizeBoundOnDom = null;
 
-  componentWillMount () {
+  componentDidMount () {
     this.syncScrollBodyListener(this.props);
     this.checkScroll();
   }
