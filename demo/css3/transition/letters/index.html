@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSS Transition - letters demo</title>
+    <style>
+    .container {
+      text-align: center;
+      padding: 10px;
+      margin: 10px;
+      background: #f9f9f9;
+    }
+    
+    .container .letters {
+      text-decoration: none;
+      font-weight: bold;
+      line-height: 100px;
+    }
+    
+    .container .letters span {
+      -moz-transition-duration: 1.5s;
+      -webkit-transition-duration: 1.5s;
+      -o-transition-duration: 1.5s;
+      font-size: 50px;
+    }
+    .container .letters span:hover {
+      font-size: 100px;
+    }
+    
+    .container .letters span.green {
+      color: #547659;
+      text-shadow: 1px 1px 2px #8FC1A5;
+    }
+    .container .letters span.green:hover {
+      color: #315637;
+      text-shadow: 5px 5px 5px #99ADA2;
+    }
+    
+    .container .letters span.red {
+      color: #874031;
+      text-shadow: 1px 1px 2px #C1998F;
+    }
+    .container .letters span.red:hover {
+      color: #723B2F;
+      text-shadow: 5px 5px 5px #B4A09B;
+    }
+    
+    .container .letters span.blue {
+      color: #314A87;
+      text-shadow: 1px 1px 2px #8F9AC1;
+    }
+    .container .letters span.blue:hover {
+      color: #2F3F72;
+      text-shadow: 5px 5px 5px #9B9FB4;
+    }
+    </style>
+  </head>
+  <body>
+    
+    <div class="container">
+      <a href="http://grenlibre.fr/" class="letters">
+        <span class="green">g</span><span class="green">r</span><span class="green">e</span><span class="green">n</span><span class="red">l</span><span class="red">i</span><span class="red">b</span><span class="red">r</span><span class="red">e</span><span class="blue">.</span><span class="blue">f</span><span class="blue">r</span>
+      </a>
+    </div>
+    <div>
+    
+      <h2>This is just css. There are no javascript or flash code !</h2>
+      <p>For more CSS3 Transition demos, please go to <a href="http://blog.grenlibre.fr/2010/05/css3-transition-available-on-firefox-3-7">this article from my blog</a>.</p>
+      
+      <h3>This is the css code :</h3>
+      <pre>
+.container {
+  text-align: center;
+  padding: 10px;
+  margin: 10px;
+  background: #f9f9f9;
+}
+
+.container .letters {
+  text-decoration: none;
+  font-weight: bold;
+  line-height: 100px;
+}
+
+.container .letters span {
+  -moz-transition-duration: 1.5s;
+  -webkit-transition-duration: 1.5s;
+  -o-transition-duration: 1.5s;
+  font-size: 50px;
+}
+.container .letters span:hover {
+  font-size: 100px;
+}
+
+.container .letters span.green {
+  color: #547659;
+  text-shadow: 1px 1px 2px #8FC1A5;
+}
+.container .letters span.green:hover {
+  color: #315637;
+  text-shadow: 5px 5px 5px #99ADA2;
+}
+
+.container .letters span.red {
+  color: #874031;
+  text-shadow: 1px 1px 2px #C1998F;
+}
+.container .letters span.red:hover {
+  color: #723B2F;
+  text-shadow: 5px 5px 5px #B4A09B;
+}
+
+.container .letters span.blue {
+  color: #314A87;
+  text-shadow: 1px 1px 2px #8F9AC1;
+}
+.container .letters span.blue:hover {
+  color: #2F3F72;
+  text-shadow: 5px 5px 5px #9B9FB4;
+}</pre>
+
+    </div>
+    <footer>
+      CSS transition - letters demo - by Gaetan Renaudeau - 2010 - <a 
+href="http://grenlibre.fr/">grenlibre.fr</a>
+    </footer><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9919624-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>
+

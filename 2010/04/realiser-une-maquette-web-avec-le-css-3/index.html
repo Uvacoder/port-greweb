@@ -1,0 +1,406 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Réaliser une maquette web avec le CSS 3">
+    
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - Réaliser une maquette web avec le CSS 3</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2010/04/realiser-une-maquette-web-avec-le-css-3/">Réaliser une maquette web avec le CSS 3</a></h1>
+    <time class="date" datetime="2010-04-03">April  3, 2010</time>
+   <span class="tags">
+     <a class="tag" href="/tag/css.html">css</a>
+     <a class="tag" href="/tag/sass.html">sass</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p>Le CSS depuis sa version 3 constitue une <strong>bonne évolution technologique pour palier l’utilisation abusive d’images</strong> dans la réalisation d’une application web.</p>
+
+<p>Il n’est ainsi plus nécessaire de recourir à des images pour réaliser des <strong>ombres</strong>, des <strong>dégradés</strong>, des <strong>bordures arrondis</strong> ou encore utiliser des <strong>polices spécifiques</strong>.</p>
+
+<p>L’avenir du CSS3 nous promet encore plus : il est d’ores et déjà possible sur certains navigateurs d’effectuer des <strong>animations</strong>, des <strong>transitions</strong>, des <strong>effets de reflets</strong>,… sans devoir recourir au <em>javascript</em>, au <em>canvas</em> ou, pire encore, au <em>flash</em>.</p>
+
+<!--more-->
+
+<h2>Généralités</h2>
+
+<h3>Pourquoi ?</h3>
+
+<p>Quelques raisons pour utiliser le CSS 3…</p>
+
+<h4>dans une optique de maintenabilité</h4>
+
+<p>En utilisant des images pour réaliser des effets simples, <strong>il faut mettre à jour l’image à chaque fois</strong>. Si bien qu’il est nécessaire d’utiliser un logiciel de dessin et de garder les sources pour pouvoir facilement modifier les couleurs à l’avenir.<br>
+<strong>La modification d’un thème est alors pénible</strong> : Pour chaque image du thème : il faut ouvrir la source de l’image avec son logiciel préféré (GIMP, Photoshop, …), modifier la couleur, exporter l’image, recharger la page,… A contrario, <strong>il ne suffit que de modifier une ligne de code CSS pour changer sa couleur</strong> (l’utilisation de variable avec SASS est intéréssant).</p>
+
+<h4>par simplicité</h4>
+
+<p>Le CSS 3 <strong>offre plus de possibilités</strong> donc <strong>simplifie bien des tâches</strong> qui étaient complexe à réaliser auparavant. Bordures arrondis, ombres, dégradés, animations, reflets,… sont maintenant facilement réalisables avec le CSS 3.</p>
+
+<p>Voici un exemple frappant parmi tant d’autres :<br>
+Auparavant, on voyait fleurir à foison des tableaux pour réaliser de simples bordures arrondis.</p>
+
+<h5>On voyait auparavant</h5>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;radius&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;tr&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;topleft&quot;</span><span class="nt">&gt;&lt;/td&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;top&quot;</span><span class="nt">&gt;&lt;/td&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;topright&quot;</span><span class="nt">&gt;&lt;/td&gt;</span>
+<span class="nt">&lt;/tr&gt;</span>
+<span class="nt">&lt;tr&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;left&quot;</span><span class="nt">&gt;&lt;/td&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span>content here...<span class="nt">&lt;/td&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;right&quot;</span><span class="nt">&gt;&lt;/td&gt;</span>
+<span class="nt">&lt;/tr&gt;&lt;tr&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;bottomleft&quot;</span><span class="nt">&gt;&lt;/td&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;bottom&quot;</span><span class="nt">&gt;&lt;/td&gt;</span>
+<span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;bottomright&quot;</span><span class="nt">&gt;&lt;/td&gt;</span>
+<span class="nt">&lt;/tr&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+<span class="nt">&lt;style&gt;</span>
+<span class="nt">table</span><span class="nc">.radius</span> <span class="nc">.topleft</span> <span class="p">{</span>
+<span class="k">background</span><span class="o">:</span> <span class="sx">url(topleft.png)</span><span class="p">;</span>
+<span class="k">width</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>
+<span class="k">height</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c">/* DE MEME pour les 8 autres cases ... */</span>
+<span class="nt">&lt;/style&gt;</span>
+</code></pre></div>
+<h5>Maintenant avec le CSS3</h5>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;radius&quot;</span><span class="nt">&gt;</span>content here...<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;style&gt;</span>
+<span class="nc">.radius</span> <span class="p">{</span>
+  <span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">&lt;/style&gt;</span>
+</code></pre></div>
+<h4>dans un objectif de scalabilité des thèmes</h4>
+
+<p>L’utilisation des possibilités du CSS 3 au lieu d’images va permettre d’<strong>étendre rapidement son application web à plusieurs thèmes</strong> et de modifier facilement ces thèmes. Il suffira d’avoir un fichier pour chaque thème.</p>
+
+<h3>SASS et le framework Compass</h3>
+
+<p>Afin de résoudre les problèmes de <em>cross-navigateur</em> abordés précédemment, je vous conseille l’utilisation du <strong>SASS</strong> et du framework <a href="http://compass-style.org/">Compass</a>.<br>
+Pour plus de renseignements sur le SASS, n’hésitez pas à lire <a href="/2010/03/sass-levolution-du-css">cet article</a>.</p>
+
+<h3>Principales nouveautés du CSS 3</h3>
+
+<p>Dans la suite de cet article, <strong>pour plus de simplicités, nous nous arrêtons à la compatibilité de Firefox</strong> (préfixé par -moz) mais bien entendu, il est possible de les rendre compatibles avec tous les navigateurs récents. Comme précisé avant, l’utilisation du framework <em>Compass</em> permet entre autres de résoudre ce problème.</p>
+
+<h4>Les bordures arrondis</h4>
+
+<p><img src="/images/2010/css3/exemple_border_radius.png" alt=""></p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.exemple</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="nb">black</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">2px</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="p">}</span>  
+</code></pre></div>
+<h4>Les dégradés</h4>
+
+<p>Compatibles depuis Firefox 3.6.<br>
+<img src="/images/2010/css3/exemple_gradient.png" alt=""></p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.exemple</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="nb">black</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">2px</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">background</span><span class="o">:</span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">linear</span><span class="o">-</span><span class="n">gradient</span><span class="p">(</span><span class="m">-90</span><span class="n">deg</span><span class="o">,</span> <span class="nb">green</span><span class="o">,</span> <span class="nb">yellow</span><span class="p">);</span>  
+<span class="p">}</span>  
+</code></pre></div>
+<h4>Les ombres</h4>
+
+<h5>Sous les textes</h5>
+
+<p><img src="/images/2010/css3/exemple_text_shadow.png" alt=""></p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.exemple</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="nb">black</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">2px</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">background</span><span class="o">:</span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">linear</span><span class="o">-</span><span class="n">gradient</span><span class="p">(</span><span class="m">-90</span><span class="n">deg</span><span class="o">,</span> <span class="nb">green</span><span class="o">,</span> <span class="nb">yellow</span><span class="p">);</span>  
+<span class="err"> </span> <span class="k">text-shadow</span><span class="o">:</span> <span class="m">-1px</span> <span class="m">-1px</span> <span class="m">1px</span> <span class="nb">yellow</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<h5>Sous les éléments</h5>
+
+<p><img src="/images/2010/css3/exemple_box_shadow.png" alt=""></p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.exemple</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="nb">black</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">2px</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">background</span><span class="o">:</span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">linear</span><span class="o">-</span><span class="n">gradient</span><span class="p">(</span><span class="m">-90</span><span class="n">deg</span><span class="o">,</span> <span class="nb">green</span><span class="o">,</span> <span class="nb">yellow</span><span class="p">);</span>  
+<span class="err"> </span> <span class="k">text-shadow</span><span class="o">:</span> <span class="m">-1px</span> <span class="m">-1px</span> <span class="m">1px</span> <span class="nb">yellow</span><span class="p">;</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">1px</span> <span class="m">1px</span> <span class="m">1px</span> <span class="n">rgba</span><span class="p">(</span><span class="m">0</span><span class="o">,</span> <span class="m">0</span><span class="o">,</span> <span class="m">0</span><span class="o">,</span> <span class="m">0</span><span class="o">.</span><span class="m">5</span><span class="p">);</span>  
+<span class="p">}</span>  
+</code></pre></div>
+<p>A noter d’ailleurs que la couleur de format <strong>rgba(r, g, b, a)</strong> est une nouveauté du CSS 3.</p>
+
+<h3>Optimiser la compatibilité avec les navigateurs plus anciens</h3>
+
+<p>Voici une utilisation intelligente des dégradés (avec SASS) pour permettre une meilleure <strong>compatibilité</strong> avec, en dernier recours, une couleur ou une image alternative :</p>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="nf">=vertical-gradient</span><span class="p">(</span><span class="nv">!from</span><span class="o">,</span> <span class="nv">!to</span><span class="o">,</span> <span class="nv">!alt</span><span class="o">=</span><span class="p">(</span><span class="nv">!from</span><span class="o">/</span><span class="mi">2</span>   <span class="nv">!to</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">background</span><span class="o"> =</span> <span class="nv">!alt</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">background</span><span class="o"> =</span> <span class="nf">-webkit-gradient</span><span class="p">(</span><span class="n">linear</span><span class="o">,</span> <span class="no">left</span> <span class="no">top</span><span class="o">,</span> <span class="no">left</span> <span class="no">bottom</span><span class="o">,</span> <span class="nf">from</span><span class="p">(</span><span class="nv">!from</span><span class="p">)</span><span class="o">,</span> <span class="nf">to</span><span class="p">(</span><span class="nv">!to</span><span class="p">))</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">background</span><span class="o"> =</span> <span class="nf">-moz-linear-gradient</span><span class="p">(</span><span class="mi">-90</span><span class="kt">deg</span><span class="o">,</span> <span class="nv">!from</span><span class="o">,</span> <span class="nv">!to</span><span class="p">)</span>  
+
+<span class="cm">/* exemples d&#39;utilisation : */  </span>
+<span class="nn">#main</span> <span class="o">&gt;</span> <span class="nt">header</span>  
+<span class="err"> </span>  <span class="nt">vertical-gradient</span><span class="o">(</span><span class="nn">#719369</span><span class="o">,</span> <span class="nn">#587451</span><span class="o">,</span> <span class="nt">url</span><span class="o">(</span><span class="nt">header</span><span class="nc">.png</span><span class="o">))</span>  
+
+<span class="nn">#main</span> <span class="o">&gt;</span> <span class="nt">header</span>  
+<span class="err"> </span>  <span class="nt">vertical-gradient</span><span class="o">(</span><span class="nt">green</span><span class="o">,</span> <span class="nt">yellow</span><span class="o">,</span> <span class="nn">#80FF80</span><span class="o">)</span>
+</code></pre></div>
+<h2>Exemple de maquette</h2>
+
+<p>Voici un <strong>exemple d’utilisation du CSS3</strong> utilisé sur un projet récent (réalisé à l’université).  </p>
+
+<p><img src="/images/2010/css3/university_nostalgia_exemple.png" alt=""></p>
+
+<p>Il n’y a aucune image (sauf l’avatar tux) et l’application est entièrement compatible avec au minimum Firefox et Chrome.<br>
+Si l’application vous intéresse, elle est sur <a href="http://github.com/gre/University-nostalgia">github</a>.</p>
+
+<h3>Extrait du code SASS</h3>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="k">@import</span> <span class="s">compass.sass</span>  
+<span class="k">@import</span> <span class="s">compass/reset.sass</span>  
+<span class="k">@import</span> <span class="s">theme.sass</span>  
+
+<span class="nf">=vertical-gradient</span><span class="p">(</span><span class="nv">!from</span><span class="o">,</span> <span class="nv">!to</span><span class="o">,</span> <span class="nv">!alt</span><span class="o">=</span><span class="p">(</span><span class="nv">!from</span><span class="o">/</span><span class="mi">2</span>   <span class="nv">!to</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">background</span><span class="o"> =</span> <span class="nv">!alt</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">background</span><span class="o"> =</span> <span class="nf">-webkit-gradient</span><span class="p">(</span><span class="n">linear</span><span class="o">,</span> <span class="no">left</span> <span class="no">top</span><span class="o">,</span> <span class="no">left</span> <span class="no">bottom</span><span class="o">,</span> <span class="nf">from</span><span class="p">(</span><span class="nv">!from</span><span class="p">)</span><span class="o">,</span> <span class="nf">to</span><span class="p">(</span><span class="nv">!to</span><span class="p">))</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">background</span><span class="o"> =</span> <span class="nf">-moz-linear-gradient</span><span class="p">(</span><span class="mi">-90</span><span class="kt">deg</span><span class="o">,</span> <span class="nv">!from</span><span class="o">,</span> <span class="nv">!to</span><span class="p">)</span>  
+
+<span class="nv">!back</span><span class="o"> =</span> <span class="mh">#e9f3e7</span>  
+<span class="nv">!back_aside</span><span class="o"> =</span> <span class="mh">#F8FAF5</span>  
+<span class="na">!back\_header\_from</span><span class="o">=</span><span class="mh">#719369</span>  
+<span class="na">!back\_header\_to</span><span class="o">=</span><span class="mh">#587451</span>  
+<span class="na">!back\_footer\_from</span><span class="o">=</span><span class="mh">#b4c1b1</span>  
+<span class="na">!back\_footer\_to</span><span class="o">=</span><span class="mh">#9da89a</span>  
+
+<span class="nn">#wrapper</span>  
+<span class="err"> </span>  <span class="nt">border-radius</span><span class="o">(!</span><span class="nt">global</span><span class="err">\</span><span class="nt">_border</span><span class="err">\</span><span class="nt">_radius</span><span class="o">)</span>  
+<span class="err"> </span> <span class="nd">:border</span> <span class="nt">1px</span> <span class="nt">solid</span> <span class="o">!</span><span class="nt">back-</span><span class="nn">#111</span>  
+<span class="err"> </span> <span class="o">&gt;</span><span class="nt">nav</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">border-top-radius</span><span class="o">(</span><span class="nt">10px</span><span class="o">)</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nd">:background</span> <span class="nt">white</span>  
+<span class="err"> </span> <span class="o">&gt;</span><span class="nt">header</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">vertical-gradient</span><span class="o">(!</span><span class="nt">back</span><span class="err">\</span><span class="nt">_header</span><span class="err">\</span><span class="nt">_from</span><span class="o">,</span> <span class="o">!</span><span class="nt">back</span><span class="err">\</span><span class="nt">_header</span><span class="err">\</span><span class="nt">_to</span><span class="o">,</span> <span class="nt">url</span><span class="o">(/</span><span class="nt">public</span><span class="o">/</span><span class="nt">images</span><span class="o">/</span><span class="nt">header</span><span class="nc">.png</span><span class="o">))</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nd">:color</span> <span class="nt">white</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nd">:z-index</span> <span class="nt">1</span>  
+<span class="err"> </span> <span class="o">&gt;</span><span class="nt">footer</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">vertical-gradient</span><span class="o">(!</span><span class="nt">back</span><span class="err">\</span><span class="nt">_footer</span><span class="err">\</span><span class="nt">_from</span><span class="o">,</span> <span class="o">!</span><span class="nt">back</span><span class="err">\</span><span class="nt">_footer</span><span class="err">\</span><span class="nt">_to</span><span class="o">)</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">border-bottom-radius</span><span class="o">(</span><span class="nt">10px</span><span class="o">)</span>  
+
+<span class="err"> </span> <span class="nn">#main</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">background</span><span class="o"> =</span> <span class="nv">!back_aside</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">box-shadow</span><span class="o">(</span><span class="nt">0px</span><span class="o">,</span> <span class="nt">-1px</span><span class="o">,</span> <span class="nt">2px</span><span class="o">,</span> <span class="nt">rgba</span><span class="o">(,,,</span><span class="nt">0</span><span class="nc">.25</span><span class="o">))</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nd">:z-index</span> <span class="nt">2</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="o">&gt;</span><span class="nt">section</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="nd">:background</span> <span class="nt">white</span>
+</code></pre></div>
+<h3>Un triangle en css ???</h3>
+
+<p>Ce n’est pas de la magie mais <strong>il est possible de faire des triangles en CSS</strong> (même en CSS2) grâce à une petite astuce. Explication en images :</p>
+
+<h4>Une boite avec une couleur pour chaque bordure</h4>
+
+<p><img src="/images/2010/css3/triangle_01.png" alt=""></p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.box</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">background</span><span class="o">:</span> <span class="nb">black</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">width</span><span class="o">:</span> <span class="m">40px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">height</span><span class="o">:</span> <span class="m">40px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border-width</span><span class="o">:</span> <span class="m">15px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border-color</span><span class="o">:</span> <span class="nb">yellow</span> <span class="nb">red</span> <span class="nb">blue</span> <span class="nb">green</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border-style</span><span class="o">:</span> <span class="k">solid</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<h4>width et height à 0</h4>
+
+<p><img src="/images/2010/css3/triangle_02.png" alt=""></p>
+
+<h4>Bordures transparentes</h4>
+
+<p><img src="/images/2010/css3/triangle_03.png" alt=""></p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.box</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">background</span><span class="o">:</span> <span class="nb">black</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">width</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">height</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border-width</span><span class="o">:</span> <span class="m">15px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border-color</span><span class="o">:</span> <span class="k">transparent</span> <span class="nb">red</span> <span class="k">transparent</span> <span class="k">transparent</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border-style</span><span class="o">:</span> <span class="k">solid</span><span class="p">;</span>  
+<span class="p">}</span>  
+</code></pre></div>
+<h4>Autre utilisation des triangles</h4>
+
+<p>Le même procédé m’a permis de faire ceci :<br>
+<img src="/images/2010/css3/triangle_menus.png" alt=""></p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

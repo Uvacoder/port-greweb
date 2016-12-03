@@ -1,0 +1,378 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="implement a component handling the scroll of a list to pull more data of a Graphql Connection with Relay" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Relay, scrolling connections">
+    <meta name="twitter:description" content="implement a component handling the scroll of a list to pull more data of a Graphql Connection with Relay">
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - Relay, scrolling connections</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a></h1>
+    <time class="date" datetime="2016-09-19">September 19, 2016</time>
+   <span class="tags">
+     <a class="tag" href="/tag/react.html">react</a>
+     <a class="tag" href="/tag/relay.html">relay</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><a href="https://github.com/facebook/relay">Relay</a> doesn&#39;t solve for you how you should render your components. Relay is &quot;universal&quot; and doesn&#39;t even assume it will be running in a browser context. It focuses only on providing an abstraction to work with GraphQL – the same way React focuses only on rendering. Each library solves one single problem at a time <em>(and hell, both are complex enough problem to solve already)</em>.</p>
+
+<p>Because these libraries are very generic, it&#39;s now up to the community to solve the &quot;more specific&quot; parts. Just search on NPM and you can find tons of React libraries already, some might help you to solve part of the problem you want to solve.</p>
+
+<p>This article demonstrates one use-case: <strong>implementing a component handling the scroll of a list to pull more data</strong> of a GraphQL connection with Relay.</p>
+
+<!--more-->
+
+<h2>Usage</h2>
+
+<p>In React you should think in term of components that subdivide individual task to solve. To solve scrolling a connection you should just need this:</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="o">&lt;</span><span class="nx">InfiniteScrollable</span> <span class="nx">relay</span><span class="o">=</span><span class="p">{</span><span class="nx">relay</span><span class="p">}</span><span class="o">&gt;</span>
+  <span class="p">...</span>
+<span class="o">&lt;</span><span class="err">/InfiniteScrollable&gt;</span>
+</code></pre></div>
+<p>Here is a real use-case we have at <a href="https://projectseptember.com">projectseptember</a>.</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">Component</span><span class="p">,</span>
+  <span class="nx">PropTypes</span><span class="p">,</span>
+<span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">Relay</span> <span class="nx">from</span> <span class="s2">&quot;react-relay&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">List</span> <span class="nx">from</span> <span class="s2">&quot;material-ui/List&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">Content</span> <span class="nx">from</span> <span class="s2">&quot;./Content&quot;</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">ContentStream</span> <span class="kr">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">relay</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">object</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+    <span class="nx">user</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">object</span><span class="p">,</span>
+  <span class="p">};</span>
+  <span class="nx">render</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="p">{</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">relay</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">InfiniteScrollable</span> <span class="nx">relay</span><span class="o">=</span><span class="p">{</span><span class="nx">relay</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">List</span><span class="o">&gt;</span>
+          <span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">stream</span><span class="p">.</span><span class="nx">edges</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span>
+            <span class="o">&lt;</span><span class="nx">Content</span> <span class="nx">content</span><span class="o">=</span><span class="p">{</span><span class="nx">e</span><span class="p">.</span><span class="nx">node</span><span class="p">}</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">e</span><span class="p">.</span><span class="nx">cursor</span><span class="p">}</span> <span class="o">/&gt;</span>
+          <span class="p">)}</span>
+        <span class="o">&lt;</span><span class="err">/List&gt;</span>
+      <span class="o">&lt;</span><span class="err">/InfiniteScrollable&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="nx">Relay</span><span class="p">.</span><span class="nx">createContainer</span><span class="p">(</span><span class="nx">ContentStream</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">initialVariables</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">first</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="nx">fragments</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">user</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">Relay</span><span class="p">.</span><span class="nx">QL</span><span class="err">`</span>
+<span class="nx">fragment</span> <span class="nx">on</span> <span class="nx">User</span> <span class="p">{</span>
+  <span class="nx">stream</span> <span class="p">(</span><span class="nx">first</span><span class="o">:</span><span class="nx">$first</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">edges</span> <span class="p">{</span>
+      <span class="nx">cursor</span>
+      <span class="nx">node</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">{</span><span class="nx">Content</span><span class="p">.</span><span class="nx">getFragment</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">)}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+    <span class="err">`</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>We don&#39;t have to express how to &quot;pull for more data&quot; in that code. In fact, this is delegated to <code>InfiniteScrollable</code> and we never have to think again about it.</p>
+
+<h2>InfiniteScrollable implementation</h2>
+
+<p>Relay enforces to implement <a href="https://facebook.github.io/relay/docs/graphql-relay-specification.html#content">a subset of GraphQL spec</a>, like the Connection API. It&#39;s a good thing because we can also rely on this fact, and what we only need is the <code>relay</code> object to implement a generic pull-on-scroll.</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span>
+  <span class="nx">Component</span><span class="p">,</span>
+  <span class="nx">PropTypes</span><span class="p">,</span>
+<span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span><span class="nx">findDOMNode</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-dom&quot;</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">regex</span> <span class="o">=</span> <span class="sr">/(auto|scroll)/</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">style</span> <span class="o">=</span> <span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">prop</span><span class="p">)</span> <span class="o">=&gt;</span>
+  <span class="nx">getComputedStyle</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="kc">null</span><span class="p">).</span><span class="nx">getPropertyValue</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">scroll</span> <span class="o">=</span> <span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="o">=&gt;</span>
+  <span class="nx">regex</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span>
+    <span class="nx">style</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="s2">&quot;overflow&quot;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="nx">style</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="s2">&quot;overflow-y&quot;</span><span class="p">)</span> <span class="o">+</span>
+    <span class="nx">style</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="s2">&quot;overflow-x&quot;</span><span class="p">));</span>
+
+<span class="kr">const</span> <span class="nx">scrollparent</span> <span class="o">=</span> <span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="o">=&gt;</span>
+  <span class="o">!</span><span class="nx">node</span> <span class="o">||</span> <span class="nx">node</span><span class="o">===</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span>
+  <span class="o">?</span> <span class="nb">document</span><span class="p">.</span><span class="nx">body</span>
+  <span class="o">:</span> <span class="nx">scroll</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span>
+    <span class="o">?</span> <span class="nx">node</span>
+    <span class="o">:</span> <span class="nx">scrollparent</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">resizeEventOn</span> <span class="o">=</span> <span class="nx">n</span> <span class="o">=&gt;</span> <span class="nx">n</span><span class="o">===</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span> <span class="o">?</span> <span class="nb">window</span> <span class="o">:</span> <span class="nx">n</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">InfiniteScrollable</span> <span class="kr">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">children</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">any</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+    <span class="nx">relay</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">object</span><span class="p">,</span>
+    <span class="nx">style</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">object</span><span class="p">,</span>
+    <span class="nx">loadPixelsInAdvance</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">number</span><span class="p">,</span>
+    <span class="nx">relayVariable</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">string</span><span class="p">,</span>
+    <span class="nx">chunkSize</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">number</span><span class="p">,</span>
+    <span class="c1">// loadMore could even be generalize, this component works if you provide loadMore instead of relay</span>
+    <span class="nx">loadMore</span><span class="o">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">func</span><span class="p">,</span> <span class="c1">// (can) returns a promise</span>
+  <span class="p">};</span>
+  <span class="kr">static</span> <span class="nx">defaultProps</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">loadPixelsInAdvance</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="nx">relayVariable</span><span class="o">:</span> <span class="s2">&quot;first&quot;</span><span class="p">,</span>
+    <span class="nx">chunkSize</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+  <span class="p">};</span>
+
+  <span class="nx">state</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">loading</span><span class="o">:</span> <span class="kc">false</span> <span class="p">};</span>
+
+  <span class="nx">resizeBoundOnDom</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="nx">componentDidMount</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">syncScrollBodyListener</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">checkScroll</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="nx">componentWillUnmount</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">unbindResizeEvent</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="nx">componentDidUpdate</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">syncScrollBodyListener</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="nx">unbindResizeEvent</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">resizeBoundOnDom</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">resizeBoundOnDom</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="s2">&quot;scroll&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkScroll</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">resizeBoundOnDom</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">getScrollParent</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">scrollparent</span><span class="p">(</span><span class="nx">findDOMNode</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="nx">syncScrollBodyListener</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">resizeBoundOnDom</span> <span class="o">=</span> <span class="nx">resizeEventOn</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getScrollParent</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">resizeBoundOnDom</span> <span class="o">!==</span> <span class="k">this</span><span class="p">.</span><span class="nx">resizeBoundOnDom</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unbindResizeEvent</span><span class="p">();</span>
+      <span class="nx">resizeBoundOnDom</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;scroll&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">checkScroll</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="nx">loadMoreUsingRelay</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="p">{</span> <span class="nx">relay</span><span class="p">,</span> <span class="nx">relayVariable</span><span class="p">,</span> <span class="nx">chunkSize</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span>
+     <span class="nx">relay</span><span class="p">.</span><span class="nx">setVariables</span><span class="p">({</span>
+       <span class="p">[</span><span class="nx">relayVariable</span><span class="p">]</span><span class="o">:</span> <span class="nx">relay</span><span class="p">.</span><span class="nx">variables</span><span class="p">[</span><span class="nx">relayVariable</span><span class="p">]</span> <span class="o">+</span> <span class="nx">chunkSize</span>
+     <span class="p">},</span> <span class="nx">readyState</span> <span class="o">=&gt;</span> <span class="p">{</span>
+       <span class="k">if</span> <span class="p">(</span><span class="nx">readyState</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="nx">reject</span><span class="p">(</span><span class="nx">readyState</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+       <span class="k">if</span> <span class="p">(</span><span class="nx">readyState</span><span class="p">.</span><span class="nx">done</span><span class="p">)</span> <span class="nx">resolve</span><span class="p">();</span>
+     <span class="p">}));</span>
+  <span class="p">};</span>
+
+  <span class="nx">checkScroll</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">loading</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="nx">container</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getScrollParent</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">container</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="p">{</span> <span class="nx">height</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">getBoundingClientRect</span><span class="p">();</span>
+    <span class="kr">const</span> <span class="p">{</span> <span class="nx">scrollHeight</span><span class="p">,</span> <span class="nx">scrollTop</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">container</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="nx">bottom</span> <span class="o">=</span> <span class="nx">scrollTop</span> <span class="o">+</span> <span class="nx">height</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="p">{</span> <span class="nx">loadPixelsInAdvance</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="nx">advance</span> <span class="o">=</span> <span class="nx">bottom</span> <span class="o">-</span> <span class="nx">scrollHeight</span> <span class="o">+</span> <span class="nx">loadPixelsInAdvance</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">advance</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="nx">loading</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span> <span class="p">()</span> <span class="o">=&gt;</span>
+        <span class="nx">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">({</span> <span class="nx">advance</span><span class="p">,</span> <span class="nx">bottom</span><span class="p">,</span> <span class="nx">scrollHeight</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="nx">scrollTop</span><span class="p">,</span> <span class="nx">loadPixelsInAdvance</span> <span class="p">})</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">loadMore</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">loadMoreUsingRelay</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span>
+          <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="nx">loading</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}),</span> <span class="c1">// technically could recall checkScroll here. in second callback of setState. fork it, try it, adapt it !</span>
+          <span class="nx">e</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="nx">e</span><span class="p">),</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="nx">loading</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}))</span>
+        <span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="nx">render</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// you might want to render a spinner?</span>
+    <span class="c1">// children might be a function?</span>
+    <span class="c1">// etc..</span>
+    <span class="c1">// these are some variations we could have from this starting point</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This is a <strong>possible implementation</strong> of this problem. You might want to add more things based on your needs. For instance you could automatically render a loading spinner... or a million other things! Please try it, fork it, give feedback :)</p>
+
+<p>It is also possible to implement it as a High Order Component (HOC): <a href="https://github.com/facebook/relay/issues/1377">https://github.com/facebook/relay/issues/1377</a>.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

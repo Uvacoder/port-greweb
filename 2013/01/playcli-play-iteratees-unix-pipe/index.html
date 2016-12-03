@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="PlayCLI is a new Scala library to work with UNIX commands and Play-Iteratees (a scala implementation of Iteratees facilitating the handling of data streams reactively)" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="PlayCLI: Play Iteratees + UNIX pipe">
+    <meta name="twitter:description" content="PlayCLI is a new Scala library to work with UNIX commands and Play-Iteratees (a scala implementation of Iteratees facilitating the handling of data streams reactively)">
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - PlayCLI: Play Iteratees + UNIX pipe</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/01/playcli-play-iteratees-unix-pipe/">PlayCLI: Play Iteratees + UNIX pipe</a></h1>
+    <time class="date" datetime="2013-01-30">January 30, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/iteratee.html">iteratee</a>
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     <a class="tag" href="/tag/reactive.html">reactive</a>
+     <a class="tag" href="/tag/unix.html">unix</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <blockquote>
+<p><strong>TL;DR.</strong> PlayCLI is a new <a href="http://scala-lang.org">Scala</a> library to work with UNIX commands and <a href="http://www.playframework.org/documentation/2.0/Iteratees">Play-Iteratees</a> (a scala implementation of Iteratees facilitating the handling of data streams reactively). Here’s an overview:</p>
+</blockquote>
+
+<iframe src="http://gre.github.io/playCLI-examples/embedder.html#index.html" frameborder="0" width="550" height="452"></iframe>
+
+<h2>Links</h2>
+
+<ul>
+<li>  <a href="http://gre.github.io/playCLI-examples/api">The scala API</a>.</li>
+<li>  <a href="http://github.com/gre/playCLI">PlayCLI source code (Github)</a>.</li>
+<li>  <a href="http://github.com/gre/playCLI-examples">PlayCLI Examples application (Github)</a>.</li>
+</ul>
+
+<h3>SBT</h3>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="s">&quot;fr.greweb&quot;</span> <span class="o">%%</span> <span class="s">&quot;playcli&quot;</span> <span class="o">%</span> <span class="s">&quot;0.1&quot;</span>
+</code></pre></div>
+<!--more-->
+
+<h2>Why PlayCLI</h2>
+
+<p>After having made <a href="/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/">Zound</a> in a HackDay (an experiment to generate an audio stream with playframework iteratees and through the WAVE format), I figured out this was going to be hard to make it work with multiple audio format: <em>tell me if I’m wrong but</em>, there are not so much audio libraries in Java/Scala, or most of them does not support stream handling (and not reactively), and it was going to be crazy to re-implement everything in Scala (both in term of cost and performance).</p>
+
+<p>Besides, <strong>UNIX has plenty of tools</strong> to do this and:</p>
+
+<ol>
+<li> they are <strong>complete</strong> and provide a lot of options</li>
+<li> they are <strong>easy to use</strong> (see how Bash is powerful as a consequence)</li>
+<li> Most of them <strong>support streams</strong> out of the box (via stdin / stdout)</li>
+<li> They are very <strong>efficient</strong> (written in C / assembly)</li>
+</ol>
+
+<p>So why not re-use them from our reactive code?</p>
+
+<h3>Similarities with UNIX pipes</h3>
+
+<blockquote>
+<p>Take the expressivity of UNIX pipes, bring the power of Scala, mix it with Play Framework and you got a powerful framework for handling real-time and web streaming.</p>
+</blockquote>
+
+<p>Play Iteratees are an elegant &amp; powerful way to handle streams reactively, and I’ve actually always understood them like UNIX pipes, you have the same reactive code style: linearized declarative way of handling streams.</p>
+
+<p><strong>Bash:</strong></p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat words.txt <span class="p">|</span> grep <span class="nv">$word</span> &gt; result.txt
+</code></pre></div>
+<p><strong>Scala:</strong></p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="nc">Enumerator</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="s">&quot;words.txt&quot;</span><span class="o">)</span> <span class="o">&amp;&gt;</span>   
+<span class="err"> </span> <span class="n">splitByNl</span> <span class="o">&amp;&gt;</span> <span class="c1">// split a stream of Array[Byte] into stream of String (not impl here)  </span>
+<span class="err"> </span> <span class="nc">Enumeratee</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">containsSlice</span><span class="o">(</span><span class="n">word</span><span class="o">))</span> <span class="err"> </span><span class="o">|&gt;&gt;&gt;</span>   
+<span class="err"> </span> <span class="n">fileWriter</span> <span class="c1">// consume the steam while storing in a file (not impl here)</span>
+</code></pre></div>
+<p>or if you prefer the “without symbol” version:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="nc">Enumerator</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="s">&quot;words.txt&quot;</span><span class="o">).</span>  
+<span class="err"> </span> <span class="n">through</span> <span class="n">splitByNl</span><span class="o">.</span>  
+<span class="err"> </span> <span class="n">through</span> <span class="nc">Enumeratee</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">containsSlice</span><span class="o">(</span><span class="n">word</span><span class="o">)).</span>  
+<span class="err"> </span> <span class="n">run</span> <span class="n">fileWriter</span>
+</code></pre></div>
+<p>However, It’s biased to say Iteratees are only UNIX pipes, they are more than that, but I’m not going to extend on that subject, they are at least statically typed and safe (it’s more than just a stream of bytes, see <a href="http://mandubian.com/2012/08/27/understanding-play2-iteratees-for-normal-humans/">this article</a>).</p>
+
+<p>So if Iteratees are at least UNIX pipes, why can’t we use Unix pipes from iteratees?</p>
+
+<p><strong>PlayCLI provides a bridge to use scala.sys.Process with play-iteratees.</strong></p>
+
+<h2>More about PlayCLI</h2>
+
+<p><em>(this is a copy of the API documentation)</em></p>
+
+<h3>Overview</h3>
+
+<p>Depending on your needs, you can <strong>Enumerate / Pipe / Consume</strong> an UNIX command:</p>
+
+<p><a href="http://gre.github.io/playCLI-examples/api/#enumerate(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator%5BArray%5BByte%5D%5D">CLI.enumerate</a> is a way to create a stream from a command which <strong>generates output</strong><br>
+(it creates an <a href="http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Enumerator">Enumerator</a>[Array[Byte]] )</p>
+
+<p><a href="http://gre.github.io/playCLI-examples/api/#pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee%5BArray%5BByte%5D,Array%5BByte%5D%5D">CLI.pipe</a> is a way to pipe a command which <strong>consumes input and generates output</strong><br>
+(it creates an <a href="http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Enumeratee">Enumeratee</a>[Array[Byte],Array[Byte]])</p>
+
+<p><a href="http://gre.github.io/playCLI-examples/api/#consume(command:scala.sys.process.ProcessBuilder,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Iteratee%5BArray%5BByte%5D,Int%5D">CLI.consume</a> creates a process which <strong>consumes a stream</strong> – useful for side effect commands<br>
+(it creates an <a href="http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Iteratee">Iteratee</a>[Array[Byte],Int])</p>
+
+<h4>Examples</h4>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">import</span> <span class="nn">playcli._</span>  
+<span class="k">import</span> <span class="nn">scala.sys.process._</span>  
+
+<span class="c1">// Some CLI use cases  </span>
+<span class="k">val</span> <span class="n">tail</span> <span class="k">=</span> <span class="nc">CLI</span><span class="o">.</span><span class="n">enumerate</span><span class="o">(</span><span class="s">&quot;tail -f /var/log/nginx/access.log&quot;</span><span class="o">)</span>  
+<span class="k">val</span> <span class="n">grep</span> <span class="k">=</span> <span class="o">(</span><span class="n">word</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">CLI</span><span class="o">.</span><span class="n">pipe</span><span class="o">(</span><span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;grep&quot;</span><span class="o">,</span> <span class="n">word</span><span class="o">))</span>  
+<span class="k">val</span> <span class="n">ffmpeg</span> <span class="k">=</span> <span class="nc">CLI</span><span class="o">.</span><span class="n">pipe</span><span class="o">(</span><span class="s">&quot;ffmpeg -i pipe:0 ... pipe:1&quot;</span><span class="o">)</span> <span class="c1">// video processing  </span>
+<span class="k">val</span> <span class="n">convert</span> <span class="k">=</span> <span class="nc">CLI</span><span class="o">.</span><span class="n">pipe</span><span class="o">(</span><span class="s">&quot;convert - -colors 64 png:-&quot;</span><span class="o">)</span> <span class="c1">// color quantization  </span>
+
+<span class="c1">// Some usage examples  </span>
+<span class="k">val</span> <span class="n">sharedTail</span> <span class="k">=</span> <span class="nc">Concurrent</span><span class="o">.</span><span class="n">broadcast</span><span class="o">(</span><span class="n">tail</span><span class="o">)</span>  
+<span class="nc">Ok</span><span class="o">.</span><span class="n">stream</span><span class="o">(</span><span class="n">sharedTail</span><span class="o">).</span><span class="n">withHeaders</span><span class="o">(</span><span class="nc">CONTENT_TYPE</span> <span class="o">-&gt;</span> <span class="s">&quot;text/plain&quot;</span><span class="o">)</span> <span class="c1">// Play framework  </span>
+
+<span class="k">val</span> <span class="n">searchResult</span><span class="k">:</span> <span class="kt">Enumerator</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="n">dictionaryEnumerator</span> <span class="o">&amp;&gt;</span> <span class="n">grep</span><span class="o">(</span><span class="s">&quot;able&quot;</span><span class="o">)</span> <span class="o">&amp;&gt;</span> <span class="n">aStringChunker</span>  
+
+<span class="nc">Ok</span><span class="o">.</span><span class="n">stream</span><span class="o">(</span><span class="nc">Enumerator</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="s">&quot;image.jpg&quot;</span><span class="o">)</span> <span class="o">&amp;&gt;</span> <span class="n">convert</span><span class="o">).</span><span class="n">withHeaders</span><span class="o">(</span><span class="nc">CONTENT_TYPE</span> <span class="o">-&gt;</span> <span class="s">&quot;image/png&quot;</span><span class="o">)</span>  
+
+<span class="nc">Enumerator</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="s">&quot;video.avi&quot;</span><span class="o">)</span> <span class="o">&amp;&gt;</span> <span class="n">ffmpeg</span> <span class="o">&amp;&gt;</span> <span class="o">...</span>
+</code></pre></div>
+<h3>Process</h3>
+
+<p>CLI uses <a href="http://www.scala-lang.org/api/current/index.html#scala.sys.process.package">scala.sys.process</a><br>
+and create a Process instance for each UNIX command.</p>
+
+<p>A CLI process is terminates when:</p>
+
+<ul>
+<li>  The command has end.</li>
+<li>  stdin and stdout is terminated.</li>
+<li>  <a href="http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Done$">Done</a> is reached (for <a href="http://gre.github.io/playCLI-examples/api/#enumerate(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator%5BArray%5BByte%5D%5D">enumerate</a> and <a href="#pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee%5BArray%5BByte%5D,Array%5BByte%5D%5D">pipe</a>).</li>
+<li>  <a href="http://www.playframework.org/documentation/api/2.1-RC1/scala/index.html#play.api.libs.iteratee.Input$$EOF$">EOF</a> is sent (for <a href="http://gre.github.io/playCLI-examples/api/#pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee%5BArray%5BByte%5D,Array%5BByte%5D%5D">pipe</a> and <a href="http://gre.github.io/playCLI-examples/api/#consume(command:scala.sys.process.ProcessBuilder,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Iteratee%5BArray%5BByte%5D,Int%5D">consume</a>).</li>
+</ul>
+
+<p>CLI still waits for the Process to terminate by asking the exit code (via <code>Process.exitCode()</code>).<br>
+If the process is never ending during this phase, it will be killed when <code>terminateTimeout</code> is reached.</p>
+
+<p>PS: Thanks to implicits, you can simply give a String or a Seq to the CLI.* functions a <code>ProcessBuilder</code>.</p>
+
+<h3>Mutability</h3>
+
+<p><a href="http://gre.github.io/playCLI-examples/api/#enumerate(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumerator%5BArray%5BByte%5D%5D">enumerate</a> and <a href="http://gre.github.io/playCLI-examples/api/#pipe(command:scala.sys.process.ProcessBuilder,chunkSize:Int,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Enumeratee%5BArray%5BByte%5D,Array%5BByte%5D%5D">pipe</a> are <strong>immutable</strong>, in other words, re-usable<br>
+(each result can be stored in a val and applied multiple times).<br>
+<strong>A new process is created for each re-use</strong>.</p>
+
+<p><a href="http://gre.github.io/playCLI-examples/api/#consume(command:scala.sys.process.ProcessBuilder,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Iteratee%5BArray%5BByte%5D,Int%5D">consume</a> is <strong>mutable</strong>, it should not be used multiple times: it targets side effect command.</p>
+
+<h3>Logs</h3>
+
+<p>A “CLI” logger (logback) is used to log different information in different log levels:</p>
+
+<ul>
+<li>  <strong>ERROR</strong> would mean a CLI error (not used yet).</li>
+<li>  <strong>INFO</strong> used for the process’ stdout output of a <a href="http://gre.github.io/playCLI-examples/api/#consume(command:scala.sys.process.ProcessBuilder,terminateTimeout:Long)(implicitec:scala.concurrent.ExecutionContext):play.api.libs.iteratee.Iteratee%5BArray%5BByte%5D,Int%5D">CLI.consume</a>.</li>
+<li>  <strong>DEBUG</strong> used for the process life cycle (process creation, process termination, exit code).</li>
+<li>  <strong>WARN</strong> used for the process’ stderr output.</li>
+<li>  <strong>TRACE</strong> used for low level information (IO read/write). </li>
+</ul>
+
+<h2>Conclusion</h2>
+
+<p>I’m eager to see what you guys can do with such an API, it enables a lot of possibility, I’m especially thinking about multimedia purposes (using powerful commands like: ImageMagick, ffmpeg, sox,…).</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

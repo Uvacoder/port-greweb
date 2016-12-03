@@ -1,0 +1,368 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="Here is how you can design and export your 2D game map with Blender (both the logic and the graphics)." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Blender as a 2D game level editor &#8211; Proof Of Concept">
+    <meta name="twitter:description" content="Here is how you can design and export your 2D game map with Blender (both the logic and the graphics).">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2012/04/map1.png">
+    <link rel="image_src" href="http://greweb.me/images/2012/04/map1.png">
+    
+
+    <title>@GreWeb - Blender as a 2D game level editor &#8211; Proof Of Concept</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/">Blender as a 2D game level editor &#8211; Proof Of Concept</a></h1>
+    <time class="date" datetime="2012-04-09">April  9, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/blender.html">blender</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p>A long time ago, video games were only two-dimensional. Of-course this was due to our poor hardware capabilities, but when computers became faster and faster 3D games appeared in mass.<br>
+<strong>Did it kill 2D games? Nope.</strong> They continue to exist because it offer a different gameplay and are easier to make. Maybe also a bit because we are nostalgic of old-school games!</p>
+
+<p>We can distinguish two kinds of 2D games:</p>
+
+<p><img src="/images/2012/04/bomberman93.jpg" alt="" class="thumbnail-left" />
+<a href="http://www.tonypa.pri.ee/tbw/tut00.html"><strong>Tile based games</strong></a> where the game world is simplified with a big grid – each grid position has some properties.<br>
+A map editor is not always needed for tile based games, because the map can be straighforward to represent and maintain like in a <em>Bomberman</em> or in a <em>Pacman</em>. A simple editor is generally used to make graphism with sprites.  </p>
+
+<p><br style="clear:both" /></p>
+
+<p><img src="/images/2012/04/woarpc001.jpg" alt="" class="thumbnail-left" />
+<strong>Non-tile based games</strong>, which can be called “polygon based games” are more complex.<br>
+In such game, like a <em>Worms</em> or a <em>Sonic</em>, it’s totally crazy to write the map by hand (objects positions, polygons coordinates, …). The alternative, is not to use predefined maps, but on-the-fly generated maps which doesn’t fit every games.  </p>
+
+<p><br style="clear:both" /></p>
+
+<p><a href="http://higherorderfun.com/blog/2012/05/20/the-guide-to-implementing-2d-platformers/">Here are more detailed work on these different game designs</a>.</p>
+
+<p><strong>Making the game engine</strong> is one thing, but <strong>designing the game levels</strong> can be one big work too and <strong>we need tools to make it easier</strong>.</p>
+
+<!--more-->
+
+<h2>Tile based game maps</h2>
+
+<p>In tile based games, maps are usually quite simple to represent.</p>
+
+<p>For instance, here is how we can code the maze of <a href="http://www.masswerk.at/JavaPac/JS-PacMan2.html">Pacman</a>:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">[</span>  
+<span class="s2">&quot;ahhhhhgxbhhdxehhhhhc&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;vp....o......o....pv&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;v.lhm...lhhm...lhm.v&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;v.....n......n.....v&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;v.n.n.v.ahhc.v.n.n.v&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;d.v.o.v.vxxq.v.o.v.b&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;x.v...v.vxxt.v...v.x&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;c.bhm.o.bhhr.o.lhd.a&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;v........x.........v&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;em.lc.am.lm.lc.am.lg&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;v...v.v......v.v...v&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;v.k.o.o.lhhm.o.o.k.v&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;vp................pv&quot;</span><span class="p">,</span>  
+<span class="s2">&quot;bhhhhhcxahhcxahhhhhd&quot;</span>  
+<span class="p">]</span>
+</code></pre></div>
+<p>where every character is a tile and has a given meaning.</p>
+
+<p>For more complex games, we can also represent the map with a set of objects, and each object has position and size properties (x, y, width, height) and other properties for the game logic.</p>
+
+<p>For instance, see the <em>ImpactJS</em> tile based games editor:</p>
+
+<p><a href="http://impactjs.com/documentation/weltmeister"><img src="/images/2012/04/weltmeister-tutorial-entities.png" alt=""></a></p>
+
+<h2>But what about polygons based game?</h2>
+
+<p>Well, some have tried to make dedicated 2D game map editor like shown in this video:</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/kvvEmm2Vyoc?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
+
+<p>but it sounds a bit unfinished and specific.</p>
+
+<h3>Do it yourself, but don’t reinvent the wheel.</h3>
+
+<p><strong>But finally, isn’t it what a 3D editor is doing?</strong></p>
+
+<p>Isn’t it the most generic tool we can find?</p>
+
+<p>They have done a lot of awesome work in term of user interface, polygon modeling, textures (procedural / bitmap), …let’s profit of all this work to generate awesome texture map while exporting polygons.</p>
+
+<p>Relying on such tools, you don’t have to learn a brand new map editor, you can relax on what you know if you have the chance to know Blender or Maya or anything.</p>
+
+<h3>The Z magic</h3>
+
+<p>Let’s ignore the Z dimension, or rather, let’s <strong>use the Z-dimension as a way to represent the semantics of the game map!</strong></p>
+
+<p>This is the map I made for <a href="http://gre.github.io/blazing-race">Blazing Race</a>, a HTML5 against-the-clock platform game where you control a fireball:</p>
+
+<p><img src="/images/2012/04/zs.png" alt=""></p>
+
+<p>For my game needs, I used <strong>different Z layers to represent different kind of materials and game objects</strong>:</p>
+
+<ul>
+<li>  z=1 : candles’ position – the objective of the game is to light them all</li>
+<li>  z=0 : the game grounds – where collision occurs</li>
+<li>  z=-1 : the water areas – where your flame dies</li>
+<li>  z=-2 : special areas where you miss oxgyen – your flame dies in a few seconds</li>
+</ul>
+
+<p>But I also used <strong>objects ids</strong> as an another way to distinguish objects:<br>
+a “start” object to define the game start position and two “topleft” and “bottomright” objects to define the game bound.</p>
+
+<h3>Maintain your map source in one file</h3>
+
+<p>Another powerful feature of this, is you can maintain your map polygons AND your map textures in a single way. Use your 3D editor as a polygon editor and use its render engine to generate textures:</p>
+
+<p><img src="/images/2012/04/map1.png" alt=""></p>
+
+<p>Take benefits from what your 3D editor can do.</p>
+
+<h3>Export polygons to the Javascript game</h3>
+
+<p><img src="/images/2012/04/path4850.png" alt=""></p>
+
+<p>I’ve made a transformer which take a COLLADA file in input (the most commonly supported standard format to describe a 3D scene, you can export it from any 3D editor like Blender, Maya, 3DS…) which extract and transform relevant informations from it and give you a json map for your game in output.</p>
+
+<p><em>It was quite simple to implement, thanks to the Three.js COLLADA importer!</em></p>
+
+<p>Here is the current (unfinished) interface for this:</p>
+
+<p><a href="http://gre.github.io/blazing-race/maps/converter/"><img src="/images/2012/04/demo_screenshot.png" alt=""></a></p>
+
+<p>As a proof of usability of the output JSON map, the preview was only made in a few lines of Javascript code.</p>
+
+<p>Extract:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">draw</span> <span class="p">(</span><span class="nx">map</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">container</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#viewport&#39;</span><span class="p">).</span><span class="nx">empty</span><span class="p">();</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#legend&#39;</span><span class="p">).</span><span class="nx">empty</span><span class="p">();</span>
+  <span class="nx">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">w</span> <span class="o">*</span> <span class="nx">map</span><span class="p">.</span><span class="nx">height</span><span class="o">/</span><span class="nx">map</span><span class="p">.</span><span class="nx">width</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">CROSS_SIZE</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;canvas width=&quot;&#39;</span><span class="o">+</span><span class="nx">w</span><span class="o">+</span><span class="s1">&#39;&quot; height=&quot;&#39;</span><span class="o">+</span><span class="nx">h</span><span class="o">+</span><span class="s1">&#39;&quot;&gt;&lt;/canvas&gt;&#39;</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">getContext</span><span class="p">(</span><span class="s2">&quot;2d&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">map</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="nx">map</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">objs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">faces</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">randomColor</span><span class="p">(</span><span class="mi">70</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">);</span>
+      <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">color</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">objs</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="nx">objs</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">f</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">f</span><span class="o">&lt;</span><span class="nx">obj</span><span class="p">.</span><span class="nx">faces</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="o">++</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">face</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">faces</span><span class="p">[</span><span class="nx">f</span><span class="p">];</span>
+          <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+          <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">v</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">v</span><span class="o">&lt;</span><span class="nx">face</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="o">++</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">vertice</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">face</span><span class="p">[</span><span class="nx">v</span><span class="p">]];</span>
+            <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">*</span><span class="nx">vertice</span><span class="p">.</span><span class="nx">x</span><span class="o">/</span><span class="nx">map</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nx">vertice</span><span class="p">.</span><span class="nx">y</span><span class="o">/</span><span class="nx">map</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">v</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+              <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+            <span class="k">else</span>
+              <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="nx">ctx</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">addLegend</span><span class="p">(</span><span class="nx">color</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">map</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="nx">map</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">objs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">randomColor</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span>
+      <span class="nx">ctx</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="nx">color</span><span class="p">;</span>
+      <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">objs</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">objs</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">x</span><span class="o">/</span><span class="nx">map</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nx">p</span><span class="p">.</span><span class="nx">y</span><span class="o">/</span><span class="nx">map</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">x</span><span class="o">-</span><span class="nx">CROSS_SIZE</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span><span class="o">+</span><span class="nx">CROSS_SIZE</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="o">-</span><span class="nx">CROSS_SIZE</span><span class="p">);</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="o">+</span><span class="nx">CROSS_SIZE</span><span class="p">);</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">addLegend</span><span class="p">(</span><span class="nx">color</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="nx">container</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">canvas</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2>What is next?</h2>
+
+<p>Blazing Race, is not finished yet, I need to improve a lot of things.</p>
+
+<p>I’ll try to release a standalone version of this converter soon with tutorials and examples.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

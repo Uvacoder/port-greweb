@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSS Transition - box1 demo</title>
+    <style>
+    .container {
+      padding: 10px;
+      display: inline-block;
+      overflow: auto;
+    }
+    .container .box1 {
+      width: 200px;
+      height: 200px;
+      margin: 10px;
+      
+      -moz-transition-duration: 1s;
+      -webkit-transition-duration: 1s;
+      -o-transition-duration: 1s;
+      
+      -moz-border-radius: 20px;
+      -webkit-border-radius: 20px;
+      border-radius: 20px;
+      
+      background-color: #f00;
+      border: 2px solid #900;
+      
+      line-height: 200px;
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+    }
+    .container:hover .box1 {
+      -moz-border-radius: 200px;
+      -webkit-border-radius: 200px;
+      border-radius: 200px;
+      
+      background-color: #fa0;
+      border: 5px solid #930;
+      
+      font-size: 60px;
+      text-shadow: 0px 0px 4px black;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="animable box1">Hello</div>
+    </div>
+    <div>
+      <h2>This is just css. There are no javascript or flash code !</h2>
+      <p>For more CSS3 Transition demos, please go to <a href="http://blog.grenlibre.fr/2010/05/css3-transition-available-on-firefox-3-7">this article from my blog</a>.</p>
+      
+      <h3>This is the css code :</h3>
+      <pre>.container {
+  padding: 10px;
+  display: inline-block;
+  overflow: auto;
+}
+.container .box1 {
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+  
+  -moz-transition-duration: 1s;
+  -webkit-transition-duration: 1s;
+  -o-transition-duration: 1s;
+  
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  
+  background-color: #f00;
+  border: 2px solid #900;
+  
+  line-height: 200px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+}
+.container:hover .box1 {
+  -moz-border-radius: 200px;
+  -webkit-border-radius: 200px;
+  border-radius: 200px;
+  
+  background-color: #fa0;
+  border: 5px solid #930;
+  
+  font-size: 60px;
+  text-shadow: 0px 0px 4px black;
+}</pre>
+    </div>
+    <footer>
+      CSS transition - box1 demo - by Gaetan Renaudeau - 2010 - <a 
+href="http://grenlibre.fr/">grenlibre.fr</a>
+    </footer><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9919624-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>
+

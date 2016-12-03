@@ -1,0 +1,468 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="Ce tutoriel vise à présenter canvas comme une librairie très simple d’utilisation et haut niveau grâce au langage javascript." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Tutoriel Canvas : Réaliser une bannière animée en quelques lignes de code">
+    <meta name="twitter:description" content="Ce tutoriel vise à présenter canvas comme une librairie très simple d’utilisation et haut niveau grâce au langage javascript.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2010/animated_banner.png">
+    <link rel="image_src" href="http://greweb.me/images/2010/animated_banner.png">
+    
+
+    <title>@GreWeb - Tutoriel Canvas : Réaliser une bannière animée en quelques lignes de code</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2010/02/tutoriel-canvas-realiser-une-banniere-animee-en-quelques-lignes-de-code">Tutoriel Canvas : Réaliser une bannière animée en quelques lignes de code</a></h1>
+    <time class="date" datetime="2010-02-03">February  3, 2010</time>
+   <span class="tags">
+     <a class="tag" href="/tag/animation.html">animation</a>
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/bezier.html">bezier</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><img src="/images/2010/animated_banner.png" alt=""></p>
+
+<p><strong>Pré-requis conseillé: <a href="/2011/03/html-canvas-pour-les-neophytes">Voir la vidéo : HTML Canvas pour les néophytes</a></strong></p>
+
+<p>Le <strong>HTML 5</strong> intègre de nouvelles technologies comme le <strong>canvas</strong>, une véritable API graphique destinée à remplacer le flash dans les années à venir.</p>
+
+<p>Ce tutoriel vise à présenter <strong>canvas</strong> comme une <strong>librairie très simple d’utilisation et haut niveau</strong> grâce au langage <strong>javascript</strong>.</p>
+
+<p>Il vous apprendra à réaliser une animation similaire à la bannière <del>actuelle</del> (ancienne maintenant) de mon blog en <strong>quelques lignes de code</strong>.</p>
+
+<p>Il est volontairement ordonnancé de manière didactique, si vous maitriser les concepts, n’hésitez pas à avancer.</p>
+
+<!--more-->
+
+<h2>Code de base (skeleton template)</h2>
+
+<p>Nous allons travailler avec ce code <strong>html</strong> de base :</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;&lt;title&gt;&lt;/title&gt;&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">&quot;tuto&quot;</span> <span class="na">width=</span><span class="s">&quot;500&quot;</span> <span class="na">height=</span><span class="s">&quot;100&quot;</span> <span class="na">style=</span><span class="s">&quot;border: 1px solid;&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">language=</span><span class="s">&quot;javascript&quot;</span><span class="nt">&gt;</span>
+      <span class="kd">var</span> <span class="nx">canvas</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;tuto&#39;</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">getContext</span><span class="p">(</span><span class="s1">&#39;2d&#39;</span><span class="p">);</span>
+
+      <span class="c1">// Le code javascript ira ici</span>
+
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<p>Ce code nous servira dans tous le reste du tutoriel. </p>
+
+<h3>Deux choses notables :</h3>
+
+<ul>
+<li>Nous avons créé un élément <strong>canvas</strong> et indiqué ses dimensions <strong>(500×100)</strong>. Pour mieux pouvoir repérer ses dimensions, nous lui avons ajouté une bordure.</li>
+<li>En <strong>javascript</strong>, nous avons récupéré l’élément DOM puis le contexte 2d qui nous servira pas la suite.</li>
+</ul>
+
+<h2>Quelques notions de base du canvas</h2>
+
+<h3>La surface du canvas</h3>
+
+<p>Le <strong>canvas</strong> occupe une surface dont la dimension est définie par les paramètres <em>width</em> et <em>height</em>.</p>
+
+<p>Pour ceux qui ne serait pas familier avec les <strong>bibliothèques graphiques</strong>, cette surface peut être vu comme un quadrillage de pixel sur <strong>deux dimensions</strong> : <strong>x</strong> variant de <em>0 à width</em> et <strong>y</strong> variant de <em>0 à height</em>.</p>
+
+<p>Le point d’origine de ce repère orthonormé est situé <strong>dans le coin haut gauche du canvas</strong>:</p>
+
+<p><img src="/demo/animate-banner/canvas-cartesian.png" alt=""></p>
+
+<h3>Le concept de contexte</h3>
+
+<p>Le contexte 2d récupéré dans la variable <strong>ctx</strong> est en fait l’<strong>interface de programmation</strong> (API) de la bibliothèque graphique <strong>canvas</strong>.</p>
+
+<p>C’est en quelque sorte l’<strong>intermédiaire entre le programmeur et la bibliothèque graphique</strong>.</p>
+
+<p>Ainsi par exemple, si l’on veux dessiner un rectangle de dimension <strong>20×10</strong> à la position <strong>(5,6)</strong>, il suffit simplement d’écrire: </p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">ctx</span><span class="p">.</span><span class="nx">fillRect</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+<h3>Les paramètres globaux du canvas</h3>
+
+<p>Pour dessiner, toute librairie graphique a besoin de connaitre un certain nombre de paramètres tels que la <em>couleur du trait, la taille de la brosse, etc</em>.</p>
+
+<p>Plutôt que de devoir passer en paramètre ces informations aux fonctions du contexte, <strong>canvas</strong> met directement à disposition ses paramètres afin de pouvoir les modifier facilement.</p>
+
+<p>Ainsi, nous pourrons définir la couleur de remplissage dans <strong>ctx.fillStyle</strong> et la couleur de trait dans <strong>ctx.strokeStyle</strong>.</p>
+
+<h2>Commençons à coder</h2>
+
+<p>Avant d’attaquer l’animation, nous allons commencer à manier les <strong>outils de tracage</strong>.</p>
+
+<h3>Chemins et traits simples</h3>
+
+<p>Nous allons commencer par tracer un trait simple qui va traverser tous le canvas.</p>
+
+<p>Essayez le code suivant:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span><span class="c1">// commence à tracer un chemin  </span>
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(,</span> <span class="mi">20</span><span class="p">);</span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="c1">// défini le premier point de tracage à la position (0, 20)  </span>
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span> <span class="c1">// Tracer une ligne jusqu&#39;à la position (canvas.width, 30). canvas.width désigne la largeur du canvas (500 dans notre exemple).  </span>
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="c1">// Indique au canvas de dessiner le chemin tracé depuis le beginPath</span>
+</code></pre></div>
+<p><a href="/demo/animate-banner/step1.html">Voir le résultat</a></p>
+
+<h3>Chemins et courbes de bézier</h3>
+
+<h4>La notion de courbe de bézier</h4>
+
+<p>Une courbe de bézier est définie par 4 points :</p>
+
+<ul>
+<li>  Deux points désignant le début et la fin du trait.</li>
+<li>  Deux points appelés <strong>poignées</strong> permettant de contrôler la courbe.</li>
+</ul>
+
+<p><img src="/demo/animate-banner/bezier-schema.png" alt=""></p>
+
+<h4>Application en canvas</h4>
+
+<p>Essayez le code suivant :</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>  
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(,</span> <span class="mi">20</span><span class="p">);</span>  
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>  
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+</code></pre></div>
+<p><a href="/demo/animate-banner/step2.html">Voir le résultat</a></p>
+
+<p><strong>De la même façon, la procédure consiste à:</strong></p>
+
+<ul>
+<li>commencer un chemin,</li>
+<li>se placer à une certaine position,</li>
+<li>effectuer un traçage (courbe de bézier),</li>
+<li>terminer le traçage (<strong>ctx.stroke()</strong>).</li>
+</ul>
+
+<p>Intéressons nous plus particulièrement au traçage de la courbe de bézier avec l’appel de <strong>ctx.bezierCurveTo</strong>.</p>
+
+<h5>bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)</h5>
+
+<p>Cette fonction prends en argument les coordonnées du premier point de contrôle <strong>(cp1x, cp1y)</strong>, du deuxième point de contrôle <strong>(cp2x, cp2y)</strong> et du point final <strong>(x, y)</strong>. A noter que le point de début est le point sur lequel on s’est placé au moyen de <strong>moveTo</strong>.</p>
+
+<p><strong>Dans notre exemple, les deux points de contrôle sont placés ainsi :</strong></p>
+
+<p><img src="/demo/animate-banner/bezier-exemple.png" alt=""></p>
+
+<h3>Ajout de l’animation</h3>
+
+<p>Pour animer notre courbe de bézier, nous allons faire varier les 4 points de notre courbe en fonction du temps.</p>
+
+<p>En javascript, il y a deux moyen d’effectuer une animation :</p>
+
+<ul>
+<li><del>Au moyen de <strong>setInterval</strong> permettant d’appeler une fonction par interval de temps régulier.</del></li>
+<li><del>Au moyen de <strong>setTimeout</strong> permettant d’appeler une fonction après un temps donné.</del></li>
+<li><strong>[UPDATE 2011]</strong> Il est maintenant recommandé d’utiliser <strong>requestAnimationFrame</strong> qui est l’équivalent de setTimeout mais destiné à l’animation donc plus performant. <a href="http://paulirish.com/2011/requestanimationframe-for-smart-animating/">Plus d’informations içi (en)</a></li>
+</ul>
+
+<p>La première approche est parfaite pour une animation <strong>“statique”, avec peu d’intéraction</strong>.</p>
+
+<p>La seconde approche est intéressante lorsque l’animation <strong>doit être contrôlée</strong> (intéraction). En effet, cette approche consiste à appeler setTimeout à chaque cycle d’animation.</p>
+
+<p>Nous choisirons d’utiliser <strong>setInterval</strong>, plus simple et plus adaptée à notre tutoriel.</p>
+
+<h4>Approche linéaire</h4>
+
+<p>Commençons simplement par une <strong>évolution linéaire des points</strong>.</p>
+
+<p>Essayez le code suivant :</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// variable fonction du temps</span>
+<span class="kd">var</span> <span class="nx">cycle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span> <span class="c1">// clean the canvas</span>
+  <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">-</span><span class="nx">i</span><span class="o">%</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">));</span> <span class="c1">// y évolue par rebond entre 0 et canvas.height au cours du temps (linéarité)</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+  <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="nx">cycle</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span> <span class="c1">// lance le cycle chaque 30 millisecondes</span>
+</code></pre></div>
+<p><a href="/demo/animate-banner/step3.html">Voir le résultat</a></p>
+
+<p>Pour l’instant les poignées sont fixes et l’évolution linéaire de <strong>y</strong> donne un effet de rebond peu intéréssant.</p>
+
+<p>C’est pour cela que nous abandonnons l’idée d’une évolution linéaire des positions au cours du temps pour l’approche sinusoïdale.</p>
+
+<h4>Approche sinusoïdale</h4>
+
+<p>Comme nous l’avons vu, l’évolution linéaire n’est pas adaptée pour ce genre d’animation (effet de rebond). Il faudrait rendre l’animation plus fluide.</p>
+
+<p>Pour cela, nous allons utiliser <strong>une évolution sinusoïdale des positions au cours du temps</strong>.</p>
+
+<p>Essayez le code suivant :</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// variable fonction du temps</span>
+<span class="kd">var</span> <span class="nx">cycle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="nx">i</span><span class="o">/</span><span class="mi">20</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">offset</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span> <span class="c1">// y varie de 0 à canvas.height</span>
+  <span class="kd">var</span> <span class="nx">cpy1</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">offset</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span> <span class="c1">// les poignées évoluent également de façon sinusoïdale</span>
+  <span class="kd">var</span> <span class="nx">cpy2</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">cpy1</span><span class="p">;</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">cpy1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">cpy2</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+  <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="nx">cycle</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+</code></pre></div>
+<p><a href="/demo/animate-banner/step4.html">Voir le résultat</a></p>
+
+<h3>Peaufinage</h3>
+
+<h4>Amélioration du style du trait</h4>
+
+<p>Essayez le code suivant :</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">ctx</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="s1">&#39;rgba(80,150,240,0.5)&#39;</span><span class="p">;</span> <span class="c1">// couleur bleu avec opacité de 50%</span>
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">// épaisseur de trait de 5 pixels</span>
+<span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">cycle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="nx">i</span><span class="o">/</span><span class="mi">20</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">offset</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">cpy1</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">offset</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">cpy2</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">cpy1</span><span class="p">;</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">cpy1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">cpy2</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+  <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="nx">cycle</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+</code></pre></div>
+<p><a href="/demo/animate-banner/step5.html">Voir le résultat</a></p>
+
+<h4>Ajout de plusieurs courbes</h4>
+
+<p>Pour avoir un effet plus accrochant, nous allons ajouter plusieurs courbes de bézier avec un décalage temporel entre elles.</p>
+
+<p>Nous allons également attribuer plusieurs styles aux différentes courbes.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">numberOfLines</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">cycle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">j</span><span class="o">&lt;</span><span class="nx">numberOfLines</span><span class="p">;</span> <span class="o">++</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="nx">j</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="mi">20</span><span class="p">;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nx">numberOfLines</span><span class="o">-</span><span class="nx">j</span><span class="p">);</span> <span class="c1">// épaisseur variable en fonction de la ligne</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="s1">&#39;rgba(80,150,240,&#39;</span><span class="o">+</span><span class="p">(</span><span class="nx">j</span><span class="o">/</span><span class="mi">5</span><span class="o">+</span><span class="mf">0.1</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">;</span> <span class="c1">// opacité variable en fonction de la ligne</span>
+    <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">offset</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">cpy1</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">offset</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">cpy2</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">cpy1</span><span class="p">;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">cpy1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">cpy2</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="nx">cycle</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+</code></pre></div>
+<p><a href="/demo/animate-banner/step6.html">Voir le résultat</a></p>
+
+<h3>Aller plus loin</h3>
+
+<p>Il est possible de continuer encore plus loin en ajoutant l’<strong>évolution de plusieurs paramètres en fonction du temps</strong>.
+Pour conclure, voici la démonstration finale:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">cycle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">j</span><span class="o">&lt;</span><span class="nx">numberOfLines</span><span class="p">;</span> <span class="o">++</span><span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineWidth</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nx">numberOfLines</span><span class="o">-</span><span class="nx">j</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="s1">&#39;rgba(100,200,&#39;</span><span class="o">+</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">i</span><span class="o">/</span><span class="mi">80</span><span class="p">)</span><span class="o">*</span><span class="mi">256</span><span class="p">))</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="p">(</span><span class="nx">j</span><span class="o">/</span><span class="mi">5</span><span class="o">+</span><span class="mf">0.1</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">offset</span> <span class="o">=</span> <span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="nx">j</span><span class="o">*</span><span class="mi">10</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">i</span><span class="o">/</span><span class="mi">100</span><span class="p">)))</span><span class="o">/</span><span class="mi">20</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">offset</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">cpy1</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">offset</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">cpy2</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">cpy1</span><span class="p">;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">bezierCurveTo</span><span class="p">(</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">cpy1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="nx">cpy2</span><span class="p">,</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="nx">y</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="nx">cycle</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+</code></pre></div>
+<p><a href="/demo/animate-banner/final.html">Voir le résultat</a></p>
+
+<p>Nous avons ajouté:</p>
+
+<ul>
+<li>L’évolution de la <strong>couleur</strong> au cours du temps.</li>
+<li>L’évolution du <strong>décalage entre les courbes</strong> au cours du temps.</li>
+</ul>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

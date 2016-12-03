@@ -1,0 +1,884 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="While continuing to experiment with Web Audio API and GLSL, I've made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped)." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Making a rhythm game with bleeding-edge web">
+    <meta name="twitter:description" content="While continuing to experiment with Web Audio API and GLSL, I've made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped).">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2013/09/timelapse.png">
+    <link rel="image_src" href="http://greweb.me/images/2013/09/timelapse.png">
+    
+
+    <title>@GreWeb - Making a rhythm game with bleeding-edge web</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/09/timelapse">Making a rhythm game with bleeding-edge web</a></h1>
+    <time class="date" datetime="2013-09-17">September 17, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/js13k.html">js13k</a>
+     <a class="tag" href="/tag/glsl.html">GLSL</a>
+     <a class="tag" href="/tag/audio.html">audio</a>
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><img src="/images/2013/09/timelapse.png" alt="" class="thumbnail-left" /></p>
+
+<p>While continuing to experiment with <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> and <a href="/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/">GLSL</a>,
+I&#39;ve made <strong><a href="http://js13kgames.com/entries/timelapse">a game called Timelapse</a></strong> for <a href="http://js13kgames.com/">js13kgames</a>
+(an HTML5 game competition where entries must be less than 13 kb zipped).</p>
+
+<p>This article is a <strong>postmortem overview of my game development</strong> which will try to explain
+what was my game mecanism ideas and show you some interesting parts with <strong>screenshots, audios and source code snippets</strong>.</p>
+
+<h2>The Game</h2>
+
+<p><a href="http://js13kgames.com/entries/timelapse">Open the game on js13kgames</a> / <a href="https://github.com/gre/js13k">github</a>.</p>
+
+<p><strong>The game intends to work on Desktop and Mobile</strong>.
+However, <em>Chrome</em> is recommended 
+(<em>Firefox Aurora</em> also supports it but audio is a bit wrong, but Mozilla devs should improve this <a href="https://twitter.com/padenot/status/375924494537195520">soon</a>).
+Today, it works on <em>Android Chrome Beta</em> on a Nexus 4, unfortunately with some clicks in the audio (Web Audio API is bleeding-edge).</p>
+
+<!--more-->
+
+<h2>Experimenting with stuff</h2>
+
+<p>Last months, I&#39;ve been playing with Web Audio API and released a few experiments like 
+<a href="/2013/09/beez">Beez</a>, <a href="/2013/08/FM-audio-api">FM Synthesis</a> and <a href="/2013/08/zound-wip-v1/">Zound</a>.</p>
+
+<p>My game development started last weekend as an experiment, I tried to make some <strong>dubstep-like sound</strong>, 
+starting with a <strong><a href="http://jsfiddle.net/greweb/CrXYw/4/">&quot;Wob Wob Wob&quot; sound</a></strong>.</p>
+
+<p>I also started to dig into <a href="http://glsl.heroku.com/">glsl.heroku.com</a>, 
+I definitely wanted to make some <strong>cool and unusual graphics with glitchy style</strong> to fit with dubstep audio part, 
+I unfortunately hadn&#39;t enough deepen this glitchy part as I would have liked.</p>
+
+<p>GLSL quite fits this need: it mays look strange and hard code language as a start 
+but <strong>it&#39;s very easy and free to do anything with it</strong>. 
+I used my <a href="/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/">glsl.js</a> wrapper to easily have a shader rendering the whole Canvas.</p>
+
+<blockquote>
+<p>GLSL is a totally different way of thinking the rendering: 
+the main principle is to define <strong>a function which returns a Color for a given Position</strong>. 
+I use to call it &quot;Functional Rendering&quot; in opposite to &quot;Procedural Rendering&quot;. I&#39;ll talk again about those concepts soon.</p>
+</blockquote>
+
+<p>I started my graphics by forking <a href="http://glsl.heroku.com/e#10795.2">this very interesting glow effect</a>.</p>
+
+<h2>Prototyping the game ideas</h2>
+
+<p>Then I started to really think about the game I could do, 
+I sketched some game mecanisms and thought about the gameplay.</p>
+
+<p>My game was designed to be a <strong>one-button</strong> <a href="https://en.wikipedia.org/wiki/Dance_Dance_Revolution">DDR</a>-like <strong>rhythm game</strong>
+with the main idea that <strong>the user controls the speed</strong> <em>(the BPM, beats per minute)</em> of the song.
+I wanted an <strong>inertia system</strong>: tap a bit early and your song will speed up, tap a bit late and the song will slow down.
+This speed freedom isn&#39;t without constraints: You can reach a gameover if your speed isn&#39;t enough fast, or contrariwise if it is too fast (like a overheat).</p>
+
+<blockquote>
+<p>The game listen to your inputs to adapt the song BPM.</p>
+</blockquote>
+
+<p>The game is basically about SPACE-typing on each beat, but also introduce some <strong>freestyle &quot;dubstep&quot; phase</strong>
+<em>(It&#39;s not really dubstep though!)</em>: the gameplay is either typing on the key like hell or holding and releasing some &quot;riff&quot;. </p>
+
+<p>The score mecanisms give good scores for very precise beats and will be negative for very bad/loss rhythms.
+During the freestyle section, each action gives a score, also each riff (holding the button for more than 1 tick) gives a score. Making small riffs has been designed to give more points that a very long riff so you have to find the good balance.
+(The score also increases at the end of each freestyle phase).</p>
+
+<p><img src="/images/2013/09/highscores.png" style="max-width: 300px; width: 50%" /></p>
+
+<p>I also had to find a game end, I first thought about trying to make the game harder and harder but it wasn&#39;t trivial to make
+because I wanted to keep my <em>&quot;player is free to take any speed he wants&quot;</em> idea.</p>
+
+<p>Instead, I chose to <strong>limit the game time by one minute</strong>, 
+which makes my game a psychedelic rush game if you want a good score: 
+A good strategy to make a good score is to first speed up the song inertia as fast as possible, and then keep the rhythm on an high BPM.</p>
+
+<blockquote>
+<p>That mecanism is interesting because it is also harder to make precise scores on higher speed, it can even be risky (reaching the BPM limit, failing some beats), the player has to find the speed it fits the most!</p>
+</blockquote>
+
+<h2>The game experience</h2>
+
+<p>I wanted my game experience to be both on the <strong>graphics</strong> and on the <strong>audio</strong> aspects:
+you have both a feedback on your actions with the graphics using a color (
+<span style="color:#0F0">green=good</span>,
+<span style="color:#CC0">yellow=meh</span>,
+<span style="color:#F00">red=bad</span>
+) and with the audio (different sound depending on the rate of the action).</p>
+
+<p><img src="/images/2013/09/good.png" style="width: 30%" />
+<img src="/images/2013/09/timelapse.png" style="width: 30%" />
+<img src="/images/2013/09/toofast.png" style="width: 30%" /></p>
+
+<p>The audio BPM is also graphically visualized using a circle with a rotating pulse
+which also helps you on the rhythm.</p>
+
+<p>During the freestyle phase, the circle turns fully highlighted and the audio &quot;wob wob wob&quot; part is playing.
+Each user freestyle &quot;riff&quot; (hold a note) will randomly change the delay of a &quot;repeater&quot;, an important part on the audio of that section I will discuss in the <em>Audio Section</em>.</p>
+
+<p><img src="/images/2013/09/killer-riff.png" style="max-width: 300px; width: 100%" /></p>
+
+<p>If the player runs the song too fast, an overheat happens and the circle turns very light:</p>
+
+<p><img src="/images/2013/09/lighted.png" style="max-width: 300px; width: 100%" /></p>
+
+<p>On the contrary, it turns very dark and glitchy when the BPM is very slow:</p>
+
+<p><img src="/images/2013/09/slow.png" style="max-width: 300px; width: 100%" /></p>
+
+<h2>More about the audio</h2>
+
+<p>As described in the <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">specification</a>, the <em>Web Audio API</em> is an audio routing graph composed of low level audio nodes.
+Using it raw can be quite verbose, I&#39;ve made my own reusable component using those nodes.
+My convention is to use Javascript constructor for those components and to have a &quot;inp&quot; and an &quot;out&quot; <em>AudioNode</em> field.</p>
+
+<p>First I create a <code>ctx</code> <em>AudioContext</em> (works for Chrome &amp; Firefox Aurora):</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">AudioContext</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">webkitAudioContext</span><span class="p">)();</span>
+</code></pre></div>
+<p>This <code>ctx</code> variable now offers all methods to work with sound.</p>
+
+<h3>Global effects: Reverbation, Compressor</h3>
+
+<p>Web Audio API have a <strong>Convolver</strong> node which allows to make diverse audio effects like <strong>reverbation</strong>, which is basically emulating your song played in a room. You can find more information <a href="http://creativejs.com/resources/web-audio-api-a-bit-more-advanced/">here</a>.</p>
+
+<p>I&#39;ve used a simple Reverb effect to pass the whole sound. This simple reverb implementation can be found on <a href="https://github.com/web-audio-components/simple-reverb">https://github.com/web-audio-components/simple-reverb</a>.</p>
+
+<p>Another <strong>very</strong> important brick of the Audio graph is the <strong>Compressor</strong>.
+The <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> have a built-in Compressor with some parameters.</p>
+
+<p>A compressor dynamically adapts the input sound to a normalized output. It ensures the output is not distorted (saturated because amplitude is too high) or inaudible because too low.
+In other words, it consists of dynamically raise the volume if the input is lower, and decrease the volume if the input is higher, that a given rate.</p>
+
+<p>Here is the global audio setup I&#39;ve used as an output for all different sounds of the song:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">var</span> <span class="nx">out</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span> <span class="c1">// My global output</span>
+  <span class="kd">var</span> <span class="nx">outCompressor</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createDynamicsCompressor</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">reverb</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Reverb</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>
+  <span class="nx">out</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// We will increase the main volume when the song starts</span>
+  <span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">reverb</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+  <span class="nx">reverb</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">outCompressor</span><span class="p">);</span>
+  <span class="nx">outCompressor</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">destination</span><span class="p">);</span>
+</code></pre></div>
+<h3>Ambiant sounds</h3>
+
+<p>I&#39;ve used a soft <strong>sine Oscillator</strong> and some <strong>Noise generator</strong> (protected by a bandpass Filter) for the <strong>ambiant sound</strong>.
+That gives more depth to the song.</p>
+
+<p>It was also used to give more audio feedback on the gameplay:</p>
+
+<ul>
+<li>The <strong>Oscillator frequency follows the BPM</strong> (goes higher in frequency with the song speed).</li>
+<li>The BPM also affects the <strong>frequency of a LFO</strong> which oscillate the <strong>volume of the Noise</strong> to make an <strong>helicopter-like sound</strong>.</li>
+<li>The Oscillator is fastly <strong>detuned on each user action</strong>, and especially if the user tap too early it will produce a &quot;bip&quot; like you can hear in the following Soundcloud.</li>
+<li>Finally, a second noise passed into a highpass filter will be louder if the player is in danger (BPM is too slow or too fast). <em>(we won&#39;t show the code for this one)</em></li>
+</ul>
+
+<p>I have muted all other sounds to make you hear only the ambiant sound when speeding up the song up to a gameover:</p>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110774935"></iframe>
+
+<p>The Noise component:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">function</span> <span class="nx">Noise</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Here we loop on a 2s noise buffer, it is more efficient that generating on the fly</span>
+    <span class="kd">var</span> <span class="nx">bufferSize</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">sampleRate</span><span class="p">,</span>
+    <span class="nx">noiseBuffer</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createBuffer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nx">bufferSize</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">sampleRate</span><span class="p">),</span>
+    <span class="nx">output</span> <span class="o">=</span> <span class="nx">noiseBuffer</span><span class="p">.</span><span class="nx">getChannelData</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">bufferSize</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">output</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">whiteNoise</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createBufferSource</span><span class="p">();</span>
+    <span class="nx">whiteNoise</span><span class="p">.</span><span class="nx">buffer</span> <span class="o">=</span> <span class="nx">noiseBuffer</span><span class="p">;</span>
+    <span class="nx">whiteNoise</span><span class="p">.</span><span class="nx">loop</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">gain</span> <span class="o">=</span> <span class="nx">createGain</span><span class="p">();</span>
+    <span class="nx">whiteNoise</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">gain</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">filter</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createBiquadFilter</span><span class="p">();</span>
+    <span class="nx">gain</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">filter</span><span class="p">);</span>
+    <span class="nx">filter</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;lowpass&quot;</span><span class="p">;</span> <span class="c1">// Generally lowpass, but can be overrided</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">white</span> <span class="o">=</span> <span class="nx">whiteNoise</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">gain</span> <span class="o">=</span> <span class="nx">gain</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">filter</span> <span class="o">=</span> <span class="nx">filter</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">Noise</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">duration</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">white</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">duration</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+</code></pre></div>
+<p>Here is some code I used for making the ambiant sound:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">var</span> <span class="nx">bpmOsc2mult</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">bpmNoiseMult</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">noiseBpmGain</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span>
+  <span class="nx">noiseBpmGain</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">out</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">noiseBpm</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Noise</span><span class="p">();</span>
+  <span class="nx">noiseBpm</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">noiseBpmGain</span><span class="p">);</span>
+  <span class="nx">noiseBpm</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="nx">noiseBpm</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">;</span>
+  <span class="nx">noiseBpm</span><span class="p">.</span><span class="nx">filter</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;bandpass&quot;</span><span class="p">;</span>
+  <span class="nx">noiseBpm</span><span class="p">.</span><span class="nx">filter</span><span class="p">.</span><span class="nx">Q</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+  <span class="nx">noiseBpm</span><span class="p">.</span><span class="nx">filter</span><span class="p">.</span><span class="nx">frequency</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">bpmNoiseLfoMult</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">bpmNoiseLfoPow</span> <span class="o">=</span> <span class="mf">1.3</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">lfoBpm</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createOscillator</span><span class="p">();</span>
+  <span class="nx">lfoBpm</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">lfoBpmGain</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span>
+  <span class="nx">lfoBpmGain</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">;</span>
+  <span class="nx">lfoBpm</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">lfoBpmGain</span><span class="p">);</span>
+  <span class="nx">lfoBpmGain</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">noiseBpmGain</span><span class="p">.</span><span class="nx">gain</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">osc2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OscGain</span><span class="p">();</span>
+  <span class="nx">osc2</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;sawtooth&quot;</span><span class="p">;</span>
+  <span class="nx">osc2</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">vars</span><span class="p">.</span><span class="nx">bpm</span> <span class="o">*</span> <span class="nx">bpmOsc2mult</span><span class="p">;</span>
+  <span class="nx">osc2</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">detune</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="nx">osc2</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+  <span class="nx">osc2</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">out</span><span class="p">);</span>
+  <span class="nx">osc2</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</code></pre></div>
+<h3>NOTES</h3>
+
+<p>To easily define melodies, I first define &quot;NOTES&quot;, a map of <code>note -&gt; frequency</code>. 
+For instance <code>NOTES.A4</code> is <code>440</code> Hz:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">NOTES</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">notes</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="kd">var</span> <span class="nx">toneSymbols</span> <span class="o">=</span> <span class="s2">&quot;CcDdEFfGgAaB&quot;</span><span class="p">;</span>
+  <span class="kd">function</span> <span class="nx">noteToFrequency</span> <span class="p">(</span><span class="nx">note</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="nx">note</span><span class="o">-</span><span class="mi">69</span><span class="p">)</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="mi">440</span><span class="p">;</span> <span class="c1">// Beauty of audio math!</span>
+  <span class="p">};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">octave</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">octave</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="o">++</span><span class="nx">octave</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">t</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">;</span> <span class="o">++</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">notes</span><span class="p">[</span><span class="nx">toneSymbols</span><span class="p">[</span><span class="nx">t</span><span class="p">]</span><span class="o">+</span><span class="nx">octave</span><span class="p">]</span> <span class="o">=</span> <span class="nx">noteToFrequency</span><span class="p">(</span><span class="nx">octave</span> <span class="o">*</span> <span class="mi">12</span> <span class="o">+</span> <span class="nx">t</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">notes</span><span class="p">;</span>
+<span class="p">}());</span>
+</code></pre></div>
+<p>My convention here is to use a cap for major notes like <code>D</code> and no cap for minor notes like <code>d</code> (the black keys on a Piano).
+The following number is the octave. Notes are defined with two characters: Like A1, C2, B3, a4, ...
+You will see that&#39;s quite convenient to use the <code>with(NOTES){ ... }</code> syntax.</p>
+
+<p>See Also <a href="https://en.wikipedia.org/wiki/Frequencies_of_notes">Frequencies of notes</a>.</p>
+
+<h3>FM Synth &quot;bass&quot; melody</h3>
+
+<p>I used some <a href="/2013/08/FM-audio-api">FM synth</a> for making the main &quot;bass&quot; melody:</p>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110622269"></iframe>
+
+<p>First, I made a &quot;OscGain&quot; and a &quot;FM&quot; components.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">function</span> <span class="nx">OscGain</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">osc</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createOscillator</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">t</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">gain</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">gain</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">OscGain</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">duration</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">duration</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">function</span> <span class="nx">FM</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">OscGain</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">mod</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OscGain</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">mod</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">FM</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">duration</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">duration</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">mod</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">duration</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+</code></pre></div>
+<p>And used this melody:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">with</span> <span class="p">(</span><span class="nx">NOTES</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">bassMelo</span> <span class="o">=</span> <span class="p">[</span><span class="nx">G4</span><span class="p">,</span><span class="nx">D4</span><span class="p">,</span><span class="nx">F4</span><span class="p">,</span><span class="nx">C4</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="c1">// Usage for the bass:</span>
+  <span class="kd">var</span> <span class="nx">bass</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FM</span><span class="p">();</span>
+  <span class="nx">bass</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">out</span><span class="p">);</span>
+  <span class="kd">function</span> <span class="nx">tick</span> <span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="c1">// Change the note each 4 tick</span>
+    <span class="kd">var</span> <span class="nx">oscFreq</span> <span class="o">=</span> <span class="nx">bassMelo</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">i</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="o">%</span> <span class="nx">bassMelo</span><span class="p">.</span><span class="nx">length</span><span class="p">];</span>
+    <span class="nx">bass</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">oscFreq</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">;</span>
+    <span class="nx">bass</span><span class="p">.</span><span class="nx">mod</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">oscFreq</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">;</span>
+    <span class="nx">bass</span><span class="p">.</span><span class="nx">mod</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">oscFreq</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">;</span>
+    <span class="c1">// ...</span>
+  <span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p><strong>N.B.</strong>:
+The modulator frequency is 1/4 of the oscillator frequency which gives a cool bass sound. <br/>
+Also, That tick function is called at a (variable) frequency of <code>60 / BPM</code> Hz (BPM means Beat Per Minute, here it&#39;s more a Tick Per Minute) with the tick number <code>&quot;i&quot;</code> and the tick time <code>&quot;time&quot;</code>.</p>
+</blockquote>
+
+<h3>FM Synth &quot;main&quot; melody</h3>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110620277"></iframe>
+
+<p>This &quot;main&quot; synth is also a Frequency Modulation, but using a 3/4 ratio on the modulator frequency,
+and with an envelope on each notes.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">with</span> <span class="p">(</span><span class="nx">NOTES</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">melo1</span> <span class="o">=</span> <span class="p">[</span><span class="nx">E3</span><span class="p">,</span><span class="nx">G3</span><span class="p">,</span><span class="nx">D3</span><span class="p">,</span><span class="nx">G3</span><span class="p">,</span><span class="nx">E3</span><span class="p">,</span><span class="nx">A3</span><span class="p">,</span><span class="nx">C3</span><span class="p">,</span><span class="nx">G3</span><span class="p">];</span>
+  <span class="nx">melo2</span> <span class="o">=</span> <span class="p">[</span><span class="nx">E3</span><span class="p">,</span><span class="nx">B3</span><span class="p">,</span><span class="nx">D3</span><span class="p">,</span><span class="nx">G3</span><span class="p">,</span><span class="nx">E3</span><span class="p">,</span><span class="nx">C4</span><span class="p">,</span><span class="nx">C3</span><span class="p">,</span><span class="nx">D3</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Making an envelope consists of scheduling the amplitude through time with a <em>Gain</em>. See my <a href="/2013/08/FM-audio-api">FM Article</a>.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">function</span> <span class="nx">envelope</span> <span class="p">(</span><span class="nx">gainNode</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="nx">volume</span><span class="p">,</span> <span class="nx">duration</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">gain</span> <span class="o">=</span> <span class="nx">gainNode</span><span class="p">.</span><span class="nx">gain</span><span class="p">;</span>
+    <span class="nx">gain</span><span class="p">.</span><span class="nx">cancelScheduledValues</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="nx">gain</span><span class="p">.</span><span class="nx">setValueAtTime</span><span class="p">(</span><span class="nx">gain</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">time</span><span class="p">);</span>
+    <span class="nx">gain</span><span class="p">.</span><span class="nx">linearRampToValueAtTime</span><span class="p">(</span><span class="nx">volume</span><span class="p">,</span> <span class="nx">time</span> <span class="o">+</span> <span class="nx">a</span><span class="p">);</span>
+    <span class="nx">gain</span><span class="p">.</span><span class="nx">linearRampToValueAtTime</span><span class="p">(</span><span class="nx">volume</span> <span class="o">*</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">time</span> <span class="o">+</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">d</span><span class="p">);</span>
+    <span class="nx">gain</span><span class="p">.</span><span class="nx">setValueAtTime</span><span class="p">(</span><span class="nx">volume</span> <span class="o">*</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">time</span> <span class="o">+</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">d</span> <span class="o">+</span> <span class="nx">duration</span><span class="p">);</span>
+    <span class="nx">gain</span><span class="p">.</span><span class="nx">linearRampToValueAtTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">time</span> <span class="o">+</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">d</span> <span class="o">+</span> <span class="nx">duration</span> <span class="o">+</span> <span class="nx">r</span><span class="p">);</span>
+  <span class="p">}</span>
+</code></pre></div>
+<p>Also, the melody periodically switch into &quot;arpeggio note&quot; with this function:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">var</span> <span class="nx">DELTAS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="p">];</span>
+
+  <span class="kd">function</span> <span class="nx">applyArpeggio</span> <span class="p">(</span><span class="nx">freqParam</span><span class="p">,</span> <span class="nx">baseFreq</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="nx">duration</span><span class="p">,</span> <span class="nx">arpDuration</span><span class="p">,</span> <span class="nx">deltas</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">deltas</span><span class="p">)</span> <span class="nx">deltas</span> <span class="o">=</span> <span class="nx">DELTAS</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">deltas</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">ranges</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="nx">cancelScheduledValues</span><span class="p">(</span><span class="nx">freqParam</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">t</span> <span class="o">&lt;=</span> <span class="nx">duration</span><span class="p">;</span> <span class="nx">t</span> <span class="o">+=</span> <span class="nx">arpDuration</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">setValueAtTime</span><span class="p">(</span><span class="nx">freqParam</span><span class="p">,</span> <span class="nx">baseFreq</span> <span class="o">*</span> <span class="nx">deltas</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">time</span> <span class="o">+</span> <span class="nx">t</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</code></pre></div>
+<p>The Arpeggio effect is about fastly changing some octaves higher (like C3,C4,C5,C3,C4,C5,... very fastly).
+I&#39;ve keeped that &quot;deltas&quot; a parameter to try other arpeggios, I&#39;ve only used <code>[1,2,4]</code> multiplicators in the game.</p>
+
+<p>Indeed, thanks to the magic of audio math, 
+incrementing the octave means multipling the frequency by 2,
+more generally increment by N octaves means multiplying by <code>2 ^ N</code>.</p>
+
+<p>Finally, here is &quot;meloNote&quot;, the function which triggers one melody note.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">function</span> <span class="nx">meloNote</span> <span class="p">(</span><span class="nx">noteFreq</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="nx">arpeggio</span><span class="p">,</span> <span class="nx">metallic</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">fm</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FM</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">duration</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">release</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+    <span class="nx">fm</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;triangle&quot;</span><span class="p">;</span>
+    <span class="nx">fm</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="nx">noteFreq</span><span class="p">;</span>
+    <span class="nx">fm</span><span class="p">.</span><span class="nx">mod</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nx">noteFreq</span><span class="p">;</span>
+    <span class="nx">fm</span><span class="p">.</span><span class="nx">mod</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;sine&quot;</span><span class="p">;</span>
+    <span class="nx">fm</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">meloOut</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">fm</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">(</span><span class="nx">meloOut</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+    <span class="nx">startNode</span><span class="p">(</span><span class="nx">fm</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="nx">arpeggio</span> <span class="o">&amp;&amp;</span> <span class="nx">applyArpeggio</span><span class="p">(</span><span class="nx">fm</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="nx">noteFreq</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="nx">duration</span><span class="o">+</span><span class="nx">release</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">);</span>
+    <span class="nx">envelope</span><span class="p">(</span><span class="nx">fm</span><span class="p">.</span><span class="nx">gain</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nx">duration</span><span class="p">,</span> 
+        <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">);</span>
+    <span class="nx">envelope</span><span class="p">(</span><span class="nx">fm</span><span class="p">.</span><span class="nx">mod</span><span class="p">.</span><span class="nx">gain</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="nx">noteFreq</span> <span class="o">*</span> <span class="nx">metallic</span><span class="p">,</span> <span class="nx">duration</span><span class="p">,</span> 
+        <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">);</span>
+  <span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p><strong>N.B.</strong> The metallic parameter is a parameter from 0 to 1 to give a more metallic sound. 
+It changes the modulator intensity. In fact, that 3/4 ratio on the FM is the reason metallic sound.</p>
+</blockquote>
+
+<p>This function is called each tick with a new note:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">tick</span> <span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">risk</span><span class="p">();</span> <span class="c1">// How the player is in danger</span>
+  <span class="kd">var</span> <span class="nx">metallic</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="nx">r</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="nx">smoothstep</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="nx">i</span> <span class="o">/</span> <span class="mi">16</span><span class="p">));</span>
+  <span class="kd">var</span> <span class="nx">melo</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">16</span> <span class="o">&lt;</span> <span class="mi">8</span> <span class="o">?</span> <span class="nx">melo1</span> <span class="o">:</span> <span class="nx">melo2</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">octave</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">32</span> <span class="o">&lt;</span> <span class="mi">16</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">m</span> <span class="o">=</span> <span class="nx">melo</span><span class="p">[</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">8</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nx">octave</span><span class="p">);</span>
+  <span class="nx">meloNote</span><span class="p">(</span><span class="nx">m</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="nx">meloIsArpeggio</span><span class="p">,</span> <span class="nx">metallic</span><span class="p">);</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Repeater of freestyle part</h3>
+
+<p>A <strong>&quot;repeater&quot; with random delay add crazyness in the freestyle section</strong>. The delay time is randomly changed each time you hold the key so it gives cool feedback.</p>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110612559"></iframe>
+
+<p>The <em>Repeater</em> is made of a <em>Delay</em> piped in a <em>Gain</em> and piped back in the delay input to produce feedback (echo).
+A particularity of this component is the input <em>Gain</em> is also the output <em>Gain</em>.</p>
+
+<p><img src="/images/2013/09/repeater_schema.png" alt=""></p>
+
+<p>Implementation of a Repeater:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">function</span> <span class="nx">Repeater</span> <span class="p">(</span><span class="nx">delayValue</span><span class="p">,</span> <span class="nx">repeatGainValue</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">out</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">delay</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createDelay</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// The Max Delay</span>
+    <span class="nx">delay</span><span class="p">.</span><span class="nx">delayTime</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">delayValue</span><span class="p">;</span>
+    <span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">delay</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">repeatGain</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span>
+    <span class="nx">repeatGain</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">repeatGainValue</span><span class="p">;</span>
+    <span class="nx">delay</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">repeatGain</span><span class="p">);</span>
+    <span class="nx">repeatGain</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">out</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">delay</span> <span class="o">=</span> <span class="nx">delay</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">repeater</span> <span class="o">=</span> <span class="nx">repeatGain</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">gain</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">inp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">out</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div>
+<h3>Playing with Stereo</h3>
+
+<p>Doing stereo with Web Audio API can be a bit verbose without wrapping it,
+here is the Stereo component:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">function</span> <span class="nx">Stereo</span> <span class="p">(</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">merger</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createChannelMerger</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">inp</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span>
+    <span class="nx">inp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">left</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+    <span class="nx">inp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">right</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">inp</span> <span class="o">=</span> <span class="nx">inp</span><span class="p">;</span>
+    <span class="nx">left</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">merger</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="nx">right</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">merger</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">left</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="nx">right</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">merger</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div>
+<h3>Drumbox</h3>
+
+<p><strong>The Drumbox is simply made of a Kick, a Snare and a Hihat.</strong></p>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110781486"></iframe>
+
+<p>A <strong>Snare</strong> is implemented with a Noise and a Filter:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">function</span> <span class="nx">Snare</span> <span class="p">(</span><span class="nx">volume</span><span class="p">,</span> <span class="nx">freqFrom</span><span class="p">,</span> <span class="nx">freqTo</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">noise</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Noise</span><span class="p">();</span>
+    <span class="nx">noise</span><span class="p">.</span><span class="nx">filter</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;lowpass&quot;</span><span class="p">;</span>
+    <span class="nx">noise</span><span class="p">.</span><span class="nx">filter</span><span class="p">.</span><span class="nx">Q</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="nx">noise</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">noise</span> <span class="o">=</span> <span class="nx">noise</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">noise</span><span class="p">.</span><span class="nx">out</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">volume</span> <span class="o">=</span> <span class="nx">volume</span> <span class="o">||</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">freqFrom</span> <span class="o">=</span> <span class="nx">freqFrom</span> <span class="o">||</span> <span class="mi">800</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">freqTo</span> <span class="o">=</span> <span class="nx">freqTo</span> <span class="o">||</span> <span class="mi">1000</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">release</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">Snare</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">trigger</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">noise</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">envelope</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">noise</span><span class="p">.</span><span class="nx">gain</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">volume</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> 
+          <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">release</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">f</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">noise</span><span class="p">.</span><span class="nx">filter</span><span class="p">.</span><span class="nx">frequency</span><span class="p">;</span>
+      <span class="nx">f</span><span class="p">.</span><span class="nx">setValueAtTime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">freqFrom</span><span class="p">,</span> <span class="nx">time</span><span class="p">);</span>
+      <span class="nx">f</span><span class="p">.</span><span class="nx">linearRampToValueAtTime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">freqTo</span><span class="p">,</span> <span class="nx">time</span><span class="o">+</span><span class="mf">0.1</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+</code></pre></div>
+<p>The <strong>HiHat</strong> is also made with a Noise and a Filter, 
+except the Filter is a highpass filter (only high frequency are audible).</p>
+
+<p>Finally, The <strong>Kick</strong> is made with a <code>Kicker</code> and a <code>Snare</code>.</p>
+
+<p>Here is the Kicker implementation:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">function</span> <span class="nx">Kicker</span> <span class="p">(</span><span class="nx">freq</span><span class="p">,</span> <span class="nx">attack</span><span class="p">,</span> <span class="nx">duration</span><span class="p">,</span> <span class="nx">fall</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">OscGain</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">freq</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">freq</span> <span class="o">=</span> <span class="nx">freq</span> <span class="o">||</span> <span class="mi">50</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">fall</span> <span class="o">=</span> <span class="nx">fall</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">attack</span> <span class="o">=</span> <span class="nx">attack</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">duration</span> <span class="o">=</span> <span class="nx">duration</span> <span class="o">||</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">volume</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">Kicker</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">duration</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">startNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">duration</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="nx">trigger</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">attack</span><span class="p">,</span> <span class="nx">d</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">attack</span> <span class="o">+</span> <span class="mf">0.06</span><span class="p">,</span> <span class="nx">s</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nx">r</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">duration</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">envelope</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">gain</span><span class="p">,</span> <span class="nx">time</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">volume</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">duration</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">r</span><span class="p">);</span>
+      <span class="nx">setValueAtTime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">freq</span><span class="p">,</span> <span class="nx">time</span><span class="p">);</span>
+      <span class="nx">linearRampToValueAtTime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">frequency</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">time</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">fall</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+</code></pre></div>
+<p>And finally, here is my &quot;kick&quot; method called each time a user press the key:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="nx">kick</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">errorRate</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">errorRate</span> <span class="o">=</span> <span class="nx">errorRate</span> <span class="o">*</span> <span class="nx">errorRate</span> <span class="o">*</span> <span class="nx">errorRate</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">freq</span> <span class="o">=</span> <span class="nx">mix</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="nx">errorRate</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">speed</span> <span class="o">=</span> <span class="nx">mix</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="nx">errorRate</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="nx">vars</span><span class="p">.</span><span class="nx">bpm</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">kick</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Kicker</span><span class="p">(</span><span class="nx">freq</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="nx">speed</span><span class="p">,</span> <span class="nx">speed</span><span class="p">);</span>
+    <span class="nx">kick</span><span class="p">.</span><span class="nx">volume</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">;</span>
+    <span class="nx">kick</span><span class="p">.</span><span class="nx">osc</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;sine&quot;</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">filter</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">createBiquadFilter</span><span class="p">();</span>
+    <span class="nx">filter</span><span class="p">.</span><span class="nx">frequency</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">mix</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="nx">errorRate</span><span class="p">);</span>
+    <span class="nx">filter</span><span class="p">.</span><span class="nx">Q</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="nx">errorRate</span><span class="p">;</span>
+    <span class="nx">kick</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">filter</span><span class="p">);</span>
+    <span class="nx">filter</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">drumOut</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">filter</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">(</span><span class="nx">drumOut</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+    <span class="nx">kick</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">snare</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Snare</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="nx">snare</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">drumOut</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">snare</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">(</span><span class="nx">drumOut</span><span class="p">.</span><span class="nx">inp</span><span class="p">);</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+    <span class="nx">snare</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+
+    <span class="nx">E</span><span class="p">.</span><span class="nx">pub</span><span class="p">(</span><span class="s2">&quot;kick&quot;</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
+  <span class="p">}</span>
+</code></pre></div>
+<h3>Stereo Drumbox</h3>
+
+<p>I&#39;ve used two Repeaters (one for the left, on for the right) on the Drumbox to produce some stereo echo effects.</p>
+
+<p>The effect can be very weak to hear, so I made in the following audio example 2 different delays so you can understand what I mean:</p>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110622238"></iframe>
+
+<p>All sounds from the drumbox (snare, hihat, kick) is piped into &quot;drumOut&quot;, which have that Stereo system.</p>
+
+<p>Here is the code of the &quot;drumOut&quot; (the output where goes all Drum Box sounds):</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">var</span> <span class="nx">drumOut</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// using the second example delay effect (listen to the soundcloud sound)</span>
+    <span class="kd">var</span> <span class="nx">left</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Repeater</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">right</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Repeater</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">);</span> <span class="c1">// Playing with different values for stereo effects</span>
+    <span class="nx">right</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">;</span> <span class="c1">// move the drum a bit to the left</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Stereo</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">);</span>
+  <span class="p">}());</span>
+  <span class="nx">drumOut</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">out</span><span class="p">);</span>
+</code></pre></div>
+<h2>The GLSL shader</h2>
+
+<p>Here is the GLSL code I used for the game, the final version is a bit crazy because I incrementally add features to it!
+All the graphics are defined here!</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="cp">#ifdef GL_ES</span>
+<span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#define BPM_MIN 30.0</span>
+<span class="cp">#define BPM_MAX 150.0</span>
+
+<span class="k">uniform</span> <span class="k">vec2</span> <span class="n">resolution</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">time</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">kick</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">kickSpeed</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">bpm</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">lvl</span><span class="p">;</span>
+
+<span class="k">uniform</span> <span class="k">bool</span> <span class="n">dubstepAction</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">useraction</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">successState</span><span class="p">;</span>
+
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">dubloading</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">bool</span> <span class="n">dubphase</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">pulseOpenFrom</span><span class="p">;</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">pulseOpenTo</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="k">vec2</span> <span class="n">center</span> <span class="o">=</span> <span class="k">vec2</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
+
+<span class="k">const</span> <span class="k">float</span> <span class="n">PI</span> <span class="o">=</span> <span class="mf">3.14159265359</span><span class="p">;</span>
+<span class="k">const</span> <span class="k">float</span> <span class="n">PI_x_2</span> <span class="o">=</span> <span class="mf">6.28318530718</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="k">vec3</span> <span class="n">COLOR_NEUTRAL</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">);</span>
+<span class="k">const</span> <span class="k">vec3</span> <span class="n">COLOR_SUCCESS</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">);</span>
+<span class="k">const</span> <span class="k">vec3</span> <span class="n">COLOR_ERROR</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">);</span>
+
+<span class="k">float</span> <span class="n">expInOut</span> <span class="p">(</span><span class="k">float</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="mf">0.0</span><span class="o">==</span><span class="n">a</span> <span class="o">?</span> <span class="mf">0.0</span> <span class="o">:</span> <span class="mf">1.0</span><span class="o">==</span><span class="n">a</span> <span class="o">?</span> <span class="mf">1.0</span> <span class="o">:</span> <span class="mf">1.0</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">*=</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pow</span><span class="p">(</span><span class="mf">1024.0</span><span class="p">,</span><span class="n">a</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">:</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">pow</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="o">-</span><span class="mf">10.0</span><span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="mf">1.0</span><span class="p">))</span><span class="o">+</span><span class="mf">2.0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">float</span> <span class="n">random</span> <span class="p">(</span><span class="k">vec2</span> <span class="n">pos</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">fract</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">pos</span><span class="p">.</span><span class="n">xy</span> <span class="p">,</span><span class="k">vec2</span><span class="p">(</span><span class="mf">12.9898</span><span class="p">,</span><span class="mf">78.233</span><span class="p">)))</span> <span class="o">*</span> <span class="mf">43758.5453</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">vec3</span> <span class="n">random3</span> <span class="p">(</span><span class="k">vec2</span> <span class="n">pos</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">vec3</span><span class="p">(</span>
+    <span class="n">random</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span>
+    <span class="n">random</span><span class="p">(</span><span class="n">pos</span><span class="o">*</span><span class="mf">3.</span><span class="p">),</span>
+    <span class="n">random</span><span class="p">(</span><span class="n">pos</span><span class="o">*</span><span class="mf">13.</span><span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">float</span> <span class="n">distanceRadius</span> <span class="p">(</span><span class="k">float</span> <span class="n">a</span><span class="p">,</span> <span class="k">float</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">float</span> <span class="n">d</span> <span class="o">=</span> <span class="n">mod</span><span class="p">(</span><span class="n">distance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">PI_x_2</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">PI</span> <span class="o">?</span> <span class="n">d</span> <span class="o">:</span> <span class="n">PI_x_2</span> <span class="o">-</span> <span class="n">d</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">float</span> <span class="n">spiralDistance</span> <span class="p">(</span><span class="k">vec2</span> <span class="n">v</span><span class="p">,</span> <span class="k">float</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">float</span> <span class="n">d</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+  <span class="k">float</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">PI</span> <span class="o">+</span> <span class="n">atan</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">y</span><span class="p">))</span><span class="o">/</span><span class="n">PI_x_2</span><span class="p">;</span>
+  <span class="k">float</span> <span class="n">n</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">d</span><span class="o">/</span><span class="n">r</span><span class="p">)</span><span class="o">+</span><span class="n">a</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">distance</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">fract</span><span class="p">(</span><span class="n">n</span><span class="p">)));</span>
+<span class="p">}</span>
+
+<span class="k">float</span> <span class="n">bpmToSec</span> <span class="p">(</span><span class="k">float</span> <span class="n">bpm</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="mf">60.</span> <span class="o">/</span> <span class="n">bpm</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">float</span> <span class="n">circlePulse</span> <span class="p">(</span>
+  <span class="k">vec2</span> <span class="n">v</span><span class="p">,</span> <span class="k">float</span> <span class="n">kickForce</span><span class="p">,</span>
+  <span class="k">float</span> <span class="n">kickGlitchFreq</span><span class="p">,</span> <span class="k">float</span> <span class="n">kickGlitchAmp</span><span class="p">,</span>
+  <span class="k">float</span> <span class="n">thin</span><span class="p">,</span> <span class="k">float</span> <span class="n">pulseAngle</span><span class="p">,</span> <span class="k">bool</span> <span class="n">dubphase</span><span class="p">,</span>
+  <span class="k">float</span> <span class="n">waveFreq</span><span class="p">,</span> <span class="k">float</span> <span class="n">waveAmp</span><span class="p">,</span> <span class="k">float</span> <span class="n">waveDuration</span><span class="p">,</span>
+  <span class="k">float</span> <span class="n">bullForce</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="k">float</span> <span class="n">angle</span> <span class="o">=</span> <span class="n">atan</span><span class="p">(</span><span class="o">-</span><span class="n">v</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">v</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+  <span class="k">float</span> <span class="n">clock</span> <span class="o">=</span> <span class="n">distanceRadius</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span> <span class="o">/</span> <span class="n">PI</span><span class="p">;</span>
+  <span class="k">float</span> <span class="n">distAngle</span> <span class="o">=</span> <span class="n">distanceRadius</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">PI_x_2</span> <span class="o">*</span> <span class="n">pulseAngle</span><span class="p">)</span> <span class="o">/</span> <span class="n">PI</span><span class="p">;</span>
+  <span class="k">float</span> <span class="n">f</span> <span class="o">=</span> <span class="n">mix</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">smoothstep</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">cos</span><span class="p">(</span><span class="n">kickGlitchFreq</span> <span class="o">*</span> <span class="p">(</span><span class="n">clock</span><span class="o">+</span><span class="mf">0.1</span><span class="o">*</span><span class="n">angle</span><span class="o">+</span><span class="n">kickForce</span><span class="p">))),</span> <span class="n">kickGlitchAmp</span><span class="p">);</span>
+  <span class="k">float</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mix</span><span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">kickForce</span><span class="o">*</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">float</span> <span class="n">sc</span> <span class="o">=</span> <span class="n">smoothstep</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">waveDuration</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">distAngle</span><span class="p">);</span>
+  <span class="k">float</span> <span class="n">intensity</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">+</span><span class="mf">0.05</span><span class="o">*</span><span class="n">sc</span><span class="p">;</span>
+  <span class="n">r</span> <span class="o">/=</span> <span class="n">mix</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">waveAmp</span><span class="o">*</span><span class="n">sc</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="o">*</span><span class="n">waveFreq</span><span class="p">));</span>
+  <span class="k">float</span> <span class="n">a</span> <span class="o">=</span> <span class="n">mod</span><span class="p">(</span><span class="n">PI_x_2</span><span class="o">+</span><span class="n">atan</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">y</span><span class="p">),</span> <span class="n">PI_x_2</span><span class="p">)</span><span class="o">/</span><span class="n">PI_x_2</span><span class="p">;</span>
+  <span class="k">float</span> <span class="n">ring</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">-</span><span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.03</span><span class="o">*</span><span class="n">bullForce</span><span class="o">*</span><span class="p">(</span><span class="o">!</span><span class="n">dubphase</span> <span class="o">?</span> 
+    <span class="n">smoothstep</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="mf">1.5</span><span class="o">*</span><span class="n">waveDuration</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">clock</span><span class="p">)</span> <span class="o">:</span> 
+    <span class="p">(</span>
+    <span class="n">a</span> <span class="o">&lt;</span> <span class="n">pulseOpenFrom</span> <span class="o">?</span> <span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">distance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">pulseOpenFrom</span><span class="p">))</span> <span class="o">:</span> 
+    <span class="n">a</span> <span class="o">&gt;</span> <span class="n">pulseOpenTo</span> <span class="o">?</span> <span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">distance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">pulseOpenTo</span><span class="p">))</span> <span class="o">:</span> 
+    <span class="mf">1.0</span>
+    <span class="p">)</span>
+  <span class="p">);</span>
+  <span class="k">float</span> <span class="n">value</span> <span class="o">=</span> <span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">intensity</span><span class="p">,</span> <span class="n">ring</span><span class="p">);</span>
+  <span class="k">float</span> <span class="n">returnValue</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="o">/</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">pow</span><span class="p">(</span><span class="n">thin</span><span class="p">,</span> <span class="mf">2.</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">length</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">float</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">PI</span><span class="p">;</span>
+    <span class="k">float</span> <span class="n">s</span> <span class="o">=</span> <span class="n">spiralDistance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">sr</span><span class="p">);</span>
+    <span class="k">float</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">PI</span> <span class="o">+</span> <span class="n">atan</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">y</span><span class="p">))</span><span class="o">/</span><span class="n">PI_x_2</span><span class="p">;;</span>
+    <span class="k">float</span> <span class="n">v</span> <span class="o">=</span> 
+      <span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">distanceRadius</span><span class="p">(</span><span class="n">PI</span><span class="o">+</span><span class="n">pulseAngle</span><span class="o">*</span><span class="n">PI_x_2</span><span class="p">,</span> <span class="n">a</span><span class="o">*</span><span class="n">PI_x_2</span><span class="p">)</span><span class="o">/</span><span class="n">PI</span><span class="p">)</span> <span class="o">*</span>
+      <span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+    <span class="n">returnValue</span> <span class="o">+=</span> <span class="n">v</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">pow</span><span class="p">(</span><span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">s</span><span class="p">),</span> <span class="mf">0.3</span><span class="p">);</span>
+    <span class="n">returnValue</span> <span class="o">+=</span> <span class="n">s</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">float</span> <span class="n">centerIntensity</span> <span class="o">=</span> <span class="n">dubphase</span> <span class="o">?</span> <span class="mf">0.1</span> <span class="o">:</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">dubloading</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">centerIntensity</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">float</span> <span class="n">s</span> <span class="o">=</span> <span class="n">bpmToSec</span><span class="p">(</span><span class="n">bpm</span><span class="p">);</span>
+    <span class="k">float</span> <span class="n">c</span> <span class="o">=</span> <span class="n">mix</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">mod</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="n">smoothstep</span><span class="p">(</span><span class="n">centerIntensity</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">length</span><span class="p">(</span><span class="n">v</span><span class="p">));</span>
+    <span class="n">returnValue</span> <span class="o">+=</span> <span class="n">c</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">returnValue</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="n">main</span> <span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">vec3</span> <span class="n">c</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+  <span class="k">vec2</span> <span class="n">p</span> <span class="o">=</span> <span class="n">gl_FragCoord</span><span class="p">.</span><span class="n">xy</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">;</span>
+  <span class="k">float</span> <span class="n">sec</span> <span class="o">=</span> <span class="n">bpmToSec</span><span class="p">(</span><span class="n">bpm</span><span class="p">);</span>
+  <span class="k">float</span> <span class="n">statePower</span> <span class="o">=</span> <span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">time</span><span class="o">-</span><span class="n">useraction</span><span class="p">);</span>
+  <span class="k">float</span> <span class="n">colorPower</span> <span class="o">=</span> <span class="n">dubstepAction</span> <span class="o">?</span> <span class="mf">1.0</span> <span class="o">:</span> <span class="n">statePower</span><span class="p">;</span>
+  <span class="k">float</span> <span class="n">cPulse</span> <span class="o">=</span> <span class="n">circlePulse</span><span class="p">(</span>
+    <span class="n">p</span> <span class="o">-</span> <span class="n">center</span><span class="p">,</span>
+    <span class="n">smoothstep</span><span class="p">(</span><span class="n">kickSpeed</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">time</span><span class="o">-</span><span class="n">kick</span><span class="p">),</span>
+    <span class="mf">20.0</span><span class="p">,</span>
+    <span class="mf">0.5</span><span class="p">,</span>
+    <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">smoothstep</span><span class="p">(</span><span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">statePower</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">distance</span><span class="p">(</span><span class="n">smoothstep</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">statePower</span><span class="p">),</span> <span class="n">distance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">center</span><span class="p">))),</span>
+    <span class="n">mod</span><span class="p">((</span><span class="n">time</span><span class="o">-</span><span class="n">kick</span><span class="p">)</span><span class="o">/</span><span class="n">sec</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">dubphase</span><span class="p">,</span>
+    <span class="mf">1.2</span><span class="o">*</span><span class="n">sqrt</span><span class="p">(</span><span class="n">bpm</span><span class="p">)</span> <span class="o">+</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">statePower</span><span class="p">,</span>
+    <span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">min</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">bpm</span> <span class="o">/</span> <span class="mf">800.0</span><span class="p">),</span>
+    <span class="mf">1.0</span> <span class="o">-</span> <span class="n">statePower</span>
+  <span class="p">);</span>
+  <span class="k">vec3</span> <span class="n">mainColor</span> <span class="o">=</span> <span class="n">mix</span><span class="p">(</span>
+    <span class="n">COLOR_NEUTRAL</span><span class="p">,</span>
+    <span class="n">mix</span><span class="p">(</span><span class="n">COLOR_ERROR</span><span class="p">,</span> <span class="n">COLOR_SUCCESS</span><span class="p">,</span> <span class="n">successState</span><span class="p">),</span>
+    <span class="n">colorPower</span><span class="p">);</span>
+
+  <span class="n">c</span> <span class="o">+=</span> <span class="n">cPulse</span> <span class="o">*</span> <span class="n">mainColor</span><span class="p">;</span>
+
+  <span class="n">c</span> <span class="o">=</span> <span class="n">clamp</span><span class="p">(</span>
+    <span class="n">c</span><span class="p">,</span>
+    <span class="k">vec3</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span>
+    <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+  <span class="p">);</span>
+
+  <span class="k">float</span> <span class="n">bpmLight</span> <span class="o">=</span> <span class="n">smoothstep</span><span class="p">(</span><span class="n">BPM_MIN</span><span class="p">,</span> <span class="n">BPM_MAX</span><span class="p">,</span> <span class="n">bpm</span><span class="p">);</span>
+  <span class="n">c</span> <span class="o">=</span> <span class="n">mix</span><span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">random</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">time</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">random</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="mf">100.</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">time</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">random</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="mf">10.</span><span class="p">)</span> <span class="o">+</span> <span class="n">time</span><span class="p">)),</span> <span class="n">c</span><span class="p">,</span> <span class="n">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="o">*</span><span class="n">bpmLight</span><span class="p">));</span>
+
+  <span class="n">c</span> <span class="o">*=</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="n">max</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">100.0</span><span class="o">*</span><span class="p">(</span><span class="n">bpmLight</span><span class="o">-</span><span class="mf">0.85</span><span class="p">));</span>
+
+  <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2>Bonus</h2>
+
+<p><strong>Did you recognize the melody I used in the freestyle part?</strong>
+The melody doesn&#39;t keep the rhythm though, but you should be able to recognize it!</p>
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110614352"></iframe>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/03/panzer-dragoon-1k">Panzer Dragoon 1k</a>
+            </li>
+            
+            <li>
+              <a href="/2014/01/promisify-your-games">Promisify your games</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

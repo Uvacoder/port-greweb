@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>@Greweb - Articles</title>
+    <description>embrace standard web technologies for web, games and mobile apps</description>
+    <link>http://greweb.me</link>
+    <atom:link href="http://greweb.me/feed/" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>gl-react v3</title>
+      <description>gl-react has been reimplemented from scratch, feedback from previous mistake and overview of new features. </description>
+      <pubDate>Sat, 03 Dec 2016 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2016/12/gl-react-v3/</link>
+      <guid isPermaLink="true">http://greweb.me/2016/12/gl-react-v3/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Relay, scrolling connections</title>
+      <description>implement a component handling the scroll of a list to pull more data of a Graphql Connection with Relay </description>
+      <pubDate>Mon, 19 Sep 2016 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2016/09/relay-scrolling-connections/</link>
+      <guid isPermaLink="true">http://greweb.me/2016/09/relay-scrolling-connections/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>🎉 There are some OpenGL in the Project September fashion app!</title>
+      <description> </description>
+      <pubDate>Fri, 01 Jul 2016 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2016/07/projectseptember-opengl/</link>
+      <guid isPermaLink="true">http://greweb.me/2016/07/projectseptember-opengl/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Universal GL Effects for Web and Native</title>
+      <description> </description>
+      <pubDate>Sun, 19 Jun 2016 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2016/06/glreactconf/</link>
+      <guid isPermaLink="true">http://greweb.me/2016/06/glreactconf/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Introducing gl-react</title>
+      <description>This presentation is an introduction to WebGL in React and functional programming concept and showcases made with gl-react and gl-react-native </description>
+      <pubDate>Thu, 01 Oct 2015 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2015/10/introducing-gl-react/</link>
+      <guid isPermaLink="true">http://greweb.me/2015/10/introducing-gl-react/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Making performant React applications</title>
+      <description>I would like to express here my opinion and feedback on using React and performance optimization you can do. </description>
+      <pubDate>Tue, 04 Aug 2015 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2015/08/making-performant-react-applications/</link>
+      <guid isPermaLink="true">http://greweb.me/2015/08/making-performant-react-applications/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</title>
+      <description>A talk I did at webglparis to present GLSL.io and GLSL Transitions initiative. </description>
+      <pubDate>Thu, 16 Oct 2014 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2014/10/webglparis/</link>
+      <guid isPermaLink="true">http://greweb.me/2014/10/webglparis/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Cellular Automata in IBEX</title>
+      <description>IBEX is my game made for js13kgames. This article explains how the game has been implemented with GLSL and cellular automata. </description>
+      <pubDate>Mon, 22 Sep 2014 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2014/09/ibex-cellular-automata/</link>
+      <guid isPermaLink="true">http://greweb.me/2014/09/ibex-cellular-automata/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>IBEX, my js13k game</title>
+      <description>IBEX is a game made in 13k of JavaScript code made for the js13kgames one-month contest. </description>
+      <pubDate>Sun, 14 Sep 2014 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2014/09/ibex/</link>
+      <guid isPermaLink="true">http://greweb.me/2014/09/ibex/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>48 hours to prototype an Ant Sim Game</title>
+      <description>I gamejam-ed last weekend to the Ludum Dare 29 theming &quot;Beneath the Surface&quot; to develop &quot;Anthill&quot;, a minimalist anthill simulation game. </description>
+      <pubDate>Sun, 04 May 2014 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2014/05/ld29/</link>
+      <guid isPermaLink="true">http://greweb.me/2014/05/ld29/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Panzer Dragoon 1k</title>
+      <description>Panzer Dragoon 1k is a 2D remake of Panzer Dragoon in 1k of JavaScript I made for JS1K 2014 </description>
+      <pubDate>Wed, 12 Mar 2014 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2014/03/panzer-dragoon-1k/</link>
+      <guid isPermaLink="true">http://greweb.me/2014/03/panzer-dragoon-1k/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Promisify your games</title>
+      <description>a game showcase using Q Promise as first-class citizen and driven with CSS3 Animations via Zanimo. </description>
+      <pubDate>Sun, 12 Jan 2014 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2014/01/promisify-your-games/</link>
+      <guid isPermaLink="true">http://greweb.me/2014/01/promisify-your-games/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Functional Rendering</title>
+      <description>This talk explains how to think the rendering in a more functional way. Let&#39;s see how we can just do things with a function of (Vec2 =&gt; Color). </description>
+      <pubDate>Tue, 12 Nov 2013 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2013/11/functional-rendering/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/11/functional-rendering/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Slides: Web Audio API, Overview</title>
+      <description>A presentation overview of the Web Audio API </description>
+      <pubDate>Sat, 28 Sep 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/09/webaudioapi/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/09/webaudioapi/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Making a rhythm game with bleeding-edge web</title>
+      <description>While continuing to experiment with Web Audio API and GLSL, I&#39;ve made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped). </description>
+      <pubDate>Tue, 17 Sep 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/09/timelapse/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/09/timelapse/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Beez, WebRTC + Audio API</title>
+      <description>Here is Beez, a web real-time audio experiment using smartphones as synthesizer effect controllers. This is our second Web Audio API experiment made in one Hackday at Zenexity. </description>
+      <pubDate>Wed, 04 Sep 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/09/beez/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/09/beez/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Frequency Modulation (FM) with Web Audio API</title>
+      <description> </description>
+      <pubDate>Wed, 21 Aug 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/08/FM-audio-api/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/08/FM-audio-api/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>ZOUND live v1 in development</title>
+      <description>Here is a preview video of the Work In Progress development of ZOUND live, the collaborative modular audio tracker built with bleeding edge web technologies: Web Audio API, Web MIDI API, WebSocket &amp; Playframework. </description>
+      <pubDate>Thu, 08 Aug 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/08/zound-wip-v1/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/08/zound-wip-v1/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>ZOUND live project initiated</title>
+      <description>Last week, I initiated ZOUND live following my previous &quot;ZOUND&quot; experiment but being much more ambitious this time: using both the Audio API, the new MIDI API and electronic music software experience, we start our own web collaborative audio modular tracker. </description>
+      <pubDate>Tue, 30 Jul 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/07/zound-live/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/07/zound-live/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Qep3.: QanimationFrame</title>
+      <description>This third article on Q is a little parenthesis to the Qep articles series, featuring the requestAnimationFrame Javascript function and its general usage, and QanimationFrame, its Promisified version used as a &quot;wait for DOM to be ready&quot; API. </description>
+      <pubDate>Wed, 17 Jul 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/07/QanimationFrame/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/07/QanimationFrame/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Qep2.: Deferred objects, Qimage</title>
+      <description>This second article on Q will introduce you how to easily turn a callback API into a promise API using Deferred objects. It will also present the new W3C specification of Promise and finish with the implementation of Qimage, a simple Image Promise wrapper. </description>
+      <pubDate>Sat, 13 Jul 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/07/deferred/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/07/deferred/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Qep1.: Q, a Promise library</title>
+      <description>This article is the first of a series of small articles on the Q Javascript library and its eco-system. It is a brief introduction to Q Promises. </description>
+      <pubDate>Wed, 10 Jul 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/07/q-a-promise-library/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/07/q-a-promise-library/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Playframework simple deployment scripts</title>
+      <description>Playframework simple deployment scripts </description>
+      <pubDate>Tue, 07 May 2013 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2013/05/playframework-simple-deployment-scripts/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/05/playframework-simple-deployment-scripts/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>glsl.js, a Javascript + GLSL library = DRY &#038; efficient</title>
+      <description>WebGL is super powerful and efficient. This library abuses this power for efficient 2D. </description>
+      <pubDate>Mon, 11 Feb 2013 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>PlayCLI: Play Iteratees + UNIX pipe</title>
+      <description>PlayCLI is a new Scala library to work with UNIX commands and Play-Iteratees (a scala implementation of Iteratees facilitating the handling of data streams reactively) </description>
+      <pubDate>Wed, 30 Jan 2013 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2013/01/playcli-play-iteratees-unix-pipe/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/01/playcli-play-iteratees-unix-pipe/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Be careful with JS numbers!</title>
+      <description>Javascript doesn’t have integer type but lets you think it has. In Javascript, all numbers are floating numbers and are prone to floating point approximation. </description>
+      <pubDate>Thu, 10 Jan 2013 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2013/01/be-careful-with-js-numbers/</link>
+      <guid isPermaLink="true">http://greweb.me/2013/01/be-careful-with-js-numbers/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Play Framework &#8211; Enumerator.outputStream</title>
+      <description>A few weeks ago, we’ve introduced a new feature in Play Framework: the Enumerator.outputStream method, allowing you to work with Java API requiring an OutputStream to generate content, for instance the java.util.zip API. </description>
+      <pubDate>Mon, 12 Nov 2012 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2012/11/play-framework-enumerator-outputstream/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/11/play-framework-enumerator-outputstream/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Zound, a PlayFramework 2 audio streaming experiment using Iteratees</title>
+      <description>Zound uses an audio generator (JSyn, an audio synthesizer), encode the output and stream it all using Play Iteratees to pipe everything in real-time. </description>
+      <pubDate>Wed, 01 Aug 2012 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>How I learned Backbone.js, Three.js &#038; GLSL in one week</title>
+      <description>I learned to use Backbone.js and Three.js (a famous library on top of WebGL) to make a FPS in only one week. </description>
+      <pubDate>Tue, 03 Jul 2012 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Minimize your Javascript files with cURL</title>
+      <description>use Google Closure Compiler web service to minimize a Javascript file with only cURL. </description>
+      <pubDate>Sat, 12 May 2012 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2012/05/minimize-your-javascript-files-with-curl/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/05/minimize-your-javascript-files-with-curl/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Illuminated.js &#8211; 2D lights and shadows rendering engine for HTML5 applications</title>
+      <description>Illuminated.js is designed to add some awesome effects to your existing applications. Adding a cool atmosphere for your applications and games can make the difference! </description>
+      <pubDate>Thu, 10 May 2012 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>HTML5 Canvas as a color converter</title>
+      <description>We can implement an anythingToRGBA converter in 10 lines of Javascript! </description>
+      <pubDate>Thu, 03 May 2012 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2012/05/html5-canvas-as-a-color-converter/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/05/html5-canvas-as-a-color-converter/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Work in &lt;progress /&gt;</title>
+      <description>A progress tag will be displayed on recent browsers with a OS-native progress bar representing a loading. </description>
+      <pubDate>Thu, 26 Apr 2012 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2012/04/work-in-progress/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/04/work-in-progress/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Blender as a 2D game level editor &#8211; Proof Of Concept</title>
+      <description>Here is how you can design and export your 2D game map with Blender (both the logic and the graphics). </description>
+      <pubDate>Mon, 09 Apr 2012 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Play Painter &#8211; how i&#8217;ve improved the 30 minutes prototyped version</title>
+      <description>One week ago, I’ve released a web experiment featuring a collaborative Paint-like application made with Play Framework 2 and relying on WebSocket and HTML5 Canvas. Here is how I&#39;ve improved it. </description>
+      <pubDate>Sat, 17 Mar 2012 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>30 minutes to make a multi user real time paint with Play 2 framework, Canvas and WebSocket.</title>
+      <description>[VIDEO] I will show you how to implement a multi user paint using latest web technologies like Play framework (version 2), HTML5 Canvas and WebSocket. </description>
+      <pubDate>Mon, 12 Mar 2012 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Chart libraries headaches &#8211; finding the best grid step</title>
+      <description>If you have ever made a chart library in your life, you’ve probably asked yourself how to find the best scale for the grid in order to have nice values to display in the axis. </description>
+      <pubDate>Tue, 06 Mar 2012 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2012/03/chart-libraries-headaches-finding-the-best-grid-step/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/03/chart-libraries-headaches-finding-the-best-grid-step/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Bezier Curve based easing functions &#8211; from concept to implementation</title>
+      <description>Many animation libraries are today using easing functions – functions of time returning a progression percentage value. We will see how we can generalize them with bezier curves. </description>
+      <pubDate>Wed, 29 Feb 2012 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>CSS-selector-based templating system for scalable JavaScript applications</title>
+      <description>In this article, we will focus on the power of CSS as a descriptive language, current template system approach and their problems with modularity and extensibility, and try to mix both features from the concept to a concrete implementation. </description>
+      <pubDate>Sat, 04 Feb 2012 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2012/02/css-selector-based-templating-example-with-javascript/</link>
+      <guid isPermaLink="true">http://greweb.me/2012/02/css-selector-based-templating-example-with-javascript/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>How to deploy your play applications on ArchLinux with daemons</title>
+      <description>This video shows how to run different instances of Play framework server in the most Linux friendly way: using daemons. Example with ArchLinux, using yaourt, the playframework AUR package and nginx. </description>
+      <pubDate>Sat, 15 Oct 2011 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2011/10/how-to-deploy-your-play-applications-on-archlinux-with-daemons/</link>
+      <guid isPermaLink="true">http://greweb.me/2011/10/how-to-deploy-your-play-applications-on-archlinux-with-daemons/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Improve your web navigation experience &#8211; Flexible Nav jQuery library</title>
+      <description>Flexible Nav is a small jQuery library which add a smart navigation bar on the right of the page. It improves a web page navigation and helps to visualize different sections of a document, an article,.. any web page. </description>
+      <pubDate>Sat, 30 Jul 2011 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2011/07/improve-your-web-navigation-experience-flexible-nav-jquery-library/</link>
+      <guid isPermaLink="true">http://greweb.me/2011/07/improve-your-web-navigation-experience-flexible-nav-jquery-library/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Same Game Gravity: 6 platforms, 1 codebase</title>
+      <description>The Same Game is available for 6 different platforms. And I can pump out new builds for them all in around 15 minutes. Here’s how… </description>
+      <pubDate>Tue, 12 Jul 2011 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2011/07/same-game-gravity-technical-notes/</link>
+      <guid isPermaLink="true">http://greweb.me/2011/07/same-game-gravity-technical-notes/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Same Game Gravity for iPad, iPhone, Android, Facebook, Chrome, and Web!</title>
+      <description>Same Game Gravity is today available on iPad, iPhone, Android, Web, Facebook Apps and Chrome Web Store. </description>
+      <pubDate>Tue, 12 Jul 2011 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/</link>
+      <guid isPermaLink="true">http://greweb.me/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Automating Web App development for multiple platforms</title>
+      <description>In this article, we will explain why we’d choose web technologies to make applications and introduce WebAppBuilder, a tool to easily build different instances of an application. We’ll examine the Same Game Gravity as an example. </description>
+      <pubDate>Wed, 01 Jun 2011 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2011/06/automating-web-app-development-for-multiple-platforms/</link>
+      <guid isPermaLink="true">http://greweb.me/2011/06/automating-web-app-development-for-multiple-platforms/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Releasing Same Game Gravity (Android)</title>
+      <description>Following on from the success of my Same game made in HTML5 Canvas, I’ve decided to extend it to a (web) mobile game. </description>
+      <pubDate>Sun, 24 Apr 2011 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2011/04/releasing-same-game-gravity-android/</link>
+      <guid isPermaLink="true">http://greweb.me/2011/04/releasing-same-game-gravity-android/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>HTML Canvas pour les néophytes</title>
+      <description>Cette vidéo de 20 minutes présente les possibilités du Canvas à travers quelques démos et l’implémentation pas à pas d’un exemple basique. </description>
+      <pubDate>Sat, 12 Mar 2011 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2011/03/html-canvas-pour-les-neophytes/</link>
+      <guid isPermaLink="true">http://greweb.me/2011/03/html-canvas-pour-les-neophytes/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>How to make DLink DWA-140 B2 perfectly work on Linux</title>
+      <description> </description>
+      <pubDate>Wed, 05 Jan 2011 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2011/01/how-to-make-dlink-dwa-140-perfectly-work-on-linux/</link>
+      <guid isPermaLink="true">http://greweb.me/2011/01/how-to-make-dlink-dwa-140-perfectly-work-on-linux/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>CSS3 Transitions</title>
+      <description> </description>
+      <pubDate>Wed, 05 May 2010 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2010/05/css3-transitions-available-on-firefox-3-7/</link>
+      <guid isPermaLink="true">http://greweb.me/2010/05/css3-transitions-available-on-firefox-3-7/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Automatiser l&#039;exportation d&#039;un site statique avec wget</title>
+      <description> </description>
+      <pubDate>Sun, 04 Apr 2010 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2010/04/automatiser-lexportation-dun-site-statique-avec-wget/</link>
+      <guid isPermaLink="true">http://greweb.me/2010/04/automatiser-lexportation-dun-site-statique-avec-wget/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Réaliser une maquette web avec le CSS 3</title>
+      <description> </description>
+      <pubDate>Sat, 03 Apr 2010 00:00:00 +0200</pubDate>
+      <link>http://greweb.me/2010/04/realiser-une-maquette-web-avec-le-css-3/</link>
+      <guid isPermaLink="true">http://greweb.me/2010/04/realiser-une-maquette-web-avec-le-css-3/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>SASS : l&#039;évolution du CSS pour Play, Rails ou autres</title>
+      <description> </description>
+      <pubDate>Sun, 14 Mar 2010 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2010/03/sass-levolution-du-css/</link>
+      <guid isPermaLink="true">http://greweb.me/2010/03/sass-levolution-du-css/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>The same game in HTML5 canvas</title>
+      <description> </description>
+      <pubDate>Sat, 20 Feb 2010 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2010/02/the-same-game-in-html5-canvas/</link>
+      <guid isPermaLink="true">http://greweb.me/2010/02/the-same-game-in-html5-canvas/</guid>
+    </item>
+    
+    
+    
+    <item>
+      <title>Tutoriel Canvas : Réaliser une bannière animée en quelques lignes de code</title>
+      <description>Ce tutoriel vise à présenter canvas comme une librairie très simple d’utilisation et haut niveau grâce au langage javascript. </description>
+      <pubDate>Wed, 03 Feb 2010 00:00:00 +0100</pubDate>
+      <link>http://greweb.me/2010/02/tutoriel-canvas-realiser-une-banniere-animee-en-quelques-lignes-de-code</link>
+      <guid isPermaLink="true">http://greweb.me/2010/02/tutoriel-canvas-realiser-une-banniere-animee-en-quelques-lignes-de-code</guid>
+    </item>
+    
+    
+  </channel>
+</rss>

@@ -1,0 +1,326 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="Last week, I initiated ZOUND live following my previous "ZOUND" experiment but being much more ambitious this time: using both the Audio API, the new MIDI API and electronic music software experience, we start our own web collaborative audio modular tracker." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="ZOUND live project initiated">
+    <meta name="twitter:description" content="Last week, I initiated ZOUND live following my previous "ZOUND" experiment but being much more ambitious this time: using both the Audio API, the new MIDI API and electronic music software experience, we start our own web collaborative audio modular tracker.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2013/07/nanokontrol.jpg">
+    <link rel="image_src" href="http://greweb.me/images/2013/07/nanokontrol.jpg">
+    
+
+    <title>@GreWeb - ZOUND live project initiated</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/07/zound-live">ZOUND live project initiated</a></h1>
+    <time class="date" datetime="2013-07-30">July 30, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/midi.html">MIDI</a>
+     <a class="tag" href="/tag/audio.html">audio</a>
+     <a class="tag" href="/tag/hackday.html">hackday</a>
+     <a class="tag" href="/tag/zound.html">zound</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><img src="/images/2013/07/nanokontrol.jpg" alt="" class="thumbnail-left" /></p>
+
+<p>Last week, I initiated, with my <a href="http://zenexity.com">Zenexity</a> Hackday team, <strong>&quot;ZOUND live&quot;</strong>
+following the previous <a href="/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/">&quot;ZOUND&quot;</a> experiment but being much more ambitious this time:
+using both the <strong>Audio API</strong>, the <em>new</em> <strong>MIDI API</strong> and electronic music software experience,
+we start our own <strong>web collaborative audio modular tracker</strong>.</p>
+
+<h3>Live demo of the Hackday application</h3>
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/uyHWhCnE4L0" frameborder="0" allowfullscreen></iframe>
+
+<!--more-->
+
+<h2>Inspiration</h2>
+
+<p>A lot of features have been inspired from existing software like <em>SunVox</em> or <em>Renoise</em>.
+However, our version uses 100% web technologies and add collaborative and real time aspects.</p>
+
+<p><img src="/images/2013/07/sunvox.png" style="max-width: 300px" /></p>
+
+<h3>Our Tracker</h3>
+
+<p>The application has a <a href="http://en.wikipedia.org/wiki/Tracker_(music_software)">tracker</a> where you can put notes.</p>
+
+<p><img src="/images/2013/07/tracker.png" style="max-width: 300px" /></p>
+
+<h3>Our Audio modules</h3>
+
+<p>The application integrates a <a href="http://en.wikipedia.org/wiki/Modular_software_music_studio">modular music</a> concepts.</p>
+
+<p><img src="/images/2013/07/nodeeditor.png" /></p>
+
+<h2>The web techs</h2>
+
+<h3>About Web MIDI API</h3>
+
+<p>We bought a few <strong>cheap MIDI controllers to interact with our application</strong>.</p>
+
+<p><img src="/images/2013/07/midicontrollers.jpg" class="thumbnail-right" style="max-width: 250px" alt="" /></p>
+
+<p>MIDI means <em>Musical Instrument Digital Interface</em>,
+it is the <strong>protocol</strong> used by a lot of electronic musical instruments for a few decades.</p>
+
+<p>The <a href="webmidiapi">Web MIDI API</a> is a recent specification which makes MIDI devices accessible from a web page,
+via a Javascript API.</p>
+
+<p>Recently, <em>Chrome</em> has started to <a href="https://code.google.com/p/chromium/issues/detail?id=163795">implement it</a>
+and it is available under <em>Chrome Canary</em> (the dev version) via a <em>flag</em> that you need to enable.</p>
+
+<p>This is the perfect time to start experimenting it!</p>
+
+<p>However, what I feared the most happened on the Hackday: <strong>the MIDI API was broken on the morning
+after a Chrome update during the night!</strong> A first version of a browser MIDI permission was implemented
+but I never succeeded to make it working. The state of the API seems to be still broken on Mac as of writing.</p>
+
+<blockquote class="twitter-tweet"><p><a href="https://twitter.com/greweb">@greweb</a> If you know how to build chromium, I may be able to provide a patch to enable it. But it isn&#39;t so long until Canary supports it.</p>&mdash; とよしま (@toyoshim) <a href="https://twitter.com/toyoshim/statuses/360685543778041857">July 26, 2013</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>Well, that was already too late for the Hackday,
+Fortunately we fallbacked on an alternative which relies on a Java applet to access MIDI devices, it was a laggy polyfill though...</p>
+
+<p><strong>Lesson learned:</strong> a nightly feature is a nightly feature, never assume features you add via flags are stable <em>(I never did, but it was a Hackday afterall!)</em>.</p>
+
+<p>BTW, cheers to <a href="https://twitter.com/toyoshim">@toyoshim</a> who is implementing the MIDI API in Chrome :-)</p>
+
+<h3>Using Web Audio API</h3>
+
+<p>The <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> is <em>a high-level JavaScript API for processing and synthesizing audio in web applications</em>.</p>
+
+<p>The good thing about this API: it is already an <strong>modular audio API</strong>, so it&#39;s not so hard to build a modular audio application on top of it!</p>
+
+<h3>Playframework</h3>
+
+<p><a href="http://playframework.com/">Playframework</a> has been used for <strong>broadcasting events 
+between clients via WebSocket and synchronize everything on the interface</strong>.
+It is only broadcasting and does not save the song yet.</p>
+
+<h3>Backbone.js</h3>
+
+<p><a href="backbonejs.org">Backbonejs</a> was used for the <strong>models</strong>, <strong>views</strong> and its nice <strong>event system</strong>.
+It was a good library for prototyping and architecture the different parts of the application.</p>
+
+<p>I found Backbone.js especially good when linking all parts together and especially for the network logic.
+This leads to a very reactive style of programming:</p>
+
+<script src="https://gist.github.com/gre/6107277.js"></script>
+
+<h2>The team</h2>
+
+<p><strong>This project has been started during our monthly Hackday at <a href="http://zenexity.com">Zenexity</a>,
+ I want to thank my 6 awesome coworkers for being part of the project:</strong></p>
+
+<ul>
+<li><a href="http://twitter.com/mrspeaker">@mrspeaker</a> for his awesome electronic music knowledge.</li>
+<li><a href="http://twitter.com/bobylito">@bobylito</a> for his brilliant ideas and his JavaScript skills.</li>
+<li><a href="http://twitter.com/mandubian">@mandubian</a> for his playframework experience and JSON superpower!</li>
+<li><a href="http://twitter.com/etaty">@etaty</a> for helping with the server synchronization.</li>
+<li><a href="http://twitter.com/skaalf">@skaalf</a> for his cool DrumBox module.</li>
+<li><a href="http://twitter.com/Noxdzine">@Noxdzine</a> for his talentuous design.</li>
+</ul>
+
+<p>This was actually my first real project managment and it was quite cool!</p>
+
+<p><strong>Hackday is only one day</strong> and such an ambitious project is hard to achieve one in a row,
+the project architecture needed to be a bit ready and having a PoC working before the Hackday. Also I wanted everyone to have fun by experimenting with the Audio API parts and not to be blocked on boring parts.</p>
+
+<p>As a team manager, I also had to define goals to achieve for the Hackday.</p>
+
+<p>Woo, I realize that&#39;s <strong>not an easy task to manage a team when running out of time!</strong></p>
+
+<p>But fortunately, I think we fulfilled it just in time!</p>
+
+<p>We ended the Hackday with a <strong>Real Time demonstration of our application</strong> with 4 people interacting together
+with MIDI controllers.</p>
+
+<h2>More to come!</h2>
+
+<p>Today, we have a <strong>first working version of a 
+collaborative tracker with basic modular audio features</strong>:</p>
+
+<ul>
+<li>MIDI note support + MIDI control assignation allowing to change module properties.</li>
+<li>a unique tracker with a 32 lines loop and 23 tracks.</li>
+<li>Synchronisation of everything: the tracker and modules for all connected clients.</li>
+<li>off-mode allowing one user to prepare a track which is muted for other users.</li>
+<li>play/pause and record mode!</li>
+<li>cursor of users displayed on the tracker.</li>
+</ul>
+
+<p><strong>Stay tuned because there is so much features to come!</strong></p>
+
+<p><a href="http://github.com/gre/zound-live"><strong>The project on Github</strong></a></p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/03/panzer-dragoon-1k">Panzer Dragoon 1k</a>
+            </li>
+            
+            <li>
+              <a href="/2014/01/promisify-your-games">Promisify your games</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

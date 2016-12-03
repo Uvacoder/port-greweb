@@ -1,0 +1,407 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="Panzer Dragoon 1k is a 2D remake of Panzer Dragoon in 1k of JavaScript I made for JS1K 2014" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Panzer Dragoon 1k">
+    <meta name="twitter:description" content="Panzer Dragoon 1k is a 2D remake of Panzer Dragoon in 1k of JavaScript I made for JS1K 2014">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2014/03/js1k.png">
+    <link rel="image_src" href="http://greweb.me/images/2014/03/js1k.png">
+    
+
+    <title>@GreWeb - Panzer Dragoon 1k</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2014/03/panzer-dragoon-1k/">Panzer Dragoon 1k</a></h1>
+    <time class="date" datetime="2014-03-12">March 12, 2014</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/js1k.html">js1k</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><a href="http://js1k.com/2014-dragons/demo/1790"><img src="/images/2014/03/js1k.png" alt="" class="thumbnail-left" /></a></p>
+
+<p>This article introduces my journey into the JS1K world
+and a few tricks I&#39;ve used for my entry <a href="http://js1k.com/2014-dragons/demo/1790">&quot;Panzer Dragoon 1k&quot;</a> (<a href="https://gist.github.com/gre/9504494">source</a>).</p>
+
+<p>Welcome to the world of hacks, tricks and getting-things-done-at-any-price.
+You will turn the worst JavaScript practices and ugliest JavaScript facts to your advantage.
+Welcome to the world where coding the bad way is satisfying!</p>
+
+<h2>Panzer Dragoon 1k</h2>
+
+<ul>
+<li><strong><a href="http://js1k.com/2014-dragons/demo/1790">Play the JS1K entry</a></strong></li>
+<li><a href="https://gist.github.com/gre/9504494">Source Code</a></li>
+</ul>
+
+<h2>Panzer Dragoon Original Game</h2>
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/peoRBj9U-jI" frameborder="0" allowfullscreen></iframe>
+
+<!--more-->
+
+<h1>JS1K</h1>
+
+<p><strong><a href="http://js1k.com/">JS1K</a></strong> is a competition where you have to make a demo (or a game, or anything)
+in less than <strong>1 kilobytes</strong> of JavaScript: <strong>less than 1024 characters of source code</strong>.</p>
+
+<p>To reach that goal you will need ideas, JS ninja tricks 
+and most important: <strong>patience and perseverance</strong>!
+But really, <strong>anyone can participate</strong>.</p>
+
+<p>I recommend that you take a look at <a href="http://js1k.com/">js1k.com</a> and browse the existing entries.
+There is awesome guys participating to this yearly event,
+I had the chance to meet some of them at <a href="http://demojs.org/">DemoJS 2013</a> Paris event.
+Also checkout <a href="http://www.p01.org/">www.p01.org</a> which contains some very good examples of crazy short demos.</p>
+
+<h2>Tools</h2>
+
+<p>But first things first: you need tools to minimize source code (it can simply be removing comments and spaces, minifiers, or it can be much more crazy tools like crushers).</p>
+
+<p>Personally, I&#39;m using:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">cat source.js <span class="p">|</span> uglifyjs -c <span class="nv">unused</span><span class="o">=</span><span class="nb">false</span> <span class="p">|</span> tee minified.js <span class="p">|</span> jscrush &gt; crushed.js <span class="o">&amp;&amp;</span> wc -c *.js
+</code></pre></div>
+<p>This small homemade command (to use in a npm script) results for my game in:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">    1019 crushed.js
+    1756 minified.js
+    7241 source.js
+</code></pre></div>
+<p>If you are interested, I&#39;ve made this toolkit available in a complete boilerplate 
+that you can easily fork for your own usage: 
+<a href="https://gist.github.com/gre/9364718">https://gist.github.com/gre/9364718</a>.</p>
+
+<blockquote>
+<p><strong>P.S.</strong> <a href="https://github.com/gre/jscrush/"><code>jscrush</code></a> is a npm module that you can directly use from the CLI 
+but it is a port of the awesome <a href="http://www.iteral.com/jscrush/">www.iteral.com/jscrush/</a>.</p>
+</blockquote>
+
+<h1>The beginning: Saving bytes</h1>
+
+<p>It quickly becomes frustrating to compete in JS1K
+because you are basically trying to put a cow in a car (or an elephant if you are ambitious!).
+But this frustration actually becomes addictive!</p>
+
+<p><strong>Saving bytes</strong> is your job - once you get your first working prototype, and inevitably blow your byte limit.</p>
+
+<p>When you reach that limit, a good idea is to practice an <strong>&quot;add feature -&gt; remove code&quot;</strong> development loop 
+that really makes you think hard about your ultimate goal, and helps improve your entry.</p>
+
+<blockquote>
+<p><strong>The JS1K-based development:</strong>
+Adding more and more features,
+figuring out how to fill everything in,
+re-thinking your demo to only keep the essential features.
+This will keep making your demo better.</p>
+</blockquote>
+
+<p>You have to make a very hard choice: <strong><em>Which feature to remove?</em></strong>
+It is all about budget, not in term of money but in term of bytes!
+A bit like in daily life: making choices with limited resources!</p>
+
+<h2>JSCrush</h2>
+
+<p><strong><em>JSCrush</em></strong> is a crazy tool you may want to use to go deeper in the bytes reducing.</p>
+
+<p>It basically implements a compression algorithm which is based on substring occurences.
+The challenge of such a tool is not only to make a good compression but to make 
+a very small decompressor embedded in the result code because 
+this decompressor might be an overhead <em>(~ +60 bytes with small code)</em>.</p>
+
+<p>If you are using <em>JSCrush</em> which I recommend for saving extra bytes,
+you may want to use some tricks to go even further with it!</p>
+
+<p>The first time, you usually can save about 20% of bytes with classic 1k minified code.
+But if you optimize your code <strong>for</strong> <em>JSCrush</em>, you can save much more!
+I&#39;ve achieved about a 40% code reduction in my demo!</p>
+
+<p>Most of the tricks is about finding code patterns (same succession of JavaScript source code characters) 
+and trying to duplicate them.</p>
+
+<p>When I say <strong>duplicating code</strong>, it is really about <strong>DUPLICATING code!</strong></p>
+
+<blockquote>
+<p>Once &quot;indexed&quot;, a duplicated code is likely to just take one more byte in the final crushed JavaScript!</p>
+</blockquote>
+
+<h1>Some tips and tricks</h1>
+
+<p><a href="http://js1k.com/2014-dragons/demo/1790"><img src="/images/2014/03/js1k_2.png" alt="" class="thumbnail-right" /></a></p>
+
+<p>This section will share with you a non-exhaustive list of tricks.
+I&#39;m not going to talk so much about the basic and classic ones, 
+but a few novel ones that I found to work well in my entry.
+You may prefer to directly read the <a href="https://gist.github.com/gre/9504494">annotated source code of &quot;Panzer Dragoon 1K&quot;</a> instead!
+Of course, most of those tricks work closely with the <code>| minify | jscrush</code> transformation.</p>
+
+<blockquote>
+<p>Careful! Some tricks might be counter-intuitive as first glance, 
+again it ties-in with the way JSCrush is working.</p>
+</blockquote>
+
+<h2>Reduce your language</h2>
+
+<p>All existing functions and properties are costly in bytes,
+each time you use another one, it definitely add bytes.
+To save bytes, you have to limit your set of functions/properties to use
+or find ways to access them indirectly.</p>
+
+<ul>
+<li><strong>Use as few variables as you can</strong>: this is valid in computer science in general: the best systems are those with the fewest possible variables (states). if one variable can be computed out of others, it should be removed. Also consider allocating some temporary variables to re-use like in an assembly registry (e.g. <code>i</code>, <code>j</code>).</li>
+<li><strong>Reduce the set of functions</strong> you authorize yourself to use! You may just need to use &quot;fillRect&quot; for everything, or &quot;arc&quot;. Also don&#39;t use both <code>Math.min</code> and <code>Math.max</code>, one can be implemented with the other.</li>
+<li><strong>Minimize the different values / colors</strong> you are using (most of the time digits are fine, but <code>#RGB</code> colors are costy).</li>
+</ul>
+
+<h2>Duplicated wins!</h2>
+
+<ul>
+<li><p>Generally: try to <strong>duplicate the exact same code everywhere</strong>!</p></li>
+<li><p><strong>Do not use explicit aliasing</strong> like <code>M=Math</code> and <code>C=M.cos</code>, JSCrush does that job for you.</p></li>
+<li><p><strong>Get rid of intermediary computation.</strong> Prefer inline and duplicated computation over variable assigment.</p></li>
+<li><p>Also, <code>a*(b+c)</code> might be more bytes than <code>a*b+a*c</code> if <code>a</code> is an expression. (but doesn&#39;t work in all cases)</p></li>
+</ul>
+
+<p><strong>A few examples:</strong></p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">a</span> <span class="o">=</span> <span class="nx">b</span><span class="o">+</span><span class="nx">c</span><span class="p">;</span> <span class="nx">translate</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">a</span><span class="p">);</span> <span class="c1">// NOPE!</span>
+<span class="nx">translate</span><span class="p">(</span><span class="nx">b</span><span class="o">+</span><span class="nx">c</span><span class="p">,</span> <span class="nx">b</span><span class="o">+</span><span class="nx">c</span><span class="p">);</span> <span class="c1">// YES!</span>
+</code></pre></div><div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">size</span> <span class="o">=</span> <span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="o">+</span><span class="mi">10</span><span class="p">;</span> <span class="nx">fillRect</span><span class="p">(</span><span class="nx">x</span><span class="o">-</span><span class="nx">size</span><span class="p">,</span> <span class="nx">y</span><span class="o">-</span><span class="nx">size</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nx">size</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="nx">size</span><span class="p">);</span> <span class="c1">// no please don&#39;t!</span>
+<span class="nx">fillRect</span><span class="p">(</span><span class="nx">x</span><span class="o">-</span><span class="p">(</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="o">+</span><span class="mi">10</span><span class="p">),</span> <span class="nx">y</span><span class="o">-</span><span class="p">(</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="o">+</span><span class="mi">10</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="o">+</span><span class="mi">10</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="o">+</span><span class="mi">10</span><span class="p">));</span> <span class="c1">// YEAH!</span>
+</code></pre></div><div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">fillRect</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="nx">fillRect</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">18</span><span class="p">);</span> <span class="c1">// Can you afford to use 10,10,20,20 instead?</span>
+</code></pre></div>
+<p>In my demo, I was able to factorize some code. For instance the way I draw and update the x,y of my opponents and particles are the same duplicate chunk of code:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">    <span class="nx">bga</span><span class="p">();</span>
+    <span class="nx">arc</span><span class="p">(</span>
+      <span class="c1">// Update</span>
+      <span class="nx">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">e</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+      <span class="nx">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">e</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+      <span class="nx">e</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+      <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">);</span>
+    <span class="nx">fl</span><span class="p">();</span>
+</code></pre></div>
+<ul>
+<li>You sometimes can <strong>save bytes by adding more code</strong>! For instance, if you need <code>fillStyle</code> and <code>strokeStyle</code>, it may save bytes to always set both color at the same time! <code>fillStyle = strokeStyle = ...</code> even if you only need once.</li>
+<li>Always <strong>use the same <code>function parameters</code></strong>. In my game, I use <code>function(e){</code> everywhere even if I don&#39;t use that <code>e</code> in all my functions. This is saving a bunch of bytes with JSCrush.</li>
+<li><strong>Here&#39;s a particularly crazy trick:</strong> If you have different collections of complex objects, you can simply represent each item by a vector (an array) and figure out how you can make use the same indexes for the use-case.</li>
+</ul>
+
+<p>In my game:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">o</span> <span class="o">=</span> <span class="p">[];</span> <span class="c1">// an opponent: [ 0: x, 1: y, 2: health, 3: vx, 4: vy, 5: locked, 6: hitTime ]</span>
+<span class="nx">p</span> <span class="o">=</span> <span class="p">[];</span> <span class="c1">// a particule: [ 0: x, 1: y, 2: size,   3: vx, 4: vy, 5: damage ]</span>
+</code></pre></div>
+<ul>
+<li>You also may find better way of managing collections. Instead of using <code>t.push(o)</code> to add, <code>t.splice(i, 1)</code> to remove, and <code>for(i=0;e=o[i];i++){...}</code> to iterate. I am using <code>t[Math.random()]=o</code> to add, <code>delete t[i]</code> to remove and <code>for(i in o){ e=o[i]; ... }</code> to iterate. It saved a lot of bytes if you already use <code>Math.random()</code> somewhere else! For-in loops are also quite short and can by used for other tricks (e.g. <em>Programmatical aliasing</em>).</li>
+</ul>
+
+<blockquote class="twitter-tweet" lang="fr"><p>My <a href="https://twitter.com/search?q=%23js1k&amp;src=hash">#js1k</a> uses `t[Math.random()]=insert`, for-in loops and `delete t[i]` rather than push and splice. Saving bytes with jscrush</p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/statuses/439324052403277824">28 Février 2014</a></blockquote>
+
+<ul>
+<li>Use just <strong>one letter variable names</strong> (mangling variables won&#39;t work because they are in window scope, and IMHO it is better for you to write them by hand)</li>
+<li>You will probably need to <strong>initialize some variables</strong>, but do it only if necessary (if you have <code>ReferenceError</code>) and <strong>use the multi-assignment syntax</strong>: <code>A = B = 0</code> if you can. You should never have constant variables, it saves bytes to directly use the value inline.</li>
+<li><strong><code>with(c){ ... }</code></strong> in your main loop may save bytes. It makes all functions and properties of c (the drawing context) in the scope.</li>
+</ul>
+
+<h2>Language tricks</h2>
+
+<ul>
+<li><strong>Never use <code>var</code></strong>, just put everything in <code>window</code></li>
+<li><strong>Programmatically aliasing <code>c</code>&#39;s method</strong> may save you a lot of bytes (or may not, you have to check!). You also have to find the code which suit the best your use case. Be careful about collision. Here is mine: <code>for (e in c) c[e[0]+e[2]+(e[6]||&quot;&quot;)] = c[e];</code></li>
+<li>Do not waste ANY value returned by assignment and operators (i++, x=.., x+=...). I&#39;m sure you can do it somewhere else!
+Typical example:</li>
+</ul>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">x</span> <span class="o">+=</span> <span class="nx">vx</span><span class="p">;</span> <span class="nx">y</span> <span class="o">+=</span> <span class="nx">vy</span><span class="p">;</span> <span class="cm">/* ... */</span> <span class="nx">fillRect</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">s</span><span class="p">);</span> <span class="c1">// NOPE!</span>
+<span class="cm">/* ... */</span> <span class="nx">fillRect</span><span class="p">(</span><span class="nx">x</span> <span class="o">+=</span> <span class="nx">vx</span><span class="p">,</span> <span class="nx">y</span> <span class="o">+=</span> <span class="nx">vy</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">s</span><span class="p">);</span> <span class="c1">// YES!</span>
+</code></pre></div>
+<ul>
+<li>Try to not separate update from drawing logic. Mixing them may save bytes.</li>
+<li>You don&#39;t want to use <code>addEventListener</code>, just define listeners straight on window! e.g. <code>onclick = function(){...</code></li>
+</ul>
+
+<h2>Make your JS1K now!</h2>
+
+<p><a href="http://js1k.com/2014-dragons/demo/1790"><img src="/images/2014/03/js1k_3.png" alt="" class="thumbnail-left" /></a></p>
+
+<p>I&#39;m really eager to see all JS1K entries 
+because I usually enjoy reading people&#39;s code and 
+especially all the crazy tricks that I can learn from your code :-)</p>
+
+<p>This article was just sharing a bunch of tricks which work for my entry,
+but you will find much better tricks for your demo -
+so please do it and make your crazy work!</p>
+
+<hr>
+
+<p><em>Special thanks to <a href="http://twitter.com/mrspeaker">@mrspeaker</a> for fixing my English</em>.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

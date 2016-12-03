@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="IBEX is a game made in 13k of JavaScript code made for the js13kgames one-month contest." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="IBEX, my js13k game">
+    <meta name="twitter:description" content="IBEX is a game made in 13k of JavaScript code made for the js13kgames one-month contest.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2014/09/ibex.png">
+    <link rel="image_src" href="http://greweb.me/images/2014/09/ibex.png">
+    
+
+    <title>@GreWeb - IBEX, my js13k game</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2014/09/ibex/">IBEX, my js13k game</a></h1>
+    <time class="date" datetime="2014-09-14">September 14, 2014</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/js13k.html">js13k</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><a href="http://js13kgames.com/entries/ibex">
+  <img src="/images/2014/09/ibex.png" alt="" class="thumbnail-left" />
+</a></p>
+
+<p><strong>I&#39;ve just <a href="http://js13kgames.com/entries/ibex">finished and submitted</a> my game for <a href="http://js13kgames.com/">js13kgames</a>,</strong>
+a contest where you have to make a web game in less than 13 kilobytes of a ZIP archive.</p>
+
+<p><strong><a href="http://js13kgames.com/entries/ibex">PLAY IT HERE</a></strong> / <a href="http://github.com/gre/js13k-2014">github</a></p>
+
+<p><strong>I had a lot of fun making this game and I think it is by far the best game I ever finished.</strong>
+It is a bit a continuation of my <a href="/2014/05/ld29">&quot;antsim&quot; game</a> prototype in the idea
+that you don&#39;t control directly the entities but you are at an higher level with simple interactions.</p>
+
+<p>The game should be performant enough but however 
+require that you have a good hardware to support WebGL and some advanced limits (I used too much uniforms).
+I&#39;ll talk more about the compatibility and performance issues in a next postmortem article.</p>
+
+<p>If it doesn&#39;t work for you, please report me a dump of <a href="http://webglreport.com/">http://webglreport.com/</a>.</p>
+
+<h2>Playthrough</h2>
+
+<iframe width="100%" height="440" src="//www.youtube.com/embed/nqD2qIy4auU" frameborder="0" allowfullscreen></iframe>
+
+<!--more-->
+
+<h2>The Story</h2>
+
+<p>The world is burning, Protect and Escort a group of wild ibex away from the inferno.
+On the path there are sleeping ibex to rescue, wake them and they will join the group.</p>
+
+<h2>The Gameplay</h2>
+
+<p>You will have to use the <strong>4 elements (Air, Earth, Fire, Water)</strong>
+to make the ibex progress safely in the environnment.</p>
+
+<p>The 4 elements are primary elements but there are also secondary elements at play:</p>
+
+<ul>
+<li>The <strong>Volcano</strong> (creates fire)</li>
+<li>The <strong>Source</strong> (drops water)</li>
+<li>The <strong>Forest</strong> (created by Earth and Water)</li>
+<li>The <strong>Wind</strong> (left wind and right wind is created randomly in Air)</li>
+</ul>
+
+<p>All elements interact with each other and <strong>the ibex also react to elements in different ways</strong>.</p>
+
+<ul>
+<li>Earth is a platform for the ibex</li>
+<li>Fire scares the ibex</li>
+<li>Water attracts the ibex</li>
+<li>Forest makes the ibex running faster</li>
+</ul>
+
+<h2>The Controls</h2>
+
+<p>SPACE to draw an element, ARROWS to move, W/Z + X + C + V to switch between Air + Earth + Fire + Water.</p>
+
+<p>Keyboard is recommended but playing only with mouse is also possible (click on elements and DRAG the inner cursor).</p>
+
+<h2>Some technical notes</h2>
+
+<p>This game uses a <a href="http://en.wikipedia.org/wiki/Cellular_automaton">cellular automaton</a> to simulate a world with different elements (Air, Earth, Fire, Water).
+This cellular automaton is technically computed as a texture in the GPU through WebGL and a GLSL shader (<code>logic.frag</code>).</p>
+
+<p>While I was writing this game <a href="https://twitter.com/42loops">@42loops</a> made me buy this awesome book that I&#39;m still reading:</p>
+
+<blockquote class="twitter-tweet" lang="fr"><p><a href="http://t.co/8SiMZ9PWDX">pic.twitter.com/8SiMZ9PWDX</a></p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/status/506862098597834752">2 Septembre 2014</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>You can interact with this world by drawing elements with a brush.</p>
+
+<p>However, simulation is not enough to make a game so I mainly focused on the story and the gameplay:
+On top of this simulation are living the ibex. They are managed in JavaScript and behaves with an AI.
+The pixels collision and the ibex decisions (e.g; react on fire nearby) is based on querying the simulated world (stored in the GPU as a texture).</p>
+
+<p>The rendering of the game is also performed in WebGL through another shader (<code>render.frag</code>).
+My source code is <a href="http://github.com/gre/js13k-2014">on Github</a>.</p>
+
+<p><strong>I will try to write a technical post-mortem to explain you more of this 
+and also what went wrong and what could have been more efficient in my usage of WebGL.</strong></p>
+
+<h2>Bonus</h2>
+
+<p>During my early development, I&#39;ve experimented the fire propagation in deep forest:</p>
+
+<iframe width="480" height="440" src="//www.youtube.com/embed/YU_pYAauFo4" frameborder="0" allowfullscreen></iframe>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

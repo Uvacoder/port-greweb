@@ -1,0 +1,491 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="WebGL is super powerful and efficient. This library abuses this power for efficient 2D." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="glsl.js, a Javascript + GLSL library = DRY &#038; efficient">
+    <meta name="twitter:description" content="WebGL is super powerful and efficient. This library abuses this power for efficient 2D.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2013/02/glsl_mario.jpg">
+    <link rel="image_src" href="http://greweb.me/images/2013/02/glsl_mario.jpg">
+    
+
+    <title>@GreWeb - glsl.js, a Javascript + GLSL library = DRY &#038; efficient</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/">glsl.js, a Javascript + GLSL library = DRY &#038; efficient</a></h1>
+    <time class="date" datetime="2013-02-11">February 11, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     <a class="tag" href="/tag/glsl.html">GLSL</a>
+     <a class="tag" href="/tag/webgl.html">WebGL</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><a href="http://gre.github.io/glsl.js/examples/balls"><img src="/images/2013/02/glsl_mario.jpg" alt="glsl_mario"></a></p>
+
+<p><strong>TL;DR. WebGL is super powerful and efficient. This library abuses this power for efficient 2D.</strong></p>
+
+<p>glsl.js is a subset of a WebGL library which focuses on making the GLSL (OpenGL Shading Language) easy and accessible for vizualisation and game purposes (2D or 3D).</p>
+
+<ul>
+<li>  <strong><a href="http://gre.github.io/glsl.js/examples/balls">Bouncing balls example video tutorial</a></strong></li>
+<li>  <a href="http://gre.github.io/glsl.js/examples">Open other examples</a></li>
+<li>  <a href="http://gre.github.io/glsl.js/docs">API Documentation</a></li>
+<li>  <a href="http://github.com/gre/glsl.js">Fork me on Github</a></li>
+<li>  <a href="http://gre.github.io/glsl.js/test">Unit tests</a></li>
+</ul>
+
+<p><a href="http://gre.github.io/glsl.js/examples/pong/"><img src="/images/2013/02/glsl_pong.jpg" alt="glsl_pong"></a></p>
+
+<h2>Why?</h2>
+
+<p><strong>WebGL is a very low level and stateful API</strong>. Actually the WebGL API <strong>is</strong> the OpenGL API.</p>
+
+<p>I wanted to make a graphic library where you wouldn’t have to know about this API but still have access to the powerful OpenGL Shading Language called GLSL.</p>
+
+<p>Do you know <a href="http://glsl.heroku.com">glsl.heroku.com</a>? It’s a cool platform for demoscene where you can experiment some nice effects in GLSL. My library extends this concept of rendering in one whole fragment shader (which takes the plain canvas) but also provides a way to inject your own Javascript variables.</p>
+
+<h3>DRY</h3>
+
+<p><strong>WebGL is not DRY at all</strong>, you always have to repeat yourself both on the GLSL and on the Javascript part (especially for synchronizing variables).<br>
+Worse than that, you have to know in your Javascript code what are the GLSL types of every variable to synchronize.</p>
+
+<p>How boring is that:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// Synchronizing the new values of 2 variables in pure WebGL.  </span>
+
+<span class="kd">var</span> <span class="nx">myInt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>  
+<span class="kd">var</span> <span class="nx">myIntLocation</span> <span class="o">=</span> <span class="nx">gl</span><span class="p">.</span><span class="nx">getUniformLocation</span><span class="p">(</span><span class="nx">program</span><span class="p">,</span> <span class="s2">&quot;myInt&quot;</span><span class="p">);</span>  
+<span class="nx">myInt</span>  <span class="p">;</span>  
+<span class="nx">gl</span><span class="p">.</span><span class="nx">uniform1i</span><span class="p">(</span><span class="nx">myFloatLocation</span><span class="p">,</span> <span class="nx">myInt</span><span class="p">);</span> <span class="c1">// 1i means one integer  </span>
+
+<span class="kd">var</span> <span class="nx">myVector2</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="mf">1.3</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mf">2.4</span> <span class="p">};</span>  
+<span class="kd">var</span> <span class="nx">myVector2Location</span> <span class="o">=</span> <span class="nx">gl</span><span class="p">.</span><span class="nx">getUniformLocation</span><span class="p">(</span><span class="nx">program</span><span class="p">,</span> <span class="s2">&quot;myVector2&quot;</span><span class="p">);</span>  
+<span class="nx">gl</span><span class="p">.</span><span class="nx">uniform2f</span><span class="p">(</span><span class="nx">myVector2Location</span><span class="p">,</span> <span class="nx">myVector2</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">myVector2</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span> <span class="c1">// 2f means float[2]</span>
+</code></pre></div>
+<p><strong>glsl.js</strong> provides a DRY and simple way to synchronize Javascript variables.</p>
+
+<p>First, the library will handle for you the UniformLocations.</p>
+
+<p>More important, and unlike the WebGL API and many WebGL libraries, <strong>you will never have to define the type of your variables from the Javascript with glsl.js!</strong> You just define it once in your shader!</p>
+
+<p>How it works behind is the framework will statically parse your GLSL and infer types to use for the synchronization. The right <code>gl.uniform*</code> function is called by Javascript reflection.</p>
+
+<p>It now simply becomes:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// Set the values of 2 variables in glsl.js  </span>
+<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;myInt&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>  
+<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;myVector2&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="mf">1.3</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mf">2.4</span> <span class="p">});</span>  
+<span class="c1">// ... see also this.sync() and this.syncAll()</span>
+</code></pre></div>
+<!--more-->
+
+<p>More technically, <strong>glsl.js</strong> is a subset* of a WebGL library which focus on <strong>making the GLSL (OpenGL Shading Language) easy and accessible</strong> for vizualisation and game purposes (2D or 3D).</p>
+
+<blockquote>
+<p>* Subset, because we only focus on using a <em>fragment shader</em> (the <em>vertex shader</em> is static and take the full canvas size), But don’t worry, you have a long way to go with just one <em>fragment shader</em>.</p>
+</blockquote>
+
+<p>The concept is to split the <strong>rendering part in a GLSL fragment</strong> from the <strong>logic part in Javascript</strong> of your app/game. Both part are linked by <strong>a set of variables</strong> (the state of your app/game).</p>
+
+<p><img src="https://f.cloud.github.com/assets/211411/133026/5ed79ff8-709b-11e2-85dd-60332f74dc31.png" alt="schema"></p>
+
+<p><strong>glsl.js</strong> aims to abstract every GL functions so you don’t have to learn any OpenGL API.<br>
+What you only need to care about is the logic in Javascript and the rendering in GLSL.</p>
+
+<p>By design, <strong>you can’t mix logic and render part</strong>, this approach really helps to focus on essential things separately.</p>
+
+<h3>Efficiency</h3>
+
+<p>Basically, this design is efficient because the Javascript logic will take some CPU while the rendering will take the graphic card.</p>
+
+<p>Today, WebGL is widely supported on modern desktop browsers. It’s not yet the case on mobile and tablet.</p>
+
+<p>However, using Chrome Beta, I’m able to run my HTML5 game at 60fps on my Nexus 4, which is quite promising for the future.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/EzTCdjpdTfk?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
+
+<p><em>Enough talking, let’s see some examples now…</em></p>
+
+<h3><a href="#hello-world-example"></a>Hello World Example</h3>
+
+<p>Here is an Hello World example. For more examples, see <a href="http://gre.github.io/glsl.js/examples">/examples</a>.</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">&quot;viewport&quot;</span> <span class="na">width=</span><span class="s">&quot;600&quot;</span> <span class="na">height=</span><span class="s">&quot;400&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+<span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;fragment&quot;</span> <span class="na">type=</span><span class="s">&quot;x-shader/x-fragment&quot;</span><span class="nt">&gt;</span>
+<span class="err">#</span><span class="nx">ifdef</span> <span class="nx">GL_ES</span>
+<span class="nx">precision</span> <span class="nx">mediump</span> <span class="kr">float</span><span class="p">;</span>
+<span class="err">#</span><span class="nx">endif</span>
+<span class="nx">uniform</span> <span class="kr">float</span> <span class="nx">time</span><span class="p">;</span>
+<span class="nx">uniform</span> <span class="nx">vec2</span> <span class="nx">resolution</span><span class="p">;</span>
+<span class="k">void</span> <span class="nx">main</span> <span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">vec2</span> <span class="nx">p</span> <span class="o">=</span> <span class="p">(</span> <span class="nx">gl_FragCoord</span><span class="p">.</span><span class="nx">xy</span> <span class="o">/</span> <span class="nx">resolution</span><span class="p">.</span><span class="nx">xy</span> <span class="p">);</span>
+  <span class="nx">gl_FragColor</span> <span class="o">=</span> <span class="nx">vec4</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="o">+</span><span class="nx">cos</span><span class="p">(</span><span class="nx">time</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">.,</span> <span class="mf">1.0</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;../../glsl.js&quot;</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+  <span class="kd">var</span> <span class="nx">glsl</span> <span class="o">=</span> <span class="nx">Glsl</span><span class="p">({</span>
+    <span class="nx">canvas</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;viewport&quot;</span><span class="p">),</span>
+    <span class="nx">fragment</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;fragment&quot;</span><span class="p">).</span><span class="nx">textContent</span><span class="p">,</span>
+    <span class="nx">variables</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">time</span><span class="o">:</span> <span class="mi">0</span> <span class="c1">// The time in ms</span>
+    <span class="p">},</span>
+    <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">delta</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="nx">time</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}).</span><span class="nx">start</span><span class="p">();</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<p><a href="http://gre.github.io/glsl.js/examples/helloworld"><img src="https://f.cloud.github.com/assets/211411/132729/e702c2b4-7090-11e2-8904-49e904e6c5a2.png" alt="screenshot"></a></p>
+
+<h3><a href="#glsl-opengl-shading-language"></a>GLSL: OpenGL Shading Language</h3>
+
+<blockquote>
+<p>GLSL is a high-level shading language based on the syntax of the C programming language. (Wikipedia)</p>
+</blockquote>
+
+<p>GLSL gives a very different way of thinking the rendering: basically, in a main function, you have to <strong>set the color (<code>gl_FragColor</code>) of a pixel for a given position (<code>gl_FragCoord</code>)</strong>.</p>
+
+<p>As a nice side effect, GLSL is vectorial by design: it can be stretch to any dimension.</p>
+
+<p>GLSL is efficient because it is compiled to the graphic card.</p>
+
+<p>GLSL provides an interesting collection of <strong>types</strong> (e.g. <code>int</code>, <code>float</code>, <code>vec2</code>, <code>vec3</code>, <code>mat3</code>, <code>sampler2D</code>,… and also arrays of these types) and <strong>functions</strong> (e.g. <code>cos</code>, <code>smoothstep</code>, …).</p>
+
+<p><a href="http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf">Here is a good reference for this</a>.</p>
+
+<p>You can also deeply explore the awesome collection of <a href="http://glsl.heroku.com/">glsl.heroku.com</a>. Any of glsl.heroku.com examples are compatible with <strong>glsl.js</strong> if you add some required variables (*time*, <em>mouse</em>, …).</p>
+
+<h3><a href="#appgame-logic"></a>App/Game Logic</h3>
+
+<p>You must give to Glsl a <code>canvas</code> (DOM element of a canvas), a <code>fragment</code> (the GLSL fragment code), the <code>variables</code> set, and the <code>update</code> function.</p>
+
+<p>Then you can start/stop the rendering via method (<code>.start()</code> and <code>.stop()</code>).</p>
+
+<p>The <code>update</code> function is called as soon as possible by the library. It is called in a <code>requestAnimationFrame</code> context.</p>
+
+<p>You must define all variables shared by both logic and render part in a Javascript object <code>{varname: value}</code>.<br>
+Variables must match your GLSL uniform variables. Every time you update your variables and you want to synchronize them with the GLSL you have to manually call the <code>sync</code> function by giving all variables name to synchronize.</p>
+
+<p><strong>Exemple:</strong></p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Glsl</span><span class="p">({</span>  
+<span class="err"> </span> <span class="nx">canvas</span><span class="o">:</span> <span class="nx">canvas</span><span class="p">,</span>  
+<span class="err"> </span> <span class="nx">fragment</span><span class="o">:</span> <span class="nx">fragCode</span><span class="p">,</span>  
+<span class="err"> </span> <span class="nx">variables</span><span class="o">:</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nx">time</span><span class="o">:</span> <span class="p">,</span> <span class="c1">// The time in seconds  </span>
+<span class="err"> </span> <span class="err"> </span> <span class="nx">random1</span><span class="o">:</span>   
+<span class="err"> </span> <span class="p">},</span>  
+<span class="err"> </span> <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">delta</span><span class="p">)</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="nx">time</span><span class="p">);</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;random1&quot;</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">());</span>  
+<span class="err"> </span> <span class="p">}</span>  
+<span class="p">}).</span><span class="nx">start</span><span class="p">();</span>
+</code></pre></div>
+<p><strong>Note:</strong> <em>under the hood, a type environment of uniform variables is inferred by parsing your GLSL code.</em> </p>
+
+<h3><a href="#using-arrays"></a>Using arrays</h3>
+
+<p>Hopefully, GLSL also supports arrays. You can actually bind a Javascript array to a GLSL uniform variable.</p>
+
+<p><strong>Example:</strong></p>
+
+<p>In GLSL,</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">uniform</span> <span class="k">float</span> <span class="n">tenfloats</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</code></pre></div>
+<p>In Javascript,</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">glsl</span> <span class="o">=</span> <span class="nx">Glsl</span><span class="p">({</span>  
+<span class="err"> </span> <span class="p">...</span>  
+<span class="err"> </span> <span class="nx">variable</span><span class="o">:</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nx">tenfloats</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Float32Array</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  
+<span class="err"> </span> <span class="p">},</span>  
+<span class="err"> </span> <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">tenfloats</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">();</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">sync</span><span class="p">(</span><span class="s2">&quot;tenfloats&quot;</span><span class="p">);</span>  
+<span class="err"> </span> <span class="p">}</span>  
+<span class="p">}).</span><span class="nx">start</span><span class="p">();</span>
+</code></pre></div>
+<p>Alternatively, you can still use a classical javascript Array (but native Javascript arrays are prefered because more efficient).</p>
+
+<p>Use <code>Int32Array</code> for <code>int[]</code> and <code>bool[]</code>.</p>
+
+<p>Vector arrays are also possible. In Javascript, you will have to give a linearized array.<br>
+For instance,<br>
+a <code>vec2[2]</code> will be <code>[vec2(1.0, 2.0), vec2(3.0, 4.0)]</code> if <code>Float32Array(1.0, 2.0, 3.0, 4.0)</code> is used.</p>
+
+<h3><a href="#using-objects"></a>Using objects</h3>
+
+<p>Even more interesting now, you can synchronize a whole object into the GLSL world. This is very interesting for Object-Oriented approach.</p>
+
+<p><strong>Example:</strong></p>
+
+<p>In GLSL,</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">struct</span> <span class="n">Circle</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">vec2</span> <span class="n">center</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">float</span> <span class="n">radius</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="k">uniform</span> <span class="n">Circle</span> <span class="n">c1</span><span class="p">;</span>  
+<span class="k">bool</span> <span class="n">inCircle</span> <span class="p">(</span><span class="k">vec2</span> <span class="n">p</span><span class="p">,</span> <span class="n">Circle</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">vec2</span> <span class="n">ratio</span> <span class="o">=</span> <span class="n">resolution</span><span class="o">/</span><span class="n">resolution</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">return</span> <span class="n">distance</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">ratio</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="n">center</span><span class="o">*</span><span class="n">ratio</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">.</span><span class="n">radius</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="k">void</span> <span class="n">main</span> <span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">vec2</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span> <span class="n">gl_FragCoord</span><span class="p">.</span><span class="n">xy</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">.</span><span class="n">xy</span> <span class="p">);</span>  
+<span class="err"> </span> <span class="k">if</span> <span class="p">(</span><span class="n">inCircle</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">c1</span><span class="p">))</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>  
+<span class="err"> </span> <span class="k">else</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>  
+<span class="p">}</span>
+</code></pre></div>
+<p>In Javascript,</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">Circle</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">radius</span><span class="p">)</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">center</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="nx">y</span> <span class="p">};</span>  
+<span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">radius</span> <span class="o">=</span> <span class="nx">radius</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">originalRadius</span> <span class="o">=</span> <span class="nx">radius</span><span class="p">;</span> <span class="c1">// not visible by GLSL  </span>
+<span class="p">}</span>  
+<span class="nx">Circle</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">radius</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">originalRadius</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="o">/</span><span class="mi">100</span><span class="p">);</span>  
+<span class="p">}</span>  
+<span class="kd">var</span> <span class="nx">c1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Circle</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">);</span>  
+<span class="nx">Glsl</span><span class="p">({</span>  
+<span class="err"> </span> <span class="p">...</span>  
+<span class="err"> </span> <span class="nx">variable</span><span class="o">:</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nx">c1</span><span class="o">:</span> <span class="nx">c1</span>  
+<span class="err"> </span> <span class="p">},</span>  
+<span class="err"> </span> <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">delta</span><span class="p">)</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nx">c1</span><span class="p">.</span><span class="nx">update</span><span class="p">();</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">this</span><span class="p">.</span><span class="nx">sync</span><span class="p">(</span><span class="s2">&quot;c1&quot;</span><span class="p">);</span>  
+<span class="err"> </span> <span class="p">}</span>  
+<span class="p">}).</span><span class="nx">start</span><span class="p">();</span>
+</code></pre></div>
+<p>structs inside structs are also supported:</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">struct</span> <span class="n">Circle</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">vec2</span> <span class="n">center</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">float</span> <span class="n">radius</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="k">struct</span> <span class="n">Player</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="n">Circle</span> <span class="n">circle</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">bool</span> <span class="n">visible</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<h3><a href="#using-arrays-of-objects"></a>Using Arrays of Objects</h3>
+
+<p>The two previous chapters can be assemble!</p>
+
+<p>Yes man, Array of JS object is possible!</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">uniform</span> <span class="n">Circle</span> <span class="n">circles</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>  
+<span class="c1">// circles[0].radius  </span>
+<span class="c1">// …</span>
+</code></pre></div><div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Glsl</span><span class="p">({</span>  
+<span class="err"> </span> <span class="p">...</span>  
+<span class="err"> </span> <span class="nx">variable</span><span class="o">:</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nx">circles</span><span class="o">:</span> <span class="p">[</span> <span class="k">new</span> <span class="nx">Circle</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="k">new</span> <span class="nx">Circle</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span> <span class="p">]</span>  
+<span class="err"> </span> <span class="p">},</span>  
+<span class="err"> </span> <span class="p">...</span>  
+<span class="p">}).</span><span class="nx">start</span><span class="p">();</span>
+</code></pre></div>
+<h3><a href="#using-images"></a>Using images</h3>
+
+<p>GLSL:</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">img</span><span class="p">;</span>
+</code></pre></div>
+<p>Javascript:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">image</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">();</span>   
+<span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="s2">&quot;foo.png&quot;</span><span class="p">;</span>  
+<span class="kd">var</span> <span class="nx">glsl</span> <span class="o">=</span> <span class="nx">Glsl</span><span class="p">({</span>  
+<span class="err"> </span> <span class="p">...</span>  
+<span class="err"> </span> <span class="nx">variable</span><span class="o">:</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nx">img</span><span class="o">:</span> <span class="nx">image</span>  
+<span class="err"> </span> <span class="p">}</span>  
+<span class="p">});</span>  
+<span class="nx">img</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="nx">glsl</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>  
+<span class="p">}</span>
+</code></pre></div>
+<p>Note: Using an image loader library can be a good idea.</p>
+
+<p>In GLSL, you will need to use the texture lookup functions to access the image color for a given coordinate. E.g. <code>texture2D(img, coord)</code>. (see the <a href="http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf">specs</a>).</p>
+
+<h4>See also</h4>
+
+<p><a href="http://gre.github.io/glsl.js/examples/mario_sprites/">The mario_sprites example</a></p>
+
+<h3><a href="#using-another-canvas"></a>Using another canvas</h3>
+
+<p><a href="http://gre.github.io/glsl.js/examples/canvas-text/"><img src="/images/2013/02/hello_world_text_glsl_js.png" alt="hello_world_text_glsl_js"></a></p>
+
+<h3>Using</h3>
+
+<p><a href="http://gre.github.io/glsl.js/examples/video/"><img src="/images/2013/02/glsl_js_video.png" alt="glsl_js_video"></a></p>
+
+<h2>See also</h2>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/kxBkfy_8JEs" frameborder="0" allowfullscreen=""></iframe>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

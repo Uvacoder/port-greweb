@@ -1,0 +1,517 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="SASS : l&#039;évolution du CSS pour Play, Rails ou autres">
+    
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - SASS : l&#039;évolution du CSS pour Play, Rails ou autres</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2010/03/sass-levolution-du-css/">SASS : l&#039;évolution du CSS pour Play, Rails ou autres</a></h1>
+    <time class="date" datetime="2010-03-14">March 14, 2010</time>
+   <span class="tags">
+     <a class="tag" href="/tag/css.html">css</a>
+     <a class="tag" href="/tag/sass.html">sass</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><strong>SASS, Syntactically Awesome Stylesheets</strong>, est un langage de feuille de style évolué qui permet de factoriser beaucoup de code css et de rendre son écriture et sa maintenance <strong>rapide et moins contraignante</strong>. Il est compilé en css.</p>
+
+<!--more-->
+
+<h2>Pourquoi utiliser SASS ?</h2>
+
+<p>Son utilisation a de nombreux avantages par rapport au CSS :</p>
+
+<ul>
+<li>sa <strong>simplicité</strong> (pas de crochets, pas de point virgule mais juste de l’indentation)</li>
+<li>l’<strong>imbrication</strong> des sélecteurs css (appliquant l’idée DRY : don’t repeat yourself)</li>
+<li>l’utilisation de <strong>variables</strong></li>
+<li>l’utilisation d’<strong>opérations élémentaires</strong> (sur les pixels, les couleurs, …)</li>
+<li>la <strong>factorisation</strong> du code (au lieu de faire des copier-coller, on peux factoriser le code à travers les “mixins”).</li>
+<li>La <strong>réduction</strong> css et la <strong>clarté</strong> du code</li>
+<li>La <strong>compression du code</strong> compilé avec la possibilité de tout mettre dans un fichier (via l’héritage) et de minimifier le code css.</li>
+</ul>
+
+<p>Ce langage n’est pas difficile à apprendre, cela ressemble au css, avec de nombreuses fonctionnalités intéressantes en plus.</p>
+
+<h2>La syntaxe du langage</h2>
+
+<p>La syntaxe du sass est <strong>compatible avec celle du css à quelques exceptions près</strong> :</p>
+
+<ul>
+<li>  Ne plus mettre de point virgule <strong>;</strong> </li>
+<li>  Ne plus mettre de crochets <strong>{ }</strong> </li>
+<li>  Respecter les conventions traditionnelles (<strong>attribut: valeur</strong> un espace après le deux points mais pas avant)</li>
+<li>  Respecter l’indentation : Il faut choisir une indentation et s’y tenir dans un même fichier. Au choix : une tabulation, 2 espaces, 4 espaces, … Les lignes <em>propriétés: valeurs</em> d’un sélecteur css doivent dépasser d’une indentation ce sélecteur.</li>
+</ul>
+
+<p>En respectant ces points, vous pouvez déjà <strong>coder en SASS comme en CSS</strong>.</p>
+
+<p>Mais cela ne serait pas intéressant sans les nouveautés suivantes :</p>
+
+<h3>La factorisation des sélecteurs en plusieurs niveaux</h3>
+
+<p>Au lieu d’avoir ce type d’arborescence à un niveau :</p>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="nc">.main</span> <span class="nc">.head</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o">:</span> <span class="nb">red</span>  
+<span class="nc">.main</span> <span class="nc">.body</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o">:</span> <span class="nb">blue</span>
+</code></pre></div>
+<p>Nous pouvons factoriser le sélecteur “<em>.main</em>” et se ramener à deux niveaux :</p>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="nc">.main</span>  
+<span class="err"> </span> <span class="nc">.head</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o">:</span> <span class="nb">red</span>  
+<span class="err"> </span> <span class="nc">.body</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o">:</span> <span class="nb">blue</span>
+</code></pre></div>
+<p>Ce procédé de factorisation basé sur l’esprit <strong>DRY</strong> (Don’t Repeat Yourself) est aussi applicable sur les attributs eux-mêmes :</p>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="nt">a</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">font</span><span class="o">:</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">family</span><span class="o">:</span> <span class="no">serif</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">weight</span><span class="o">:</span> <span class="no">bold</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">size</span><span class="o">:</span> <span class="mi">1</span><span class="mf">.2</span><span class="kt">em</span>
+</code></pre></div>
+<p>sera compilé en css par :</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nt">a</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">font-family</span><span class="o">:</span> <span class="k">serif</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">font-weight</span><span class="o">:</span> <span class="k">bold</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">font-size</span><span class="o">:</span> <span class="m">1.2em</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<h3>Les variables</h3>
+
+<p>La possibilité d’utiliser des variables est un gros apport au css. Elle permet <strong>une meilleure maintenance du code et une meilleure scalabilité d’une application</strong> (en utilisant par exemple des fichiers sass de thèmes définissant toutes les couleurs, images, polices, …).<br>
+Il existe plusieurs <strong>types de variables</strong> (nombre réel, pixels, couleurs, chaines de caractères …) et il est possible d’utiliser des <strong>opérations élémentaires</strong>.</p>
+
+<p>Lorsqu’on écrit une ligne <strong>attribut / value</strong> avec l’utilisation de variables (dynamique),<br>
+on utilise le caractère ‘<strong>=</strong>‘ au lieu de ‘<strong>:</strong>‘ pour l’affectation.</p>
+
+<h4>Les couleurs</h4>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="nv">!link_color</span><span class="o"> =</span> <span class="nb">red</span>  
+<span class="nt">a</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o"> =</span> <span class="nv">!link_color</span>  
+<span class="err"> </span> <span class="k">&amp;</span><span class="nd">:hover</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o"> =</span> <span class="nv">!link_color</span> <span class="mh">#222</span>
+</code></pre></div>
+<p>A noter que le symbole <strong>&amp;</strong> remplace le sélecteur parent.</p>
+
+<p>Ce qui donne le code compilé suivant :</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nt">a</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">color</span><span class="o">:</span> <span class="nb">red</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="nt">a</span><span class="nd">:hover</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">color</span><span class="o">:</span> <span class="m">#ff2222</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<h4>Les pixels</h4>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="nv">!margin</span><span class="o"> =</span> <span class="mi">16</span><span class="kt">px</span>  
+<span class="nc">.border</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">padding</span><span class="o"> =</span> <span class="nv">!margin</span> <span class="o">/</span> <span class="mi">2</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">margin</span><span class="o"> =</span> <span class="nv">!margin</span> <span class="o">/</span> <span class="mi">2</span>
+</code></pre></div>
+<p>donne le code compilé :</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.border</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">8px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">margin</span><span class="o">:</span> <span class="m">8px</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<h3>Les “mixins”</h3>
+
+<p>Les mixins sont des procédures qui contiennent plusieurs lignes de sass.<br>
+Il est possible d’utiliser des arguments sur ces mixins.</p>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="nf">=border-radius</span><span class="p">(</span><span class="nv">!radius</span> <span class="o">=</span> <span class="mi">5</span><span class="kt">px</span><span class="p">)</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">border-radius</span><span class="o">=</span> <span class="nv">!radius</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">-moz-border-radius</span><span class="o">=</span> <span class="nv">!radius</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">-webkit-border-radius</span><span class="o">=</span> <span class="nv">!radius</span>  
+</code></pre></div><div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="nn">#wrapper</span>
+<span class="err"> </span>  <span class="nt">border-radius</span><span class="o">(</span><span class="nt">10px</span><span class="o">)</span>  
+<span class="err"> </span> <span class="o">&gt;</span> <span class="nt">footer</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">border-radius</span><span class="o">()</span>
+</code></pre></div>
+<p>Cet exemple est typiquement intéressant car il permet d’utiliser <strong>border-radius</strong> de façon <strong>cross-browser</strong> et avec une ligne de code.</p>
+
+<p>A noter qu’il est possible d’affecter des valeurs par défaut aux mixins.</p>
+
+<p>Le résultat css compilé est le suivant :</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nf">#wrapper</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="nf">#wrapper</span> <span class="o">&gt;</span> <span class="nt">footer</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<h3>Exemple complet</h3>
+
+<p>Voici un exemple complet de l’utilisation du SASS</p>
+<div class="highlight"><pre><code class="language-sass" data-lang="sass"><span class="cm">/* This is just an example */  </span>
+
+<span class="cm">/* variables */  </span>
+<span class="nv">!main_width</span><span class="o"> =</span> <span class="mi">900</span><span class="kt">px</span>  
+<span class="nv">!aside_width</span><span class="o"> =</span> <span class="mi">300</span><span class="kt">px</span>  
+<span class="nv">!section_width</span><span class="o"> =</span> <span class="mi">520</span><span class="kt">px</span>  
+
+<span class="nv">!link_color</span><span class="o"> =</span> <span class="nb">red</span>  
+
+<span class="nv">!font_title</span><span class="o"> =</span> <span class="s2">&quot;Liberation&quot;</span><span class="o">,</span><span class="s2">&quot;Georgia&quot;</span><span class="o">,</span><span class="s2">&quot;serif&quot;</span>  
+
+<span class="cm">/* mixins */  </span>
+<span class="nf">=border-radius</span><span class="p">(</span><span class="nv">!radius</span> <span class="o">=</span> <span class="mi">5</span><span class="kt">px</span><span class="p">)</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">border-radius</span><span class="o">=</span> <span class="nv">!radius</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">-moz-border-radius</span><span class="o">=</span> <span class="nv">!radius</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">-webkit-border-radius</span><span class="o">=</span> <span class="nv">!radius</span>  
+
+<span class="nf">=block</span><span class="p">()</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">display</span><span class="o">:</span> <span class="no">block</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">overflow</span><span class="o">:</span> <span class="no">auto</span>  
+
+<span class="cm">/* colors */  </span>
+<span class="nt">a</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o"> =</span> <span class="nv">!link_color</span>  
+<span class="err"> </span> <span class="k">&amp;</span><span class="nd">:hover</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o"> =</span> <span class="nv">!link_color</span> <span class="mh">#222</span>  
+
+
+<span class="cm">/* layout */  </span>
+
+<span class="nn">#wrapper</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">margin</span><span class="o">:</span>  <span class="no">auto</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">position</span><span class="o">:</span> <span class="no">relative</span>  
+<span class="na"> </span><span class="err"> </span><span class="na">width</span><span class="o"> =</span> <span class="nv">!main_width</span>  
+<span class="err"> </span>  <span class="nt">border-radius</span><span class="o">(</span><span class="nt">10px</span><span class="o">)</span>  
+<span class="err"> </span> <span class="o">&gt;</span><span class="nt">nav</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">block</span><span class="o">()</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">padding</span><span class="o">:</span> <span class="mi">2</span><span class="kt">px</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">top</span><span class="o">:</span> <span class="mi">5</span><span class="kt">px</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">font-size</span><span class="o">:</span> <span class="mi">1</span><span class="mf">.2</span><span class="kt">em</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">font-family</span><span class="o"> =</span> <span class="nv">!font_title</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nt">a</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">font-weight</span><span class="o">:</span> <span class="no">bold</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">&amp;</span><span class="nd">:hover</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">color</span><span class="o">:</span> <span class="nb">white</span>  
+
+<span class="err"> </span> <span class="o">&gt;</span><span class="nt">header</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">block</span><span class="o">()</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">clear</span><span class="o">:</span> <span class="no">both</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">height</span><span class="o">:</span> <span class="mi">48</span><span class="kt">px</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">font-family</span><span class="o"> =</span> <span class="nv">!font_title</span>  
+
+<span class="err"> </span> <span class="o">&gt;</span><span class="nt">footer</span>  
+<span class="err"> </span> <span class="err"> </span>  <span class="nt">block</span><span class="o">()</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">padding</span><span class="o">:</span> <span class="mi">5</span><span class="kt">px</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">text-align</span><span class="o">:</span> <span class="no">center</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">clear</span><span class="o">:</span> <span class="no">both</span>  
+
+<span class="err"> </span> <span class="nn">#main</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">position</span><span class="o">:</span> <span class="no">relative</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="o">&gt;</span><span class="nt">section</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span>  <span class="nt">block</span><span class="o">()</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">width</span><span class="o"> =</span> <span class="nv">!section_width</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">padding</span><span class="o">:</span> <span class="mi">20</span><span class="kt">px</span>  
+
+<span class="err"> </span> <span class="err"> </span> <span class="o">&gt;</span><span class="nt">aside</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span>  <span class="nt">block</span><span class="o">()</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">float</span><span class="o">:</span> <span class="no">right</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">width</span><span class="o"> =</span> <span class="nv">!aside_width</span>  
+<span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na"> </span><span class="err"> </span><span class="na">padding</span><span class="o">:</span> <span class="mi">20</span><span class="kt">px</span>
+</code></pre></div>
+<p>et le résultat du fichier CSS compilé</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="c">/* This is just an example */</span>  
+<span class="c">/* variables */</span>  
+<span class="c">/* mixins */</span>  
+<span class="c">/* colors */</span>  
+<span class="nt">a</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">color</span><span class="o">:</span> <span class="nb">red</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="nt">a</span><span class="nd">:hover</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">color</span><span class="o">:</span> <span class="m">#ff2222</span><span class="p">;</span>  
+<span class="p">}</span>  
+
+<span class="c">/* layout */</span>  
+<span class="nf">#wrapper</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">margin</span><span class="o">:</span>  <span class="k">auto</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">position</span><span class="o">:</span> <span class="k">relative</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">width</span><span class="o">:</span> <span class="m">900px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">10px</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="nf">#wrapper</span> <span class="o">&gt;</span><span class="nt">nav</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">overflow</span><span class="o">:</span> <span class="k">auto</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">2px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">padding-top</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">font-size</span><span class="o">:</span> <span class="m">1.2em</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">font-family</span><span class="o">:</span> <span class="n">Liberation</span><span class="o">,</span> <span class="n">Georgia</span><span class="o">,</span> <span class="k">serif</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nf">#wrapper</span> <span class="o">&gt;</span><span class="nt">nav</span> <span class="nt">a</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">font-weight</span><span class="o">:</span> <span class="k">bold</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="nf">#wrapper</span> <span class="o">&gt;</span><span class="nt">nav</span> <span class="nt">a</span><span class="nd">:hover</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">color</span><span class="o">:</span> <span class="nb">white</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="nf">#wrapper</span> <span class="o">&gt;</span><span class="nt">header</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">overflow</span><span class="o">:</span> <span class="k">auto</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">clear</span><span class="o">:</span> <span class="k">both</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">height</span><span class="o">:</span> <span class="m">48px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">font-family</span><span class="o">:</span> <span class="n">Liberation</span><span class="o">,</span> <span class="n">Georgia</span><span class="o">,</span> <span class="k">serif</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="nf">#wrapper</span> <span class="o">&gt;</span><span class="nt">footer</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">overflow</span><span class="o">:</span> <span class="k">auto</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">text-align</span><span class="o">:</span> <span class="k">center</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">clear</span><span class="o">:</span> <span class="k">both</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="nf">#wrapper</span> <span class="nf">#main</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="k">position</span><span class="o">:</span> <span class="k">relative</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nf">#wrapper</span> <span class="nf">#main</span> <span class="o">&gt;</span><span class="nt">section</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">overflow</span><span class="o">:</span> <span class="k">auto</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">width</span><span class="o">:</span> <span class="m">520px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="nf">#wrapper</span> <span class="nf">#main</span> <span class="o">&gt;</span><span class="nt">aside</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">overflow</span><span class="o">:</span> <span class="k">auto</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">float</span><span class="o">:</span> <span class="k">right</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">width</span><span class="o">:</span> <span class="m">300px</span><span class="p">;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span> <span class="k">padding</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<p>Le SASS offre <strong>encore plus de possibilités</strong>, notamment l’interpolation, les conditions, les boucles, …<br>
+Vous trouverez plus d’informations sur la <em>documentation SASS</em>.</p>
+
+<h2>Utilisation</h2>
+
+<h3>Pré-requis</h3>
+
+<p><strong>Note</strong>: Ce qui suit ne s’applique pas pour le plugin sass du framework Play! .</p>
+
+<p>Pour utiliser SASS, sous linux, installez les packets <strong>ruby</strong> et <strong>rubygems</strong> puis installez <strong>haml</strong> avec la commande :</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">gem install haml
+</code></pre></div>
+<h3>Avec le framework java Play!</h3>
+
+<p>Grâce au module sass de play framework, le SASS est <strong>compilé à la volée</strong> au moment du chargement d’une page (en mode développement) ou au chargement de l’application (en mode production).</p>
+
+<h4>Installation</h4>
+
+<p>Depuis play 1.1, il suffit de lancer la commande</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">play install sass
+</code></pre></div>
+<p>Ensuite il faut activer le module dans la configuration de l’application (fichier <em>conf/application.conf</em>).</p>
+
+<h3>Avec le framework Ruby on Rails</h3>
+
+<h4>Installation</h4>
+
+<p>Pour activer le plugin SASS sur une application Rails, lancez :</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">haml --rails path/to/rails/app
+</code></pre></div>
+<h3>Autrement</h3>
+
+<p>Vous pouvez toujours utiliser SASS en compilant vos fichier sass en css à chaque modification (voir <em>Commandes pratiques</em>).<br>
+Vous inclurez ensuite le fichier css compilé dans votre html.</p>
+
+<h2>Convertir ses anciens CSS en SASS</h2>
+
+<p>Si vous ne voulez pas repartir de zéro dans le design d’un projet, vous pouvez tout à fait repartir avec les anciens CSS en les exportant en SASS.</p>
+
+<h2>Commandes pratiques</h2>
+
+<ul>
+<li><p>Pour convertir vos fichier CSS en SASS il vous suffit d’utiliser : <code>css2sass</code>  </p></li>
+<li><p>Pour compiler vos fichier SASS en CSS, utilisez: <code>sass</code>   </p></li>
+</ul>
+
+<h2>Liens</h2>
+
+<ul>
+<li><a href="http://sass-lang.com/">Site du langage SASS</a></li>
+<li><a href="http://www.playframework.org/">Site du framework Play!</a></li>
+</ul>
+
+<h3>Aller plus loin</h3>
+
+<ul>
+<li><a href="http://compass-style.org/">Compass : framework SASS</a></li>
+<li><a href="http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html">Documentation SASS</a></li>
+</ul>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

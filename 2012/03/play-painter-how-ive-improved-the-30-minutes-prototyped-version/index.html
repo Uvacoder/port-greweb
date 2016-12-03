@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="One week ago, I’ve released a web experiment featuring a collaborative Paint-like application made with Play Framework 2 and relying on WebSocket and HTML5 Canvas. Here is how I've improved it." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Play Painter &#8211; how i&#8217;ve improved the 30 minutes prototyped version">
+    <meta name="twitter:description" content="One week ago, I’ve released a web experiment featuring a collaborative Paint-like application made with Play Framework 2 and relying on WebSocket and HTML5 Canvas. Here is how I've improved it.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2012/03/twitt_playpainter.png">
+    <link rel="image_src" href="http://greweb.me/images/2012/03/twitt_playpainter.png">
+    
+
+    <title>@GreWeb - Play Painter &#8211; how i&#8217;ve improved the 30 minutes prototyped version</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/">Play Painter &#8211; how i&#8217;ve improved the 30 minutes prototyped version</a></h1>
+    <time class="date" datetime="2012-03-17">March 17, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     <a class="tag" href="/tag/websocket.html">websocket</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p>One week ago, I’ve released a <a href="/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/">technical web experiment</a> featuring <strong>a collaborative real-time Paint-like application I’ve called Play Painter</strong>. It has been made with <a href="http://playframework.org/">Play Framework 2</a> and rely on WebSocket and HTML5 Canvas Javascript APIs.</p>
+
+<p>Thanks to everyone having tested my Play Painter experiment, you helped me figure out bugs and bottlenecks and to benchmark the application running on my tiny server.<br>
+The first version of Play Painter has been improved with some optimizations. </p>
+
+<p>Explanation…</p>
+
+<blockquote class="twitter-tweet" lang="fr"><p>Thanks guys for testing playpainter! but you are breaking my server :D <a href="http://t.co/F62qwk1i" title="http://twitter.com/greweb/status/179194592481116160/photo/1">twitter.com/greweb/status/…</a></p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/status/179194592481116160">12 mars 2012</a></blockquote>
+
+<!--more-->
+
+<h2>In brief</h2>
+
+<ul>
+<li>  <strong>80 twitts</strong>, <strong>3500 unique visitors</strong> in a few days.</li>
+<li>  a peak of about <strong>80 simultaneous painters</strong>.</li>
+<li>  about <strong>200 WebSocket messages per second</strong> when 3-4 users are drawing =&gt; bottleneck found.</li>
+<li>  when it occurs, 100% CPU and about <strong>1500 system interrupts per second</strong> on my poor Atom 1.2 Ghz server.</li>
+</ul>
+
+<h2>Some reasons</h2>
+
+<p>The initial version of Play Painter was a basic fast-prototyped version:</p>
+
+<p>First, It was <strong>spreading every mouse events</strong> (down, up, move) to all clients <strong>as fast as it comes</strong>. It means that, depending on the computer and browser performance, a huge number of events could have been triggered and spread to all connected users.</p>
+
+<p>We solved this by <strong>Chunking draw events</strong>.</p>
+
+<p>Second, <strong>a lot of informations was repeated in WebSocket messages.</strong> No datas were stored on the server-side so to be sure a new user see the right draws, player name, brush color and size was sent in every message. Multiply this by the number of mouse events and you get a lot of useless information!</p>
+
+<p>We are now <strong>Storing painters information</strong>.</p>
+
+<h2>Chunking draw events</h2>
+
+<p>When an user starts drawing, mouse events give the brush positions (x, y). But instead of sending a websocket message for each of these new positions, they are stored, and every <strong>X</strong> milliseconds, are sent in a websocket message. Such message contains all points of the draw from the last sent draw message.</p>
+
+<p>The <strong>X</strong> value has currently been fixed to <strong>50 milliseconds</strong> because it’s enough for the human eye: It means about 20 messages per second for one painter. In movies we usually have a 24 frame rate.</p>
+
+<p>The same principle has been applied on the painter brush positions.</p>
+
+<h3>Example</h3>
+
+<p><strong>Before</strong><br>
+13 WebSocket messages:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">181</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">259</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">183</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">259</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">184</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">257</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">187</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">257</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">188</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">257</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">191</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">256</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">192</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">255</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">192</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">255</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">192</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">254</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">193</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">254</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">195</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">254</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">196</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">253</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;lineTo&quot;</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">196</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">253</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>
+</code></pre></div>
+<p><strong>After</strong><br>
+2 WebSocket messages: (50 ms apart)</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;trace&quot;</span><span class="p">,</span><span class="s2">&quot;points&quot;</span><span class="o">:</span><span class="p">[{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">181</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">259</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">183</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">259</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">184</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">257</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">187</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">257</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">188</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">257</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">191</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">256</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">192</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">255</span><span class="p">}],</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;trace&quot;</span><span class="p">,</span><span class="s2">&quot;points&quot;</span><span class="o">:</span><span class="p">[{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">192</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">255</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">192</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">254</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">193</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">254</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">195</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">254</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">195</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">253</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">196</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">253</span><span class="p">},{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="mi">196</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="o">:</span><span class="mi">253</span><span class="p">}],</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">19</span><span class="p">}</span>
+</code></pre></div>
+<h3>To a variable frame rate?</h3>
+
+<p>I am also thinking about a variable rate depending of the number of active painters. In fact, the more we have painters, the more we will have messages, and the more the server will have system interrupts, we could then decrease the frame rate per second to reduce this load.</p>
+
+<p>The problem of this extreme approach is the degradation of the feeling of real-time.</p>
+
+<p>For now, I’m keeping the constant frame rate version, we will see how far it goes.</p>
+
+<h2>Storing painters information</h2>
+
+<p>As I said, <strong>a lot of informations was repeated in WebSocket messages.</strong> In every draw events, painter name, brush size and brush color was sent from the client to the server, and the spread into all connected clients.</p>
+
+<p>This was ok for prototyping but we have now optimize this by storing these painter generic informations in the server and sending them when a new WebSocket connection is opened.</p>
+
+<h3>Example</h3>
+
+<p>This is what a client can receive when a websocket is connected:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;youAre&quot;</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">24</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;john&quot;</span><span class="p">,</span><span class="s2">&quot;color&quot;</span><span class="o">:</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;size&quot;</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;painter&quot;</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">21</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;gre&quot;</span><span class="p">,</span><span class="s2">&quot;color&quot;</span><span class="o">:</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;size&quot;</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;painter&quot;</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">24</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;peter&quot;</span><span class="p">,</span><span class="s2">&quot;color&quot;</span><span class="o">:</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;size&quot;</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;painter&quot;</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">4</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;paul&quot;</span><span class="p">,</span><span class="s2">&quot;color&quot;</span><span class="o">:</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;size&quot;</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;painter&quot;</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">6</span><span class="p">}</span>  
+<span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;jack&quot;</span><span class="p">,</span><span class="s2">&quot;color&quot;</span><span class="o">:</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="s2">&quot;size&quot;</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;painter&quot;</span><span class="p">,</span><span class="s2">&quot;pid&quot;</span><span class="o">:</span><span class="mi">2</span><span class="p">}</span>
+</code></pre></div>
+<p>and then…</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">{&quot;type&quot;:&quot;trace&quot;,&quot;points&quot;:[{&quot;x&quot;:181,&quot;y&quot;:259},{&quot;x&quot;:183,&quot;y&quot;:259},{&quot;x&quot;:184,&quot;y&quot;:257}],&quot;pid&quot;:19}  
+...
+</code></pre></div>
+<p>By knowing all painter properties, when someone will draw something, he will not have to repeat which color and size its brush has.</p>
+
+<h3>Server side</h3>
+
+<p>It was quite interesting to implement the server part with <a href="https://github.com/playframework/Play20/wiki/Iteratees">Play2′s Iteratees</a>, a new way of handling I/O – not so new in fact because it is directly related to Haskell Iteratee concepts.</p>
+
+<p>To implement a WebSocket connection, you will provide an <strong>Iteratee</strong> for consuming the <strong>input</strong> and an <strong>Enumerator</strong> for producing the <strong>output</strong>.</p>
+
+<p>Enumerator are chainable, this is how I firstly send the painter id and painters informations:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// out: handle messages to send to the painter  </span>
+<span class="k">val</span> <span class="n">out</span> <span class="k">=</span>  
+<span class="err"> </span> <span class="c1">// Inform the painter who he is (which pid, he can them identify himself)  </span>
+<span class="err"> </span> <span class="nc">Enumerator</span><span class="o">(</span><span class="nc">JsObject</span><span class="o">(</span><span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;type&quot;</span> <span class="o">-&gt;</span> <span class="nc">JsString</span><span class="o">(</span><span class="s">&quot;youAre&quot;</span><span class="o">),</span> <span class="s">&quot;pid&quot;</span> <span class="o">-&gt;</span> <span class="nc">JsNumber</span><span class="o">(</span><span class="n">pid</span><span class="o">))).</span><span class="n">as</span><span class="o">[</span><span class="kt">JsValue</span><span class="o">])</span> <span class="o">&gt;&gt;&gt;</span>  
+<span class="err"> </span> <span class="c1">// Inform the list of other painters  </span>
+<span class="err"> </span> <span class="nc">Enumerator</span><span class="o">(</span><span class="n">painters</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">painter</span><span class="o">)</span> <span class="k">=&gt;</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="o">(</span><span class="n">painter</span><span class="o">.</span><span class="n">toJson</span> <span class="nc">JsObject</span><span class="o">(</span><span class="nc">Seq</span><span class="o">(</span><span class="s">&quot;type&quot;</span> <span class="o">-&gt;</span> <span class="nc">JsString</span><span class="o">(</span><span class="s">&quot;painter&quot;</span><span class="o">),</span> <span class="s">&quot;pid&quot;</span> <span class="o">-&gt;</span> <span class="nc">JsNumber</span><span class="o">(</span><span class="n">id</span><span class="o">)))).</span><span class="n">as</span><span class="o">[</span><span class="kt">JsValue</span><span class="o">]</span>  
+<span class="err"> </span> <span class="o">}</span> <span class="n">toList</span> <span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">)</span> <span class="o">&gt;&gt;&gt;</span>  
+<span class="err"> </span> <span class="c1">// Stream the hub  </span>
+<span class="err"> </span> <span class="n">hub</span><span class="o">.</span><span class="n">getPatchCord</span><span class="o">()</span>
+</code></pre></div>
+<p>The <strong>&gt;&gt;&gt;</strong> operator is a shortcut to the <strong>andThen</strong> method which is the way to chain enumerators.</p>
+
+<p>For more details, <a href="https://github.com/gre/playpainter/blob/master/scala/app/controllers/Application.scala">see the scala code of the controller</a>.</p>
+
+<h2>Other features</h2>
+
+<p>The application has been improved in many other ways.</p>
+
+<ul>
+<li>  <strong>A “buffering” Canvas</strong> in the foreground has been add <strong>for the user draws</strong>. It brings client-side reactivity and helps to avoid unpleasant lag feeling when drawing. When the user draw events are coming from the server and no other user events has been sent since, it’s synchronized and we can clean this buffer.</li>
+<li>  <strong>Painter positions are show with their names</strong>.</li>
+<li>  It should now work properly on <strong>smartphones and tablets</strong>. Try on iPad and iPhone, and maybe on recent version of Android (WebSocket support required).</li>
+<li>  <strong>Keyboard shortcut</strong>: using arrows to change brush size and color.</li>
+<li>  The <strong><a href="http://github.com/gre/playpainter">source code</a> has been polished and commented</strong> especially the server side part (it’s probably the hardest part if you don’t know Play framework).</li>
+<li>  Error message displayed when a technology is not supported and when the WebSocket connection goes down (with a reconnecting try loop).</li>
+</ul>
+
+<h2>The demo is still online!</h2>
+
+<p><strong><a href="http://playpainter.greweb.fr/">playpainter.greweb.fr</a></strong></p>
+
+<h2>Future</h2>
+
+<p>With these two optimizations, I’ve reduce the global <strong>number of socket messages</strong> and also the <strong>size of each message</strong>.</p>
+
+<p>The first benchmark sounds good, 3 painters was simultaneously crazily painting while the server application was only using less than 10% of CPU.</p>
+
+<p>Now, the most challenging part would be to scale the application to a huge number of connections, but having maybe solved this bottleneck, it’s maybe now more a matter of system architecture than the application itself.</p>
+
+<p>This experiment gave me a lot of interest in <strong>WebSocket</strong> and also in <strong>the powerful way WebSockets are handled in Play framework</strong>.</p>
+
+<p>If anyone want to start a Java version of the application, please go on! <a href="https://github.com/gre/playpainter/issues/1">(this was requested on Github)</a></p>
+
+<p>Thanks to <a href="https://twitter.com/dbathily">@dbathily</a>, we know have both Scala and Java version!</p>
+
+<h3>Next experiment</h3>
+
+<p>I am thinking about making a multiplayer game on the web.<br>
+It would be something like a shooter survival game (like Counter Strike Zombie Mod) a multi-plateform 2D side view game (like Mario) !</p>
+
+<p>You will know more about this soon!</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

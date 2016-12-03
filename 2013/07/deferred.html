@@ -1,0 +1,334 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="This second article on Q will introduce you how to easily turn a callback API into a promise API using Deferred objects. It will also present the new W3C specification of Promise and finish with the implementation of Qimage, a simple Image Promise wrapper." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Qep2.: Deferred objects, Qimage">
+    <meta name="twitter:description" content="This second article on Q will introduce you how to easily turn a callback API into a promise API using Deferred objects. It will also present the new W3C specification of Promise and finish with the implementation of Qimage, a simple Image Promise wrapper.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2013/07/qimage_then_thumbnail.jpg">
+    <link rel="image_src" href="http://greweb.me/images/2013/07/qimage_then_thumbnail.jpg">
+    
+
+    <title>@GreWeb - Qep2.: Deferred objects, Qimage</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/07/deferred">Qep2.: Deferred objects, Qimage</a></h1>
+    <time class="date" datetime="2013-07-13">July 13, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/awop.html">AWOP</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/promise.html">promise</a>
+     <a class="tag" href="/tag/q.html">Q</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <h1>A <a href="/pages/a-world-of-promises/">World Of Promises</a>, episode 2</h1>
+
+<p><img src="/images/2013/07/qimage_then_thumbnail.jpg" alt="" class="thumbnail-right" style="width: 200px" /></p>
+
+<p><em>This second article on <a href="http://github.com/kriskowal/q">Q</a> will introduce you how to easily 
+turn a callback API into a promise API using Deferred objects.
+It will also present the new W3C specification of Promise and finish
+with the implementation of <a href="http://github.com/gre/qimage">Qimage</a>, a simple Image Promise wrapper.</em></p>
+
+<!--more-->
+
+<h2>Deferred objects</h2>
+
+<p><a href="http://github.com/kriskowal/q">Q</a> splits the concept of Promise in two parts: one part is the <strong>Deferred object</strong>, another is the <strong>Promise object</strong>.</p>
+
+<p>A <strong>Deferred object</strong> is an object which just aims to control the state of a Promise.
+It allows to do one of the two following actions (one time only):</p>
+
+<ul>
+<li><code>.resolve(value)</code>: moving from <em>pending</em> to <strong><em>fulfilled</em> with a value</strong>.</li>
+<li><code>.reject(error)</code>: moving from <em>pending</em> to <strong><em>rejected</em> with an error</strong>.</li>
+</ul>
+
+<p><img src="/images/2013/07/promise.png" style="max-width: 300px; width: 100%" /></p>
+
+<p>A <strong>Promise object</strong> can be obtained from a Deferred object via the <code>promise</code> field.
+In <a href="http://github.com/kriskowal/q">Q</a>, a Promise is <strong>read-only</strong>: you can basically only do <code>.then</code> with it 
+and there is no such <code>resolve</code> or <code>reject</code> method on a Promise.</p>
+
+<blockquote>
+<p>a Deferred is &quot;resolvable&quot;, a Promise is &quot;thenable&quot;.</p>
+</blockquote>
+
+<p><strong><em>N.B.</em></strong>: <em>this separation also exists in other languages but with different names (for instance in Scala: Promise / Future).</em></p>
+
+<h3><code>Q.defer()</code></h3>
+
+<p>The method Q.defer() will return a new <strong>Deferred object</strong> initialized in a <em>pending</em> state.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="p">},</span> <span class="mi">500</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="c1">// ...</span>
+<span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;the universe = &quot;</span><span class="o">+</span><span class="nx">value</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>Note that the <a href="http://wiki.commonjs.org/wiki/Promises/A">Promises/A</a> spec only specifies the concept of <strong>Promise</strong>.
+It does not defines the &quot;Deferred&quot; part.
+Up to the Promise library to implement its own way of resolving / rejecting the value of a Promise.</p>
+
+<p>There is also <a href="http://wiki.commonjs.org/wiki/Promises/B">Promises/B</a> and <a href="http://wiki.commonjs.org/wiki/Promises/D">Promises/D</a> to define that though.</p>
+
+<h3>About the DOM.Promise specification</h3>
+
+<p>a <a href="http://dom.spec.whatwg.org/#promises">new DOM specification draft</a> has born recently and is a bit different from the Q style,
+the &quot;Deferred&quot; object (called a <strong>Resolver</strong>) is given as an argument of the function given at Promise instanciation.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="k">new</span> <span class="cm">/*DOM.*/</span><span class="nx">Promise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">resolver</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">resolver</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+  <span class="p">},</span> <span class="mi">500</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;the universe = &quot;</span><span class="o">+</span><span class="nx">value</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2>Qimage: Wrapping the Image API</h2>
+
+<p>We will now show you how to easily <strong>wrap the DOM Image API into a Promise API with Q</strong>.
+Before showing the implementation, let&#39;s explore the possibilities of such API.</p>
+
+<p><strong><code>Qimage (url: String) =&gt; Promise[DOM Image]</code></strong></p>
+
+<p>Here is how we want our <code>Qimage</code> API to look like:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">Qimage</span><span class="p">(</span><span class="s2">&quot;http://imagesource.com/image.png&quot;</span><span class="p">);</span>
+<span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">image</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// image instanceof Image</span>
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// error instanceof Error</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>We can use it like this:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Qimage</span><span class="p">(</span><span class="s2">&quot;images/foo.png&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">img</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">img</span><span class="p">);</span>
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;Unable to load the image&quot;</span><span class="p">;</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>Now we define <code>Qimage</code> as a Promise library, <strong>we can then use all the power of Promises,
+combine Promises together, chain different Promise APIs</strong>...</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+  <span class="nx">Qimage</span><span class="p">(</span><span class="s2">&quot;res1.png&quot;</span><span class="p">),</span>
+  <span class="nx">Qimage</span><span class="p">(</span><span class="s2">&quot;res2.png&quot;</span><span class="p">),</span>
+  <span class="nx">Qimage</span><span class="p">(</span><span class="s2">&quot;res3.png&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="p">.</span><span class="nx">spread</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">res1</span><span class="p">,</span> <span class="nx">res2</span><span class="p">,</span> <span class="nx">res3</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">res1</span><span class="p">);</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">res2</span><span class="p">);</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">res3</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>This wrapper makes a simple but powerful Image Loading library module.</p>
+
+<h3>Implementation</h3>
+
+<p>Here is how <code>Qimage</code> works:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">Qimage</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">img</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">();</span>
+  <span class="nx">img</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">img</span><span class="p">);</span>
+  <span class="p">};</span>
+  <span class="nx">img</span><span class="p">.</span><span class="nx">onabort</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+  <span class="p">};</span>
+  <span class="nx">img</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+  <span class="p">};</span>
+  <span class="nx">img</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>...and that&#39;s it!</p>
+
+<p>Note that <strong>the Deferred object is isolated</strong> in the <code>Qimage</code> function scope.</p>
+
+<p>Only the (read-only) Promise is accessible from the outside when returned by the function.</p>
+
+<p><strong>How simple is wrapping a callback API into a Promise API!</strong></p>
+
+<hr>
+
+<p><a href="http://github.com/gre/qimage">Qimage</a> is released as a micro-lib and available on <a href="http://github.com/gre/qimage">Github</a> and <a href="https://npmjs.org/package/qimage">NPM</a>.</p>
+
+<h2>Next episode</h2>
+
+<p>Next episode will feature <strong><code>requestAnimationFrame</code></strong>, 
+<em>a fundamental function generally used for performing efficient Javascript animations</em>.
+We will show you <strong>QanimationFrame</strong> and how we can use it as a <strong>Promisified &quot;wait for DOM to be ready&quot; API</strong>.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/03/panzer-dragoon-1k">Panzer Dragoon 1k</a>
+            </li>
+            
+            <li>
+              <a href="/2014/01/promisify-your-games">Promisify your games</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

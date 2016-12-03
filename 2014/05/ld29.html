@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="I gamejam-ed last weekend to the Ludum Dare 29 theming "Beneath the Surface" to develop "Anthill", a minimalist anthill simulation game." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="48 hours to prototype an Ant Sim Game">
+    <meta name="twitter:description" content="I gamejam-ed last weekend to the Ludum Dare 29 theming "Beneath the Surface" to develop "Anthill", a minimalist anthill simulation game.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2014/05/anthill.png">
+    <link rel="image_src" href="http://greweb.me/images/2014/05/anthill.png">
+    
+
+    <title>@GreWeb - 48 hours to prototype an Ant Sim Game</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a></h1>
+    <time class="date" datetime="2014-05-04">May  4, 2014</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/ludumdare.html">ludumdare</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/phaser.html">phaser</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><img class="thumbnail-left" src="/images/2014/05/computer_preset.jpg" alt=""></p>
+
+<p>I <strong>gamejam-ed</strong> last weekend to the <a href="http://ludumdare.com/compo/">Ludum Dare</a> 
+theming <em>&quot;Beneath the Surface&quot;</em> (29th edition).</p>
+
+<p>I enjoyed that time a lot.
+What changed from the previous Ludum Dare for me is that 
+<strong>I&#39;m now</strong> —and happy to be— <strong>a father</strong>,
+and I&#39;m enough trained to wake up at 3am so I could be there attending the beginning!</p>
+
+<p>This article is my diary of this incredible 48 hours past to
+develop <strong>&quot;Anthill&quot;, a minimalist anthill simulation game</strong>.
+This postmortem will explain what <a href="/2014/05/ld29/#right">went right</a> and what <a href="/2014/05/ld29/#wrong">went wrong</a>
+for this compo.</p>
+
+<h1>The Game</h1>
+
+<p>I haven&#39;t played any Ant Simulation Game 
+but I recently played a lot <a href="http://www.shiningrocksoftware.com/">&quot;Banished&quot;</a>,
+an awesome city-building strategy game,
+and I was inspired by the &quot;assign jobs to people&quot; gameplay of this game.</p>
+
+<ul>
+<li><strong><a href="http://greweb.me/ld29/">Play the Game</a></strong></li>
+<li><a href="http://www.ludumdare.com/compo/ludum-dare-29/?action=preview&amp;uid=18803">Ludum Dare entry</a></li>
+<li><a href="//github.com/gre/ld29/">Source code</a></li>
+</ul>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/DBt-5Qmzu1k?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
+
+<h1>Timelapse</h1>
+
+<p>Developing a complete game in 48 hours (including sleeping) is tough,
+especially that it is also about making the graphics and the music!</p>
+
+<p>The game resulting of these 2 days is more a <strong>prototype</strong> than a finished game:
+the simulation remains minimalist and fastly boring,
+the food is the only resource you have to care about.</p>
+
+<p>Here is a <strong>300x accelerated screencast of the developement of &quot;Anthill&quot;</strong>:
+<iframe width="640" height="360" src="http://www.youtube.com/embed/VhH7of4gAHk?feature=player_embedded" frameborder="0" allowfullscreen></iframe></p>
+
+<!--more-->
+
+<h2><a name=right></a> What went right</h2>
+
+<h3>Music</h3>
+
+<p>Best achievement of my LD entry was –to me– <strong>making the music</strong>.</p>
+
+<p><img class="thumbnail-left" src="/images/2014/05/music_preset.jpg" alt=""></p>
+
+<p>I&#39;m not a musician, neither a pianist, but I played a lot with <a href="/tags/audio/">Audio</a> the past year and I&#39;ve managed to make a music for this game —and had a lot of fun making it.
+I&#39;ve used my <em>Yamaha P105</em> as a MIDI controller for making the game music and connecting it 
+to <a href="http://www.warmplace.ru/soft/sunvox/">SunVox</a>, a modular tracker software.</p>
+
+<h4>Play the music - feedback appreciated</h4>
+
+<iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/32426683&amp;auto_play=false&amp;hide_related=false&amp;visual=true"></iframe>
+
+<p><img class="thumbnail-right" src="/images/2014/05/playing_midi.png" alt=""></p>
+
+<p>Most of the notes you heard have been <strong>recorded live from my hand</strong>, and I was quite proud of that, because I&#39;m quite a noob on a piano.
+Doing that way, you keep some imperfection in the music (little delay on the notes, especially in the intro music) and I think that sometimes makes the music better.</p>
+
+<p>I&#39;ve talked a few times about SunVox, also <a href="/2013/07/zound-live/">I still want to make my own web version</a> 
+of a <strong>modular audio tracker</strong> that anyone (first myself!) could use 
+and also could embed live in the game (and, for instance, having game variable impacting the audio experience).</p>
+
+<h3>Graphics</h3>
+
+<p>Also, I&#39;m more a developer than a graphist so I would say this was a success^^</p>
+
+<blockquote class="twitter-tweet" lang="fr"><p>My best <a href="https://twitter.com/search?q=%23gamedev&amp;src=hash">#gamedev</a> graphics ever! <a href="http://t.co/FksRoq1r9x">pic.twitter.com/FksRoq1r9x</a></p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/statuses/460558902812086272">27 Avril 2014</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<h3>Using a library</h3>
+
+<p>I&#39;ve entirely <strong>focused on making my game</strong> rather than making the technical stack.
+Usually, I tend to develop my own framework with the game.
+It is good to learn and discover some <a href="/2014/01/promisify-your-games/">cool ways of programming a game</a>
+but this time I really wanted to get things done...</p>
+
+<h3>Phaser.io</h3>
+
+<p>...so I&#39;ve used <strong><a href="http://www.phaser.io/">Phaser</a></strong> which is a trendy and awesome framework.
+It is also built on top of the <strong>Pixi.js</strong> rendering library (I used in <a href="http://www.ludumdare.com/compo/ludum-dare-27/?action=preview&amp;uid=18803">LD27</a>) and <strong>p2.js</strong> physics engine,
+which are two brillant and performant JavaScript libraries.</p>
+
+<p>Hopefully I started my project with a &quot;Phaser template&quot; I bootstraped during the previous warmup weekend.
+I&#39;ve still lost some time playing with the Phaser API but I could have relied on Phaser features and performance so I think it worth it the second day.</p>
+
+<h3>Google Hangout with Ludum Dare friends</h3>
+
+<p>I used Google Hangout during the whole Ludum Dare, as a way to put my webcam in the timelapse, 
+but more importantly to have other Ludum Dare friends coming in it!</p>
+
+<p>This was a cool first experiment as an alternative to the &quot;stream my dev&quot; approach.
+It was quite fun and social to have <a href="http://twitter.com/mrspeaker">@mrspeaker</a>
+showing me his crazy Metal Meter game advancement.</p>
+
+<p><img src="/images/2014/05/hangout.png" alt=""></p>
+
+<h2><a name=wrong></a> What went wrong</h2>
+
+<h3>Achievability</h3>
+
+<p><strong>My <a href="https://github.com/gre/ld29/blob/master/TODO.md">initial plan</a> was too ambitious.</strong>
+It seems to always happen with me: I get the first day a lot of ideas and motivation, and I tend to underestimate the work to be done. Then at the end of the first day, I&#39;m frustrated to find out I won&#39;t have enough time to do all my plans.
+Indeed it is good to have a lot of ideas but, next Ludum Dare, I&#39;ll try to be sure to have achievable goals.</p>
+
+<blockquote>
+<p>Next time, let&#39;s <strong>remove half the features</strong> I establish!</p>
+</blockquote>
+
+<p>So, the second day morning, I&#39;ve been replanning from scratch and reprioritize my features to basically have something finished and working as a game.
+Because of this decision, the result you can see is a game, but far from the one I originally wanted. 
+<strong>This version is only about digging, collecting mushrooms and avoiding stravation</strong>.</p>
+
+<p>Also I originally scheduled to work that way <strong>Day 1: developing-only, Day 2: music and graphics + new features</strong>. I&#39;m not sure this approach can really works, especially it doesn&#39;t scale, we better work by adding complete features one after the other. That theorically works, but it is however difficult to apply in practice with the stress of the Ludum Dare countdown!</p>
+
+<h3>Path finding performance</h3>
+
+<p><strong>Implementing my own path finding algorithm was fast but not optimal</strong> at all because of performances!
+I recently released a bugfixed version which just use an existing <a href="http://qiao.github.io/PathFinding.js/visual/">path finding library</a> to fix my bad implementation 
+and also to avoid an ant to request path finding each frame when looking for a task to be affected on.</p>
+
+<h3>Finding the good simulation parameters</h3>
+
+<p>I underestimated a bit the amount of work needed to find the good parameters of the simulation.
+Those are very important to <strong>make the game well-balanced</strong> (e.g. not impossible but also not super-easy), I don&#39;t think I found the optimal parameter in the released version.</p>
+
+<p>I think I need two important things to make this parameter search easier:</p>
+
+<ul>
+<li>a framework to maintain parameters presets and change them live.</li>
+<li>make the simulation running at any speed to ease the development. (faster simulation)</li>
+</ul>
+
+<h3>[bug] A task is not always completed by the closest ant</h3>
+
+<p>There is a inconvenient <strong>proximity bug</strong> in my game that you may have noticed:
+when a new job is created, it may happen that, even if a ant was here nearby, a very far ant is assigned to this job.</p>
+
+<p>I&#39;m using a <code>foreach ant in noJobAnts { findAntTask(ant,availableTasks) }</code> loop.
+In this first approach, even if a ant will take the closest task in <code>findAntTask</code>, the first assigned ant will occupy the task even if a closer ant was after in the noJobAnts list.</p>
+
+<p>Another approach to solve this issue would be to do <code>foreach task in availableTasks { findTaskAnts(task,noJobAnts) }</code>.
+In this second approach, the <code>findTaskAnts</code> should sort the noJobAnts list for the given task proximity.</p>
+
+<p>However it is not that trivial because tasks also have different priorities for a given ant, and <code>findAntTask</code> solved that.
+In my original plan, there is some basic tasks like &quot;clean the dirt&quot; or &quot;clean the corpse&quot; which can be done by any ant. However, a specialized ant (let&#39;s say an Harvester) may have some more important tasks to be done first, so this is why we need this priority.</p>
+
+<p>In other word, fixing this bug is not trivial and I need to find the optimal loop for that!</p>
+
+<h2>To be continued...</h2>
+
+<p>I really wish to continue this game because I enjoyed making it and I would enjoy playing the one I have in mind! 
+Time will tell if I can accomplish that wish!</p>
+
+<p><img src="/images/2014/05/anthill.png" alt=""></p>
+
+<h2>You can make games!</h2>
+
+<p>I strongly think anyone a bit motivated and inspired can participate <a href="http://ludumdare.com/compo/">Ludum Dare</a>.</p>
+
+<p>Whoever you are, you can make games!</p>
+
+<ul>
+<li>If you are a developer, you can develop games easily! But that&#39;s not enough, you will require graphics and music!</li>
+<li>If you are a graphist, you can make crazy beautiful games! There is tools to help you making the game without coding.</li>
+<li>If you are a game designer or story teller, you can make awesome games too! You could also just make a cool text adventure game?</li>
+</ul>
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/PVbCECjxFds" frameborder="0" allowfullscreen></iframe>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/03/panzer-dragoon-1k">Panzer Dragoon 1k</a>
+            </li>
+            
+            <li>
+              <a href="/2014/01/promisify-your-games">Promisify your games</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

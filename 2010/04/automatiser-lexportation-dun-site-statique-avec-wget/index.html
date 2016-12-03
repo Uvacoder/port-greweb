@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Automatiser l&#039;exportation d&#039;un site statique avec wget">
+    
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - Automatiser l&#039;exportation d&#039;un site statique avec wget</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2010/04/automatiser-lexportation-dun-site-statique-avec-wget/">Automatiser l&#039;exportation d&#039;un site statique avec wget</a></h1>
+    <time class="date" datetime="2010-04-04">April  4, 2010</time>
+   <span class="tags">
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p>Il est préférable d’<strong>utiliser un framework web</strong> même si l’on veut réaliser un <strong>site vitrine simple (statique)</strong>, car l’on bénéficie des avantages du framework notamment de l’héritage (entre autre) des templates, de l’internationalisation, de la configuration des <em>routes</em>, du <em>SASS</em>, etc.</p>
+
+<p>De plus, cela permet de rendre la maintenabilité moins longue et couteuse.</p>
+
+<p>Néanmoins, son hébergeur ne permet pas toujours de faire tourner son site avec le framework utilisé (par exemple <em>ruby on rails</em> ou <em>play! framework</em>).</p>
+
+<p>Pour remédier à ce problème, il suffit d’<strong>exporter son site statique en simples pages HTML</strong>.</p>
+
+<p>Cet article est donc destiné aux particuliers ne voulant pas investir dans un serveur dédié, fans de framework avancés qui ne sont pas supportés par les offres d’entrée de gamme des hébergeurs (qui n’offrent généralement que le support du php). </p>
+
+<p><strong>D’ailleurs, pour ce type de site, pourquoi utiliser un framework MVC si l’on utilise que des vues ?</strong></p>
+
+<h2>La démarche</h2>
+
+<h3>Le site web</h3>
+
+<p><strong>Réalisez le site</strong> avec votre framework préféré et faites en sorte que la page principale (<strong>/</strong>) <strong>permette l’accès à toutes les pages du site</strong> par des liens (pas forcément directs).</p>
+
+<h3>Exportation</h3>
+
+<p>Avec <strong>wget</strong> récupérez votre site à la ligne de commande :</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">wget -r -k -np <span class="s2">&quot;http://localhost:9000/&quot;</span>
+</code></pre></div>
+<p>A l’instar d’un moteur de recherche, c’est cette commande qui va s’occuper de <strong>retracer toutes les pages web de votre site</strong>, mais aussi toutes ses ressources (images, css, js, ..). En plus de cela, elle va <strong>préserver le fonctionnement des liens</strong> entre pages. </p>
+
+<p>Adaptez <em>http://localhost:9000/</em> à l’url de votre site.</p>
+
+<p>Cela va créer le dossier <em>localhost:9000</em>, il ne vous restera plus qu’à l’envoyer sur votre serveur http.</p>
+
+<h2>Internationalisation</h2>
+
+<p>Voici une solution pour exporter son internationalisation.</p>
+
+<p>Elle consiste à rediriger l’utilisateur, depuis la page principale, sur la bonne page internationalisée en fonction de sa langue (indiquée par le navigateur), tout <strong>en gardant les fichiers publics en commun</strong> (css, images).</p>
+
+<h3>Préparer ses routes</h3>
+
+<p>préparez les uri pour qu’elles soient de la forme <strong>/{lang}/*/</strong> avec <strong>lang</strong> désignant la langue désirée.</p>
+
+<h4>Exemples de routes</h4>
+<div class="highlight"><pre><code class="language-text" data-lang="text">/en/  
+/en/about/  
+/fr/  
+/fr/about/
+</code></pre></div>
+<h3>Ajouter des liens dans les templates pour changer de langue</h3>
+
+<p>Cette action est délicate car, comme précisé auparavant, <strong>wget</strong> essaye de retracer tous les liens entre pages.</p>
+
+<p>Ainsi, si l’on crée des liens entre les différentes langues, <strong>wget</strong> créera un dossier <em>public</em> pour chaque langue internationalisée. </p>
+
+<p>Pour contourner ce problème et ainsi factoriser les fichiers communs, <strong>une solution est de créer les liens à posteriori</strong>.</p>
+
+<h4>Solution exemple avec play framework</h4>
+<div class="highlight"><pre><code class="language-text" data-lang="text">&lt;p&gt;
+#{if lang!=&#39;en&#39;}
+  &lt;a ADD_HERE_ENGLISH_LINK_ATTRIBUTES&gt;english version&lt;/a&gt;
+#{/if}
+#{if lang!=&#39;fr&#39;}
+  &lt;a ADD_HERE_FRENCH_LINK_ATTRIBUTES&gt;french version&lt;/a&gt;
+#{/if}
+&lt;/p&gt;
+</code></pre></div><div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
+<span class="c"># script bash</span>
+wget -r -k -np <span class="s2">&quot;http://localhost:9000/&quot;</span>
+sed -i s/ADD_HERE_ENGLISH_LINK_ATTRIBUTES/href<span class="o">=</span><span class="se">\&quot;\\</span>/en<span class="se">\\</span>/<span class="se">\&quot;</span>/g <span class="k">$(</span>find . -name <span class="s2">&quot;*.html&quot;</span><span class="k">)</span>
+sed -i s/ADD_HERE_FRENCH_LINK_ATTRIBUTES/href<span class="o">=</span><span class="se">\&quot;\\</span>/fr<span class="se">\\</span>/<span class="se">\&quot;</span>/g <span class="k">$(</span>find . -name <span class="s2">&quot;*.html&quot;</span><span class="k">)</span>
+</code></pre></div>
+<h3>Préparer une page de redirection</h3>
+
+<p><strong>Placez à posteriori un script de redirection à l’url /</strong> pour rediriger vers la page adéquat.</p>
+
+<h4>Par exemple un script php</h4>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$langs</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_ACCEPT_LANGUAGE&#39;</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="nb">preg_match_all</span><span class="p">(</span><span class="s1">&#39;/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i&#39;</span><span class="p">,</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_ACCEPT_LANGUAGE&#39;</span><span class="p">],</span> <span class="nv">$lang_parse</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">count</span><span class="p">(</span><span class="nv">$lang_parse</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="nv">$langs</span> <span class="o">=</span> <span class="nb">array_combine</span><span class="p">(</span><span class="nv">$lang_parse</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nv">$lang_parse</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$langs</span> <span class="k">as</span> <span class="nv">$lang</span> <span class="o">=&gt;</span> <span class="nv">$val</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$val</span> <span class="o">===</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="nv">$langs</span><span class="p">[</span><span class="nv">$lang</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nb">arsort</span><span class="p">(</span><span class="nv">$langs</span><span class="p">,</span> <span class="nx">SORT_NUMERIC</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$langs</span> <span class="k">as</span> <span class="nv">$lang</span> <span class="o">=&gt;</span> <span class="nv">$val</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">strpos</span><span class="p">(</span><span class="nv">$lang</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: fr&#39;</span><span class="p">);</span>
+    <span class="k">die</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">strpos</span><span class="p">(</span><span class="nv">$lang</span><span class="p">,</span> <span class="s1">&#39;en&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: en&#39;</span><span class="p">);</span>
+    <span class="k">die</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: en&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

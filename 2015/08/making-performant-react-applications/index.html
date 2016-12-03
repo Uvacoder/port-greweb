@@ -1,0 +1,384 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="I would like to express here my opinion and feedback on using React and performance optimization you can do." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Making performant React applications">
+    <meta name="twitter:description" content="I would like to express here my opinion and feedback on using React and performance optimization you can do.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2015/07/diaporama_3.jpg">
+    <link rel="image_src" href="http://greweb.me/images/2015/07/diaporama_3.jpg">
+    
+
+    <title>@GreWeb - Making performant React applications</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2015/08/making-performant-react-applications/">Making performant React applications</a></h1>
+    <time class="date" datetime="2015-08-04">August  4, 2015</time>
+   <span class="tags">
+     <a class="tag" href="/tag/react.html">react</a>
+     <a class="tag" href="/tag/vdom.html">vdom</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><em>^ Sorry guys, you may have notice the blog post date is wrong. I won&#39;t change the URL, but thanks to how time works, this will be fixed in one month anyway :-D</em></p>
+
+<p><a href="https://twitter.com/chantastic/status/616608931037646850">ReactEurope</a> conference
+was to me incredibly <a href="https://twitter.com/chantastic/status/616670658911715328">inspiring</a> and <a href="https://twitter.com/chantastic/status/616995607043903488">promising</a>.
+Yersterday got tons of news and tweets from JavaScript community.</p>
+
+<p>One tweet and blog post by the great <a href="https://twitter.com/aerotwist">@aerotwist</a> got my attention.</p>
+
+<blockquote class="twitter-tweet" data-cards="hidden" lang="fr"><p lang="en" dir="ltr">I often hear claims that “the DOM is slow!” and “React is fast!”, so I decided to put that to the test:&#10;&#10;<a href="https://t.co/M1RZZiyVT2">https://t.co/M1RZZiyVT2</a>&#10;&#10;🐢vs🐇</p>&mdash; Paul Lewis (@aerotwist) <a href="https://twitter.com/aerotwist/status/616934953679458304">3 Juillet 2015</a></blockquote>
+
+<p>I would like to express here my opinion and feedback on using React.</p>
+
+<p>I&#39;ve been using React for almost 2 years now, and always in performance intensive use-cases, from Games to WebGL.</p>
+
+<p><a href="http://diaporama.glsl.io/" target="_blank">
+<img src="/images/2015/07/diaporama_3.jpg" alt="" class="thumbnail-left" />
+</a></p>
+
+<p>I&#39;ve created <a href="http://glsl.io/">glsl.io</a> and I&#39;m working on <a href="https://github.com/gre/diaporama-maker">Diaporama Maker</a>.
+Both applications are built with React and combined use of HTML, SVG, WebGL.</p>
+
+<p>Diaporama Maker is probably the most ambitious piece of software I&#39;ve ever personally done.</p>
+
+<p><br style="clear: left" /></p>
+
+<blockquote>
+<p>In short, <a href="https://github.com/gre/diaporama-maker">Diaporama Maker</a> it is a WYSIWYG editor for web slideshow (mainly photo slideshows). It is a bit like iMovie with the web as first target. <a href="https://github.com/gre/diaporama-maker">The project is entirely open-sourced.</a></p>
+</blockquote>
+
+<p>Currently, I am able to render the whole application at 60 FPS and this is still unexpected and surprising to me
+(press Space to run the diaporama on <a href="http://diaporama.glsl.io/">diaporama.glsl.io demo</a>).
+Well, more exactly, this would not have been possible without some optimizations
+that I&#39;m going to detail a bit at the end of this article.</p>
+
+<!--more-->
+
+<h2>The point is productivity</h2>
+
+<p>I don&#39;t think Virtual DOM claims to be faster than doing Vanilla DOM, and that&#39;s not really the point. <strong>The point is productivity.</strong>
+You can write very well optimized code in Vanilla DOM but this might require <strong>a lot of expertise</strong>
+and a lot of time even for an experienced team <em>(time that should be spent focusing on making your product)</em>.</p>
+
+<p>When it comes to adding new features and refactoring old ones, this goes worse.
+Without a well constrained framework or paradigm, things does not scale far, are time consuming and introduce bugs,...
+Especially in a team where multiple developers have to work with each other.</p>
+
+<blockquote>
+<p><strong>See Also:</strong> <a href="https://www.youtube.com/watch?v=D-ioDiacTm8">Why does React scale?</a> by <a href="https://twitter.com/Vjeux">@vjeux</a>.</p>
+</blockquote>
+
+<h2>What matters to me</h2>
+
+<p>There is a lot of advantages of using Virtual DOM approach before talking about React performances.</p>
+
+<p>Of course, this always depends on what you are building, but I would claim that
+<strong>there is a long way to go using React before experiencing performance issues</strong>,
+and in the worse cases: <strong>you can almost always find easy solutions to optimize these performance issues</strong>.</p>
+
+<h3>DX</h3>
+
+<p>React has an incredible Developer eXperience (that people seem to call DX nowadays!) that can <a href="https://twitter.com/greweb/status/617258379183005696">help you improving UX</a> and the ability to <a href="https://facebook.github.io/react/docs/perf.html">measure Performances</a> and <a href="https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate">optimize them</a> when you reach bottlenecks.</p>
+
+<p>You can easily figure out which component is a bottleneck in the Component tree as shown in following screenshot.</p>
+
+<blockquote>
+<p><img src="/images/2015/07/diaporama-perfs.png" alt="">
+With printWasted() you can see how much time React has wasted to <code>render()</code> something that didn&#39;t change and how much instances has been created. (there is also printInclusive and printExclusive)</p>
+</blockquote>
+
+<p>This is a bit equivalent of the Web Console Profiler except it emphasis on your application components which is a very relevant approach.</p>
+
+<h3>React data flow</h3>
+
+<blockquote>
+<p>I can&#39;t imagine re-writing Diaporama Maker in Vanilla DOM.</p>
+</blockquote>
+
+<p>In Diaporama Maker, I have a lot of cross dependencies between components,
+for instance the current <code>time</code> is shared and used everywhere in the application.
+As a matter of fact, dependencies grow when adding more and more features.</p>
+
+<blockquote>
+<p><img src="/images/2015/07/diaporama_configure_kenburns.gif" alt="">
+usages of time in 3 independent components.</p>
+</blockquote>
+
+<p><strong>The descriptive Virtual DOM approach very simply solves this problem</strong>.
+You just have to pass props in to share data between components:
+there is one source of trust that climb down your component tree via &quot;props&quot;.</p>
+
+<p><img src="/images/2015/07/diaporama-maker-time-props.jpg" alt=""></p>
+
+<p>With Virtual DOM approach, the cost to add one new dependency to a shared data is small and <strong>does not become more complex as the application grows</strong>.</p>
+
+<blockquote>
+<p><img src="/images/2015/07/diaporama_slide_content.gif" alt="">
+another more complex showcase of shared states.</p>
+</blockquote>
+
+<p>Using an Event System like you would do in standard Backbone approach tends to lead to imperative style and spaghetti codes (and when using global events, components are not really reusable).</p>
+
+<p>Moreover, I think that <code>Views&lt;-&gt;Models</code> Event System approach, if not carefully used, tends to converge to an unmaintainable and laggy applications.</p>
+
+<h3>React is a Component library</h3>
+
+<p>React truly offers <strong>component as first-class citizen</strong>.
+This means it allows component reusability. I&#39;ve tried alternative like virtual-dom and I don&#39;t think it emphasizes enough on this benefit.</p>
+
+<p>There are <a href="https://twitter.com/chantastic/status/616997918155759616">important good practices</a> when using React like minimizing states and props and I&#39;m not going to expand more on this subject. Most of these best practices are not exclusive to React but come from common sense and software architecture in general.
+One of the important point for performance is to <strong>choose a good granularity of your component tree</strong>.
+It is generally a good idea to split up a component into pieces as small as possible
+because it allows to separate concerns, minimize props and consequently optimize rendering diff.</p>
+
+<h4>Diaporama Maker architecture</h4>
+
+<p>You would be surprised to know that Diaporama Maker does not even use <strong>Flux</strong> (that might be reconsidered soon for collaborative features). I&#39;ve just taken the old &quot;callback as props&quot; approach all the way down the component tree. That easily makes all components purely modular and re-usable (no dependencies on some Stores).
+I&#39;ve also taken the <a href="">inline style approach</a> without actually using any framework (this is just about props-passing <code>style</code> objects).</p>
+
+<p>As a consequence, I&#39;ve been able to externalize a lot of tiny components that are part of my application
+so I can share them across apps and also in order to people to re-use them.</p>
+
+<p>What is important about externalizing components is also the ability to test and optimize them independently (the whole idea of modularity).</p>
+
+<p>Here are all the standalone UI components used by Diaporama Maker:</p>
+
+<ul>
+<li><a href="https://github.com/gre/bezier-easing-editor">bezier-easing-editor</a></li>
+<li><a href="https://github.com/gre/bezier-easing-picker">bezier-easing-picker</a></li>
+<li><a href="https://github.com/glslio/diaporama-react">diaporama-react</a></li>
+<li><a href="https://github.com/glslio/glsl-transition-vignette">glsl-transition-vignette</a></li>
+<li><a href="https://github.com/glslio/glsl-transition-vignette-grid">glsl-transition-vignette-grid</a></li>
+<li><a href="https://github.com/gre/glsl-uniforms-editor">glsl-uniforms-editor</a></li>
+<li><a href="https://github.com/gre/kenburns-editor">kenburns-editor</a></li>
+</ul>
+
+<p>(each one have standalone demos)</p>
+
+<h2>Optimizing performances</h2>
+
+<blockquote class="twitter-tweet" lang="fr"><p lang="en" dir="ltr">I&#39;ve been working on crazy projects using React (like <a href="http://t.co/U2oETh5lhZ">http://t.co/U2oETh5lhZ</a> ). most performance issues i&#39;ve met was not because of React</p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/status/617210444839809024">4 Juillet 2015</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>Here are 2 examples of optimizations I had to do in Diaporama Maker that are not because of React:</p>
+
+<ul>
+<li>It is easy to write not very optimized WebGL, so I work a lot to optimize the pipeline of <a href="https://github.com/gre/diaporama">Diaporama engine</a></li>
+<li>CSS transforms defined on Library images was for a time very intensive for the browser to render so I am now using server-resized &quot;thumbnails&quot; instead of the full-size images. Asking the browser to recompute the <code>transform: scale(...)</code> of 50 high resolution images can be super costy. (without this optimization, the resize of the application was running at like 2-3 FPS because the library thumbnails need to recompute their scale and crop).</li>
+</ul>
+
+<p>But what if you still have performance issue due by React? Yes this can happens.</p>
+
+<h3>Timeline Grid example</h3>
+
+<p>In Diaporama Maker, I have a Component that generates a lot of elements (like 1300 elements for a 2 minutes slideshow) and my first naive implementation was very slow. This component is <a href="https://github.com/gre/diaporama-maker/blob/b0c6447b127785bea3c2487b0c77037418298b8c/client/ui/TimelineGrid/index.js">TimelineGrid</a> which renders the timescale in the timeline. It is implemented with SVG and a lot of <code>&lt;text&gt;</code> and <code>&lt;line&gt;</code>.</p>
+
+<p>The performance issue was noticeable when drag and dropping items across the application. React was forced to render() and compare the whole timescale grid every time. But the timescale does not change! it just have 3 props:</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;TimelineGrid</span> <span class="na">timeScale=</span><span class="s">{timeScale}</span> <span class="na">width=</span><span class="s">{gridWidth}</span> <span class="na">height=</span><span class="s">{gridHeight}</span> <span class="nt">/&gt;</span>
+</code></pre></div>
+<p><strong>So it was very easy to optimize it just by using the <code>PureRenderMixin</code> to say to react that all my props are immutable.</strong>
+(I could have implemented <code>shouldComponentUpdate</code> too).</p>
+
+<p>After this step, and for this precise example, I don&#39;t think a Vanilla DOM implementation can reach better performance:</p>
+
+<ul>
+<li>when one of the grid parameter change, <strong>EVERYTHING</strong> need to be recomputed because all scales are changing.</li>
+<li>React is doing even smarter thing that I would not manually do? Like reusing elements instead of destroying/creating them.</li>
+</ul>
+
+<p>There might still be ways to go more far in optimizing this example. For instance I could chunk my grid into pieces
+and only render the pieces that are visible, like in an infinite scroll system <em>(I could use something like <a href="https://github.com/gre/sliding-window">sliding-window</a> for this)</em>.
+That would probably be premature optimization for this example.</p>
+
+<h2>Wrap Up</h2>
+
+<p>To my mind, generic benchmarks always tends to be biased and does not represent use-cases reality unless you are really covering your application itself.</p>
+
+<p>The TimelineGrid component optimization explained in this article is a very specific and well chosen example,
+but it is one counter-example for such a benchmark.</p>
+
+<p>Each application has its own needs and constraints and we can&#39;t really generalize one way to go.
+Also Performance should not be the main concern to choose a technology.</p>
+
+<p>It is easy to make Virtual DOM library benchmarks,
+comparing the performance of rendering and Array diffing,
+but does that covers 80% of use-cases?
+Is performance really the point?
+What tradeoff do you accept to make between Performance and Productivity?</p>
+
+<p>Tell me what you think.</p>
+
+<p>In the meantime, I think we can all continue getting applications done
+and <a href="https://github.com/gaearon/react-hot-loader">developing amazing DX</a>.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

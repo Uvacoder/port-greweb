@@ -1,0 +1,259 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="Javascript doesn’t have integer type but lets you think it has. In Javascript, all numbers are floating numbers and are prone to floating point approximation." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Be careful with JS numbers!">
+    <meta name="twitter:description" content="Javascript doesn’t have integer type but lets you think it has. In Javascript, all numbers are floating numbers and are prone to floating point approximation.">
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - Be careful with JS numbers!</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/01/be-careful-with-js-numbers/">Be careful with JS numbers!</a></h1>
+    <time class="date" datetime="2013-01-10">January 10, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/float.html">float</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <blockquote class="twitter-tweet" lang="fr"><p>@<a href="https://twitter.com/greweb">greweb</a> : Let's do a kickstarter to build the 1st space rocket running on embedded Javascript... I think we can discover new physics rules!</p>&mdash; mandubian (@mandubian) <a href="https://twitter.com/mandubian/status/289422662101504000">10 janvier 2013</a></blockquote>
+
+<p>It is <a href="http://wtfjs.com/">common</a> in Javascript to have unexpected behaviors, but this one is particulary vicious.</p>
+
+<blockquote>
+<p>10000000000000000 === 10000000000000001</p>
+</blockquote>
+
+<p><strong>Javascript doesn’t have integer type but lets you think it has.</strong> <code>parseInt</code> and <code>parseFloat</code> built-in functions, the fact that “1″ is displayed as “1″ and not as “1.0″ (like many languages) contribute to the general misunderstood.</p>
+
+<p><strong>In Javascript, all numbers are floating numbers and are prone to <a href="https://en.wikipedia.org/wiki/Floating_point">floating point approximation</a>.</strong></p>
+
+<p>When you write <code>var i = 1;</code>, and you console.log it, Javascript is nice, you obtain <code>1</code> and not <code>1.0000000000000001</code>. </p>
+
+<p>But you can experiment that, in Javascript, <code>1.0000000000000001 === 1</code> is true…</p>
+
+<blockquote>
+<p>I hear you, telling me that <em>this sounds OK, floating point approximation rules, right?</em></p>
+</blockquote>
+
+<p>But the same thing occurs for big numbers:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="mi">10000000000000000</span> <span class="o">===</span> <span class="mi">10000000000000001</span>
+</code></pre></div>
+<p>Oh <strong>F**K</strong> !</p>
+
+<p>[edit] where in python:<br>
+<img src="https://pbs.twimg.com/media/BAg2wRyCIAAGuXW.png:large" alt=""></p>
+
+<h2>Termination of loops</h2>
+
+<p>The following is worse:</p>
+
+<script src="https://gist.github.com/4504986.js"></script>
+
+<p>is logging <code>10000000000000000</code> forever!</p>
+
+<p>Because 10000000000000001 can’t exist in Javascript with approximations, 10000000000000001 is 10000000000000000, so you can’t increment this value, and you are stuck in this crazy f**king loop. </p>
+
+<p>Conclusion, <em>Program termination proof</em> sounds hard to reach in Javascript!</p>
+
+<!--more-->
+
+<h2>How many numbers in a 1000 range?</h2>
+
+<p>Between 10000000000000000 and 10000000000001000, there are actually 750 Javascript integers.</p>
+
+<script src="https://gist.github.com/4505510.js"></script>
+
+<h2>Real World Example</h2>
+
+<p>The issue can actually <strong>lead to real web application disaster</strong>. Imagine if your database use Long for id (well like almost every databases in the world, like twitter does), and <strong>if you use the id as number in Javascript and not as string</strong>, you can have strange behaviors like never being able to represent and access a resource from the Javascript or worse!</p>
+
+<script src="https://gist.github.com/4505517.js"></script>
+
+<h2>TL;DR. The lesson</h2>
+
+<p>This is not something new, floating point approximation, but the way Javascript fix values to round the approximations mislead us.</p>
+
+<p>Now, simple thing, <strong>Avoid numbers when approximation is not permitted</strong> like for resource id (especially when you retrieve it from a server).</p>
+
+<p>This probably impacts your JSON APIs because it’s the last thing you had think of!</p>
+
+<p>Otherwise, <strong>if you need to manipulate big integers in Javascript use a library for that</strong>.</p>
+
+<p>Example: <a href="http://silentmatt.com/biginteger/">http://silentmatt.com/biginteger/</a></p>
+
+<p>[EDIT]<br>
+9007199254740993 (which is 2^53 1) is the smallest not representable integer in Javascript. In other words, you can trust Javascript numbers before this integer!</p>
+
+<p>[EDIT 2]<br>
+<a href="http://news.ycombinator.com/item?id=5051525">Thanks to 0×0 on HackerNews</a> who told me the twitter id issue example really happened in a previous twitter API: </p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

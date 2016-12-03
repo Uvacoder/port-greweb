@@ -1,0 +1,572 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="embrace standard web technologies for web, games and mobile apps" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="embrace standard web technologies for web, games and mobile apps">
+    <meta name="twitter:description" content="embrace standard web technologies for web, games and mobile apps">
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - embrace standard web technologies for web, games and mobile apps</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        
+<article>
+  
+  <header>
+    <h1><a href="/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/">Illuminated.js &#8211; 2D lights and shadows rendering engine for HTML5 applications</a></h1>
+    <time class="date" datetime="2012-05-10">May 10, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><a href="http://bit.ly/LZ2dq1"><img src="/images/2012/05/illuminatedjs.jpg" alt=""></a></p>
+
+<p><a href="http://bit.ly/LZ2dq1">Click on the image to open it!</a></p>
+
+<h2>Wow! what’s this?</h2>
+
+<p>It’s a <strong>2D scene</strong> containing 2 <strong>lights</strong> and 13 different <strong>objects</strong> rendered in <strong>real-time</strong> by a <strong>Javascript library</strong> I made called <strong>Illuminated.js</strong>.</p>
+
+<p>The library is designed to add some <strong>awesome effects to your existing applications</strong>. Adding <strong>a cool atmosphere for your applications and games</strong> can make the difference!</p>
+
+<p><strong><a href="http://gre.github.io/illuminated.js">Try the editor</a></strong> and <strong><a href="http://github.com/gre/illuminated.js">Get the source code</a></strong>.</p>
+
+<p>In this article, we will introduce the basic usages of <em>Illuminated.js</em> and APIs, and then explain how the engine works step-by-step.</p>
+
+<ul>
+<li>  <a href="/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/#gettingstarted">API – Getting started</a></li>
+<li>  <a href="/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/#underthehood">Technical notes – how does it work?</a></li>
+</ul>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/05/html5-canvas-as-a-color-converter/">HTML5 Canvas as a color converter</a></h1>
+    <time class="date" datetime="2012-05-03">May  3, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/color.html">color</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><img src="/images/2012/05/color-alpha-options.png" alt="" class="thumbnail-left" /></p>
+
+<p>I’m currently working on the User Interface of a scene editor for my <a href="http://gre.github.io/illuminated.js/">Illuminated.js library</a> with some color and alpha picker.</p>
+
+<p>HTML5 now have the <code>&lt;input type=&quot;color&quot; /&gt;</code> and <code>&lt;input type=&quot;range&quot; /&gt;</code> which is nice. It works on Chrome and there are some <a href="https://github.com/bgrins/spectrum">polyfills</a> to make it working on older browsers.</p>
+
+<p>We will now see how we can easily <strong>retrieve a rgba color from such an UI</strong>, regardless of the color format given by the color picker and <strong>combine the alpha component from the alpha range picker</strong>.</p>
+
+<blockquote>
+<p>We can implement an <strong>anythingToRGBA converter</strong> in 10 lines of Javascript!</p>
+</blockquote>
+
+<h2>What?</h2>
+
+<p>Basically, for instance, you have this: <code>&quot;#ff6432&quot;</code> and <code>0.8</code></p>
+
+<p>and you want this: <code>&quot;rgba(255,100,50,0.8)&quot;</code></p>
+
+<p>which is this color: <span style="background: #ff6432; display: inline-block; width: 50px">&nbsp;</span>.</p>
+
+<blockquote>
+<p>Well, of course, we could use a library with regexp parsers!</p>
+</blockquote>
+
+<p>But there is a lot of different formats available especially if you want to convert a color from <a href="http://www.w3.org/TR/css3-color/">CSS</a>!</p>
+
+<p>Only for the <span style="color:blue">blue</span> color, you have at least 7 different representations: <code>#00F</code>, <code>#0000FF</code>, <code>rgb(0,0,255)</code>, <code>rgba(0,0,255,1)</code>, <code>hsl(255,100%,50%)</code>, <code>hsla(255,100%,50%,1)</code>,<br>
+and… <code>blue</code>!</p>
+
+<blockquote>
+<p>Ouch, so let’s make a huge converter library!</p>
+</blockquote>
+
+<p>Nope! </p>
+
+<p>All of these are color formats are supported by CSS and also Canvas.<br>
+<strong>So, why not just re-using what the browser can do?</strong></p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/05/html5-canvas-as-a-color-converter/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/05/html5-canvas-as-a-color-converter/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/04/work-in-progress/">Work in &lt;progress /&gt;</a></h1>
+    <time class="date" datetime="2012-04-26">April 26, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/html.html">html</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><strong>Did you know browsers now have a built-in HTML tag for making progress bar?</strong> </p>
+
+<p><progress style="width: 50%">(progress is not supported)</progress></p>
+
+<p>How cool is that!</p>
+
+<p>It is perfect for making web applications loading bar in just one line of HTML and a few Javascript code.</p>
+
+<p>A progress tag will be displayed on recent browsers with a OS-native progress bar representing a loading. Like many HTML tag, if it is not supported, it fallbacks nicely by displaying its inner content. This fallback content should either be your own designed progress bar or simply display a percentage.</p>
+
+<p>It is today supported by Firefox 9 , Chrome, Opera and IE10.  </p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/04/work-in-progress/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/04/work-in-progress/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/">Blender as a 2D game level editor &#8211; Proof Of Concept</a></h1>
+    <time class="date" datetime="2012-04-09">April  9, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/blender.html">blender</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>A long time ago, video games were only two-dimensional. Of-course this was due to our poor hardware capabilities, but when computers became faster and faster 3D games appeared in mass.<br>
+<strong>Did it kill 2D games? Nope.</strong> They continue to exist because it offer a different gameplay and are easier to make. Maybe also a bit because we are nostalgic of old-school games!</p>
+
+<p>We can distinguish two kinds of 2D games:</p>
+
+<p><img src="/images/2012/04/bomberman93.jpg" alt="" class="thumbnail-left" />
+<a href="http://www.tonypa.pri.ee/tbw/tut00.html"><strong>Tile based games</strong></a> where the game world is simplified with a big grid – each grid position has some properties.<br>
+A map editor is not always needed for tile based games, because the map can be straighforward to represent and maintain like in a <em>Bomberman</em> or in a <em>Pacman</em>. A simple editor is generally used to make graphism with sprites.  </p>
+
+<p><br style="clear:both" /></p>
+
+<p><img src="/images/2012/04/woarpc001.jpg" alt="" class="thumbnail-left" />
+<strong>Non-tile based games</strong>, which can be called “polygon based games” are more complex.<br>
+In such game, like a <em>Worms</em> or a <em>Sonic</em>, it’s totally crazy to write the map by hand (objects positions, polygons coordinates, …). The alternative, is not to use predefined maps, but on-the-fly generated maps which doesn’t fit every games.  </p>
+
+<p><br style="clear:both" /></p>
+
+<p><a href="http://higherorderfun.com/blog/2012/05/20/the-guide-to-implementing-2d-platformers/">Here are more detailed work on these different game designs</a>.</p>
+
+<p><strong>Making the game engine</strong> is one thing, but <strong>designing the game levels</strong> can be one big work too and <strong>we need tools to make it easier</strong>.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/">Play Painter &#8211; how i&#8217;ve improved the 30 minutes prototyped version</a></h1>
+    <time class="date" datetime="2012-03-17">March 17, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     <a class="tag" href="/tag/websocket.html">websocket</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>One week ago, I’ve released a <a href="/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/">technical web experiment</a> featuring <strong>a collaborative real-time Paint-like application I’ve called Play Painter</strong>. It has been made with <a href="http://playframework.org/">Play Framework 2</a> and rely on WebSocket and HTML5 Canvas Javascript APIs.</p>
+
+<p>Thanks to everyone having tested my Play Painter experiment, you helped me figure out bugs and bottlenecks and to benchmark the application running on my tiny server.<br>
+The first version of Play Painter has been improved with some optimizations. </p>
+
+<p>Explanation…</p>
+
+<blockquote class="twitter-tweet" lang="fr"><p>Thanks guys for testing playpainter! but you are breaking my server :D <a href="http://t.co/F62qwk1i" title="http://twitter.com/greweb/status/179194592481116160/photo/1">twitter.com/greweb/status/…</a></p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/status/179194592481116160">12 mars 2012</a></blockquote>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/">30 minutes to make a multi user real time paint with Play 2 framework, Canvas and WebSocket.</a></h1>
+    <time class="date" datetime="2012-03-12">March 12, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     <a class="tag" href="/tag/websocket.html">websocket</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><a href="http://playpainter.greweb.fr/"><br>
+<img src="/images/2012/03/playpainter_teaser2.png" alt="" class="thumbnail-left" />
+</a></p>
+
+<blockquote>
+<p>I will show you how to <strong>implement a multi user paint</strong> using latest web technologies like <a href="http://playframework.com">Play framework</a> (version 2), <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">HTML5 Canvas</a> and <a href="http://dev.w3.org/html5/websockets/">WebSocket</a>.</p>
+</blockquote>
+
+<p>Let’s see how to implement this from scratch in about 30 minutes…</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/NHEbm-WEbRw?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/03/chart-libraries-headaches-finding-the-best-grid-step/">Chart libraries headaches &#8211; finding the best grid step</a></h1>
+    <time class="date" datetime="2012-03-06">March  6, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/math.html">math</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><img src="/images/2012/02/wrong-chart-scale.png" class="thumbnail-left" /></p>
+
+<p>If you have ever made a chart library in your life, you’ve probably asked yourself how to find the best scale for the grid in order to have <strong>nice values to display in the axis</strong>.</p>
+
+<p>Most of the time, <strong>data ranges are unknown</strong>, hence we need to <strong>adapt the grid step</strong> to provide the best display.</p>
+
+<h2>Check this out</h2>
+
+<iframe src="/demo/grid-utils/" frameborder="0" width="525" height="140"></iframe>
+
+<p>Let’s explain the algorithm…</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/03/chart-libraries-headaches-finding-the-best-grid-step/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/03/chart-libraries-headaches-finding-the-best-grid-step/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/">Bezier Curve based easing functions &#8211; from concept to implementation</a></h1>
+    <time class="date" datetime="2012-02-29">February 29, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/animation.html">animation</a>
+     <a class="tag" href="/tag/bezier.html">bezier</a>
+     <a class="tag" href="/tag/css.html">css</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <blockquote>
+<p><strong>EDIT 2014:</strong> This article ends up in an updated library available on <a href="http://npmjs.org/package/bezier-easing">NPM</a> (<code>bezier-easing</code>) and available on <a href="https://github.com/gre/bezier-easing">Github</a>. It has been used by Apple for the <a href="http://www.apple.com/mac-pro/">mac-pro page</a> and by <a href="http://velocityjs.org/">Velocity.js</a>. You can also find its usage in the <a href="http://greweb.me/glsl-transition/example/">glsl-transition examples</a>.</p>
+</blockquote>
+
+<p><img src="/images/2012/02/bezier_transition_editor.png" class="thumbnail-left" /></p>
+
+<p>Many animation libraries are today using <strong>easing functions</strong> – functions of time returning a progression percentage value. This is required to perform such cool effects:</p>
+
+<iframe src="/demo/simple-easing-animation/" height="50" width="50%"></iframe>
+
+<p>But most of these libraries implement a huge collection of functions. We will see how we can generalize them with bezier curves.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/02/css-selector-based-templating-example-with-javascript/">CSS-selector-based templating system for scalable JavaScript applications</a></h1>
+    <time class="date" datetime="2012-02-04">February  4, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/css.html">css</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/templating.html">templating</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><img src="/images/2012/02/218px-Mir_diagram-fr.svg_.png" alt="" class="thumbnail-left" /></p>
+
+<p>In this article, we will focus on the power of <strong>CSS as a descriptive language</strong>, current template system approach and their problems with <strong>modularity</strong> and <strong>extensibility</strong>, and try to mix both features from the <strong>concept</strong> to a <strong>concrete implementation</strong>.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/02/css-selector-based-templating-example-with-javascript/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/02/css-selector-based-templating-example-with-javascript/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2011/10/how-to-deploy-your-play-applications-on-archlinux-with-daemons/">How to deploy your play applications on ArchLinux with daemons</a></h1>
+    <time class="date" datetime="2011-10-15">October 15, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/sysadmin.html">sysadmin</a>
+     <a class="tag" href="/tag/linux.html">linux</a>
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>This video shows how to run different instances of <a href="http://playframework.org">Play framework</a> server in the most Linux friendly way: using daemons. Example with ArchLinux, using yaourt, the <a href="http://aur.archlinux.org/packages.php?ID=45541">playframework AUR package</a> and <a href="http://nginx.org">nginx</a>.</p>
+
+<iframe src="http://player.vimeo.com/video/30603225?title=0&amp;byline=0&amp;portrait=0" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+<h1>Some links</h1>
+
+<ul>
+<li>  <a href="http://playframework.org">Play framework website</a></li>
+<li>  <a href="https://wiki.archlinux.org/index.php/Play_framework">Play framework Archlinux documentation</a></li>
+<li>  <a href="http://aur.archlinux.org/packages.php?ID=45541">Play framework AUR package</a></li>
+</ul>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2011/10/how-to-deploy-your-play-applications-on-archlinux-with-daemons/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2011/10/how-to-deploy-your-play-applications-on-archlinux-with-daemons/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+
+<nav class="pagination">
+  
+    
+    <a href="/page3" class="previous">Previous</a>
+    
+  
+  <span class="page_number ">Page: 4 of 6</span>
+  
+    <a href="/page5" class="next">Next</a>
+  
+</nav>
+
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

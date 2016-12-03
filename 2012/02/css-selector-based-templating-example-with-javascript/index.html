@@ -1,0 +1,490 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="In this article, we will focus on the power of CSS as a descriptive language, current template system approach and their problems with modularity and extensibility, and try to mix both features from the concept to a concrete implementation." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="CSS-selector-based templating system for scalable JavaScript applications">
+    <meta name="twitter:description" content="In this article, we will focus on the power of CSS as a descriptive language, current template system approach and their problems with modularity and extensibility, and try to mix both features from the concept to a concrete implementation.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2012/02/218px-Mir_diagram-fr.svg_.png">
+    <link rel="image_src" href="http://greweb.me/images/2012/02/218px-Mir_diagram-fr.svg_.png">
+    
+
+    <title>@GreWeb - CSS-selector-based templating system for scalable JavaScript applications</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2012/02/css-selector-based-templating-example-with-javascript/">CSS-selector-based templating system for scalable JavaScript applications</a></h1>
+    <time class="date" datetime="2012-02-04">February  4, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/css.html">css</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/templating.html">templating</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><img src="/images/2012/02/218px-Mir_diagram-fr.svg_.png" alt="" class="thumbnail-left" /></p>
+
+<p>In this article, we will focus on the power of <strong>CSS as a descriptive language</strong>, current template system approach and their problems with <strong>modularity</strong> and <strong>extensibility</strong>, and try to mix both features from the <strong>concept</strong> to a <strong>concrete implementation</strong>.</p>
+
+<!--more-->
+
+<p><br style="clear: both" /></p>
+
+<h2>What is CSS ?</h2>
+
+<p>CSS is an extremely powerful descriptive language.<br>
+It helps to define <strong>how to display a document</strong> (e.g. a web page).</p>
+
+<p>A style sheet contains a set of <strong>CSS rules</strong>.<br>
+Each CSS rule has a <strong>CSS selector</strong> associated with a set of <strong>declarations</strong>.<br>
+You can see a CSS selector as a selection filter applied on every HTML element. A few element can match a CSS selector if they fit the structure describes in this selector.<br>
+Each <strong>declaration</strong> is composed of a couple (<strong>property</strong> : <strong>value</strong>).<br>
+The <strong>CSS property</strong> is a predefined property related to a display or layout behavior.<br>
+The <strong>value</strong> will apply a custom value for the property on all elements matching the CSS selector.</p>
+
+<p>Let’s focus on some advantages of this descriptive language:</p>
+
+<h3>A CSS rule is independant from others.</h3>
+
+<p>The order of CSS rules <em>(selector declarations)</em> <strong>really</strong> does not matter.<br>
+The priority between CSS rules is based on the selector itself and not on their arrangement.</p>
+
+<h3>You can “mix” CSS rule</h3>
+
+<p>2 CSS rules can have the same CSS selector. An element can be matched with multiple CSS rules. CSS rules are merged, it’s called the cascading.<br>
+This is the most important feature of CSS.<br>
+It implies a very modular and extensible language.</p>
+
+<h4>Example</h4>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nt">a</span> <span class="p">{</span>   
+<span class="err"> </span> <span class="k">color</span><span class="o">:</span> <span class="m">#33CC00</span><span class="p">;</span>  
+<span class="err"> </span> <span class="k">text-decoration</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="nt">a</span><span class="nd">:hover</span> <span class="p">{</span> <span class="k">text-decoration</span><span class="o">:</span> <span class="k">underline</span><span class="p">;</span> <span class="p">}</span>  
+<span class="nf">#articles</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">font-size</span><span class="o">:</span> <span class="m">12px</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="nf">#articles</span> <span class="nt">a</span> <span class="p">{</span>  
+<span class="err"> </span> <span class="k">color</span><span class="o">:</span> <span class="nb">red</span><span class="p">;</span> <span class="c">/* overriding the generic color of a */</span>  
+<span class="p">}</span>
+</code></pre></div>
+<h2>Some limitations of today’s template system</h2>
+
+<p>Most of template system are based on inherence between templates.</p>
+
+<ul>
+<li>  You have usually an “inclusion” approach: a template will “include” multiple external template. <em>(Many template into Many template)</em></li>
+<li>  And an “extension” approach: You define in a main template an area where you can append a template. Others templates “extend” your main template. <em>(One main template for Many template)</em></li>
+</ul>
+
+<p>These approaches aims to factorize template codes and that’s great.</p>
+
+<p>But it doesn’t fit my needs:</p>
+
+<ul>
+<li>  It brings <strong>dependencies between templates</strong>. </li>
+<li>  If you add a new template, you have to modify existing templates.<br>
+If your application tend to go modules based, this is going to be unmaintainable. </li>
+</ul>
+
+<blockquote>
+<p><strong>web application module (n)</strong><br>
+1 : an independent unit of functionality that is part of the total structure of a web application </p>
+</blockquote>
+
+<h3>A solution for scalable applications and libraries</h3>
+
+<p>I’ve recently started to rewrite my <a href="http://sliderjs.org/">SliderJS</a> library and I needed to split it into very modular features and having loose coupling between each component.</p>
+
+<p>I followed this <a href="http://www.ubelly.com/2011/11/scalablejs/">Scalable JavaScript Application Architecture</a> article.</p>
+
+<p>So, <strong>how to bring loose coupling in templating?</strong>.<br>
+Each module have its own template and know where to append. Bringing this logic in a main template would break the independency and if I need to add new modules soon, it will not working without modifiyng it.<br>
+How to keep the scalability of the main template without modifying it?</p>
+
+<p>The best solution I found is to combine <strong>CSS selectors</strong> concepts with <strong>template system</strong> approaches.</p>
+
+<h2>CSS concepts applied on templating</h2>
+
+<p>I’ve decided to inspire from CSS: <strong>attaching a CSS selector with a template</strong>.<br>
+It benefits from some CSS advantages explained before.</p>
+
+<h3>Simple twitter widget example</h3>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;twitter&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Twitter<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;twitts&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;twitt&quot;</span><span class="nt">&gt;</span>Hello world!<span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;/ul&gt;</span>
+  <span class="nt">&lt;footer&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://twitter.com/greweb&quot;</span><span class="nt">&gt;</span>Follow me on twitter<span class="nt">&lt;/a&gt;&lt;/footer&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div>
+<h4>Classical approach</h4>
+
+<p>The way to template it with the classical approach would be:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;twitter&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Twitter<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;twitts&quot;</span><span class="nt">&gt;</span>
+    {for twitt in twitts}
+    <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;twitt&quot;</span><span class="nt">&gt;</span>{twitt}<span class="nt">&lt;/li&gt;</span>
+    {/for}
+  <span class="nt">&lt;/ul&gt;</span>
+  <span class="nt">&lt;footer&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://twitter.com/{me}&quot;</span><span class="nt">&gt;</span>Follow me on twitter<span class="nt">&lt;/a&gt;&lt;/footer&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div>
+<h4>CSS selector based approach</h4>
+
+<p>But we can also split the original “template” in small fragments and mix all of them.<br>
+It helps to define each templates independently.</p>
+
+<p><strong>We can identify:</strong></p>
+
+<ul>
+<li>A <strong>root template fragment</strong>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;twitter&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</code></pre></div>
+<ul>
+<li>A <strong>header fragment</strong> appended with <code>.twitter</code> selector and with an <strong>high priority</strong>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;h1&gt;</span>Twitter<span class="nt">&lt;/h1&gt;</span>
+</code></pre></div>
+<ul>
+<li>A <strong>twitts list fragment</strong> appended with <code>.twitter</code> selector:</li>
+</ul>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;twitts&quot;</span><span class="nt">&gt;</span>
+  {for twitt in twitts}
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;twitt&quot;</span><span class="nt">&gt;</span>{twitt}<span class="nt">&lt;/li&gt;</span>
+  {/for}
+<span class="nt">&lt;/ul&gt;</span>
+</code></pre></div>
+<p>with <strong>parameters</strong> <code>twitts = [ &quot;Hello world!&quot; ]</code></p>
+
+<ul>
+<li>An empty <strong>footer fragment</strong> appended with <code>.twitter</code> selector and with a <strong>low</strong> priority:</li>
+</ul>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;footer&gt;&lt;/footer&gt;</span>
+</code></pre></div>
+<ul>
+<li>A “follow me” <strong>link fragment</strong> appended with <code>.twitter footer</code> selector:</li>
+</ul>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://twitter.com/{me}&quot;</span><span class="nt">&gt;</span>Follow me on twitter<span class="nt">&lt;/a&gt;</span>
+</code></pre></div>
+<p>with <strong>parameters</strong> <code>me = &quot;greweb&quot;</code></p>
+
+<h3>Advanced example</h3>
+
+<p>This is another example with a slider. </p>
+
+<p>Let’s conceptually imagine the following template language:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html">@root { html: <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;slider&quot;</span><span class="nt">&gt;&lt;/div&gt;</span> }
+
+.slider {
+  html: <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;slides&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+}
+
+.slider div.slides {
+  html: <span class="nt">&lt;canvas</span> <span class="na">class=</span><span class="s">&quot;slides&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+}
+
+.slider div.slides {
+  html:
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;slide&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;&lt;%= link %&gt;&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;&lt;%= img %&gt;&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;caption&quot;</span><span class="nt">&gt;</span><span class="err">&lt;</span>%= title %&gt;<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;/a&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+}
+
+.slider {
+  priority: -10
+  html: <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;pager&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+}
+
+.slider div.pager {
+  priority: 10
+  html: <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;prevSlide&quot;</span> <span class="na">href=</span><span class="s">&quot;javascript:;&quot;</span><span class="nt">&gt;</span>prev<span class="nt">&lt;/a&gt;</span>
+}
+
+.slider div.pager {
+  priority: -10
+  html: <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;nextSlide&quot;</span> <span class="na">href=</span><span class="s">&quot;javascript:;&quot;</span><span class="nt">&gt;</span>next<span class="nt">&lt;/a&gt;</span>
+}
+
+.slider div.pager {
+  html: <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;pages&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+}
+
+.slider div.pager {
+  html: <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;pages&quot;</span><span class="nt">&gt;</span>
+    <span class="err">&lt;</span>% for (var i=0; i<span class="nt">&lt;slides.length</span><span class="err">;</span> <span class="err">++</span><span class="na">i</span><span class="err">)</span> <span class="err">{</span> <span class="err">%</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;page&quot;</span> <span class="na">href=</span><span class="s">&quot;javascript:;&quot;</span><span class="nt">&gt;</span><span class="err">&lt;</span>%= i+1 %&gt;<span class="nt">&lt;/a&gt;</span>
+    <span class="err">&lt;</span>% } %&gt;
+  <span class="nt">&lt;/span&gt;</span>
+}
+</code></pre></div>
+<p>combined with some parameters, it will result</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;slider&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;slides&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;slide&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;..&quot;</span><span class="nt">&gt;&lt;img</span> <span class="na">src=</span><span class="s">&quot;..&quot;</span><span class="nt">/&gt;&lt;span</span> <span class="na">class=</span><span class="s">&quot;caption&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;slide&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;slide&quot;</span><span class="nt">&gt;</span>...<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;canvas</span> <span class="na">class=</span><span class="s">&quot;slides&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;pager&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:;&quot;</span> <span class="na">class=</span><span class="s">&quot;prevSlide&quot;</span><span class="nt">&gt;</span>prev<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;pages&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:;&quot;</span> <span class="na">class=</span><span class="s">&quot;page&quot;</span><span class="nt">&gt;</span>1<span class="nt">&lt;/a&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:;&quot;</span> <span class="na">class=</span><span class="s">&quot;page&quot;</span><span class="nt">&gt;</span>2<span class="nt">&lt;/a&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:;&quot;</span> <span class="na">class=</span><span class="s">&quot;page&quot;</span><span class="nt">&gt;</span>3<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>                                                                      
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;javascript:;&quot;</span> <span class="na">class=</span><span class="s">&quot;nextSlide&quot;</span><span class="nt">&gt;</span>next<span class="nt">&lt;/a&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div>
+<p>Of-course we could also do this programmatically with DOM. But see the benefit of such a descriptive way to define things?</p>
+
+<p>You should keep in mind that <strong>the order of rules definition does not matter</strong>. In that’s sense, it is <strong>a mixable, extensible, modular and loosely-coupled template system</strong>.</p>
+
+<h3>More about this POC</h3>
+
+<p>Unlike CSS, <strong>two same rules aren’t merged but are appended</strong>.</p>
+
+<p>The <strong><em>priority</em></strong> governs the order of append. The higher the value is, the sooner it is appended to the containers selected by the CSS selector.</p>
+
+<p>As you can see, there is a <strong>micro-templating</strong> inside each rule. For this example, it looks like the John Resig ‘s Micro Templating.</p>
+
+<p>Note also that a rule must be aware of its <strong>parameters</strong> to work properly. But this only concerns the implementation: You have to find a way to give a dynamic reference of these parameters when you add a rule.</p>
+
+<h3>Concrete implementation</h3>
+
+<p>The code above was a conceptual proof of concept, but I implement a subset of these features in Javascript and made “SelectorTemplating.js” available here : <a href="https://gist.github.com/1731611">https://gist.github.com/1731611</a></p>
+
+<p>This is how it can be used for (almost) the same example. You will see different style of usage:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;slider&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SelectorTemplating</span><span class="p">(</span><span class="nx">node</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">tmpl</span><span class="p">;</span> <span class="c1">// defined somewhere, the John Resig &#39;s Micro Templating.</span>
+
+<span class="c1">// root module</span>
+<span class="kd">function</span> <span class="nx">root</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;&lt;div class=&quot;slider&quot;&gt;&lt;/div&gt;&#39;</span> <span class="p">}</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">root</span><span class="p">);</span>
+
+<span class="c1">// slides module</span>
+<span class="kd">var</span> <span class="nx">slidesTmpl</span> <span class="o">=</span> <span class="nx">tmpl</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;slides&quot;&gt; &lt;% if(obj.slides) { for(var i=0; i&lt;slides.length; ++i) { var s = slides[i]; %&gt; &lt;div class=&quot;slide&quot;&gt; &lt;a href=&quot;&lt;%= s.link %&gt;&quot;&gt; &lt;img src=&quot;&lt;%= s.img %&gt;&quot; /&gt; &lt;span class=&quot;caption&quot;&gt;&lt;%= s.title %&gt;&lt;/span&gt; &lt;/a&gt; &lt;/div&gt; &lt;% }} %&gt; &lt;/div&gt;&#39;</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">slides</span> <span class="o">=</span> <span class="p">[</span> <span class="p">...</span> <span class="p">];</span> <span class="c1">// mutable</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;.slider&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">slidesTmpl</span><span class="p">(</span><span class="nx">slides</span><span class="o">:</span> <span class="nx">slides</span><span class="p">)</span> <span class="p">});</span>
+
+<span class="c1">// canvas module</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;.slider div.slides&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;&lt;canvas class=&quot;slides&quot;&gt;&lt;/canvas&gt;&#39;</span> <span class="p">});</span>
+
+<span class="c1">// pager module</span>
+<span class="kd">var</span> <span class="nx">pagesTmpl</span> <span class="o">=</span> <span class="nx">tmpl</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;pager&quot;&gt; &lt;span class=&quot;pages&quot;&gt; &lt;% if(obj.slides) { for(var i=0; i&lt;slides.length; ++i) { %&gt; &lt;a href=&quot;javascript:;&quot; class=&quot;page&quot;&gt;&lt;%= i+1 %&gt;&lt;/a&gt; &lt;% }} %&gt; &lt;/span&gt; &lt;/div&gt;&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">slides</span> <span class="o">=</span> <span class="p">[...];</span> <span class="c1">// synchronised with the slides module</span>
+<span class="kd">var</span> <span class="nx">prevButton</span><span class="p">,</span> <span class="nx">nextButton</span><span class="p">;</span> <span class="c1">// DOM element init when templated</span>
+<span class="kd">var</span> <span class="nx">pages</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">pagesTmpl</span><span class="p">(</span><span class="nx">slides</span><span class="o">:</span> <span class="nx">slides</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;.sliderjs&quot;</span><span class="p">,</span> <span class="nx">pages</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">);</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;.sliderjs .options&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;&lt;a class=&quot;prevSlide&quot; href=&quot;javascript:;&quot;&gt;prev&lt;/a&gt;&#39;</span> <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span> <span class="nx">prevButton</span> <span class="o">=</span> <span class="nx">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">},</span> <span class="mi">10</span> <span class="p">});</span> <span class="c1">// prepend first in options</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;.sliderjs .options&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;&lt;a class=&quot;nextSlide&quot; href=&quot;javascript:;&quot;&gt;next&lt;/a&gt;&#39;</span> <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span> <span class="nx">nextButton</span> <span class="o">=</span> <span class="nx">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">},</span> <span class="o">-</span><span class="mi">10</span> <span class="p">});</span> <span class="c1">// append at the end of options</span>
+
+<span class="c1">// when all modules are init :</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+</code></pre></div><div class="highlight"><pre><code class="language-text" data-lang="text">t.add (selector, templateFunction, callback, priority)
+ * selector is the selector function. if null, append to root.
+ * a template function is an identifier in the template.
+ * the callback is called at the end of the templating with 2 arguments : the appended nodes and the global container.
+</code></pre></div>
+<h4>Algorithm of the template process</h4>
+<div class="highlight"><pre><code class="language-text" data-lang="text">container := the container element
+rules := an array containing all rules.
+sort rules by priority.
+(1) take one rule from rules
+  - elements := []
+  - if the selector is @root, elements := [container]
+  - otherwise, elements := all elements which matches the selector
+  - if the elements is empty, back to (1) by taking the next rule.
+  - (2) if not, templatize the html and append it into all of these elements. remove the rule from rules. back to (1) by starting from the first rules. 
+
+the loop (1) must end when :
+  - there is no rules anymore
+  - you have covered all the rules array without finding a match (without passing by (2) for this loop). In that case, it means some rules are not used.
+</code></pre></div>
+<p>There is a known limitation of the algorithm I intend to fix soon:
+Once we found matching elements for a rule, we append the template in these elements once, and we remove the rule. It’s a simple way to avoid recursion. But this approach doesn’t work if a selector can potentially matches elements defined in different rules. <strong>I know how to fix this but it’s not yet implemented.</strong></p>
+
+<h2>What&#39;s next?</h2>
+
+<p>We are working hard for the next version (v2) of <a href="http://sliderjs.org">SliderJS</a> by trying to make a revolutionary IDE platform for SliderJS. It requires a modulification of every components of SliderJS, we try to keep things simple (no external library required, the core system is only 4k sized). You will have more information soon!</p>
+
+<p>This templating system should benefits of this work.</p>
+
+<p>Keep in touch!</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

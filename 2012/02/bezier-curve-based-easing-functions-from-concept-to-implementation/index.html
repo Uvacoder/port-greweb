@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="Many animation libraries are today using easing functions – functions of time returning a progression percentage value. We will see how we can generalize them with bezier curves." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Bezier Curve based easing functions &#8211; from concept to implementation">
+    <meta name="twitter:description" content="Many animation libraries are today using easing functions – functions of time returning a progression percentage value. We will see how we can generalize them with bezier curves.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2012/02/bezier_transition_editor.png">
+    <link rel="image_src" href="http://greweb.me/images/2012/02/bezier_transition_editor.png">
+    
+
+    <title>@GreWeb - Bezier Curve based easing functions &#8211; from concept to implementation</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/">Bezier Curve based easing functions &#8211; from concept to implementation</a></h1>
+    <time class="date" datetime="2012-02-29">February 29, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/animation.html">animation</a>
+     <a class="tag" href="/tag/bezier.html">bezier</a>
+     <a class="tag" href="/tag/css.html">css</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <blockquote>
+<p><strong>EDIT 2014:</strong> This article ends up in an updated library available on <a href="http://npmjs.org/package/bezier-easing">NPM</a> (<code>bezier-easing</code>) and available on <a href="https://github.com/gre/bezier-easing">Github</a>. It has been used by Apple for the <a href="http://www.apple.com/mac-pro/">mac-pro page</a> and by <a href="http://velocityjs.org/">Velocity.js</a>. You can also find its usage in the <a href="http://greweb.me/glsl-transition/example/">glsl-transition examples</a>.</p>
+</blockquote>
+
+<p><img src="/images/2012/02/bezier_transition_editor.png" class="thumbnail-left" /></p>
+
+<p>Many animation libraries are today using <strong>easing functions</strong> – functions of time returning a progression percentage value. This is required to perform such cool effects:</p>
+
+<iframe src="/demo/simple-easing-animation/" height="50" width="50%"></iframe>
+
+<p>But most of these libraries implement a huge collection of functions. We will see how we can generalize them with bezier curves.</p>
+
+<!--more-->
+
+<p>For instance, we use to do this:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">EasingFunctions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">linear</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeInQuad</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeOutQuad</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">-</span><span class="nx">t</span><span class="p">)</span> <span class="p">},</span>
+  <span class="nx">easeInOutQuad</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">&lt;</span><span class="p">.</span><span class="mi">5</span> <span class="o">?</span> <span class="mi">2</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeInCubic</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeOutCubic</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="o">--</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">+</span><span class="mi">1</span> <span class="p">},</span>
+  <span class="nx">easeInOutCubic</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">&lt;</span><span class="p">.</span><span class="mi">5</span> <span class="o">?</span> <span class="mi">4</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="o">:</span> <span class="p">(</span><span class="nx">t</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nx">t</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nx">t</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="p">},</span>
+  <span class="nx">easeInQuart</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeOutQuart</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="o">--</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeInOutQuart</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">&lt;</span><span class="p">.</span><span class="mi">5</span> <span class="o">?</span> <span class="mi">8</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="o">:</span> <span class="mi">1</span><span class="o">-</span><span class="mi">8</span><span class="o">*</span><span class="p">(</span><span class="o">--</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeInQuint</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeOutQuint</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="o">--</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">},</span>
+  <span class="nx">easeInOutQuint</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">&lt;</span><span class="p">.</span><span class="mi">5</span> <span class="o">?</span> <span class="mi">16</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="o">:</span> <span class="mi">1</span><span class="o">+</span><span class="mi">16</span><span class="o">*</span><span class="p">(</span><span class="o">--</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Defining such functions is lot of math fun but it is very <strong>specific</strong> and not really customizable. Hopefully, we can generalize these easing functions. With <strong>Bezier curves</strong>.</p>
+
+<p>In fact, this work has already been done in CSS Transitions and CSS Animations specifications! You can use <code>transition-timing-function</code> CSS property and give a <code>cubic-bezier(x1, y1, x2, y2)</code> value (all <strong>ease, linear, ease-in, ease-out, ease-in-out</strong> values are just fallbacking on this cubic-bezier usage).</p>
+
+<p><img src="/images/2012/02/TimingFunction.png" alt=""></p>
+
+<p>In a bezier curve based easing function, the X axis is the <strong>time axis</strong> whereas the Y axis represents the <strong>percentage of progress</strong> of the animation.<br>
+The two points P1 and P2 are called <strong>handles</strong> and you can (exclusively) control their X and Y positions to generate every possible cubic timing function.</p>
+
+<h3>Live demo</h3>
+
+<p>Try to interact with the handles:  </p>
+
+<iframe src="/demo/bezier-easing/" frameborder="0" width="560" height="400"></iframe>
+
+<h2>Implementation</h2>
+
+<p>Ok, so, this bezier curve concept is great but how can I implement it?</p>
+
+<p>I’ve read <a href="http://13thparallel.com/archive/bezier-curves/">here</a> how simple is it to <strong>compute many points of a Bezier curve</strong> and potentially draw them:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">B1</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span> <span class="p">}</span>  
+<span class="kd">function</span> <span class="nx">B2</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">3</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nx">t</span><span class="p">)</span> <span class="p">}</span>  
+<span class="kd">function</span> <span class="nx">B3</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">3</span><span class="o">*</span><span class="nx">t</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nx">t</span><span class="p">)</span> <span class="p">}</span>  
+<span class="kd">function</span> <span class="nx">B4</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nx">t</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="nx">t</span><span class="p">)</span> <span class="p">}</span>  
+<span class="kd">function</span> <span class="nx">getBezier</span><span class="p">(</span><span class="nx">percent</span><span class="p">,</span><span class="nx">C1</span><span class="p">,</span><span class="nx">C2</span><span class="p">,</span><span class="nx">C3</span><span class="p">,</span><span class="nx">C4</span><span class="p">)</span> <span class="p">{</span>  
+  <span class="kd">var</span> <span class="nx">pos</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">coord</span><span class="p">();</span>  
+  <span class="nx">pos</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">C1</span><span class="p">.</span><span class="nx">x</span><span class="o">*</span><span class="nx">B1</span><span class="p">(</span><span class="nx">percent</span><span class="p">)</span> <span class="o">+</span> <span class="nx">C2</span><span class="p">.</span><span class="nx">x</span><span class="o">*</span><span class="nx">B2</span><span class="p">(</span><span class="nx">percent</span><span class="p">)</span> <span class="o">+</span> <span class="nx">C3</span><span class="p">.</span><span class="nx">x</span><span class="o">*</span><span class="nx">B3</span><span class="p">(</span><span class="nx">percent</span><span class="p">)</span> <span class="o">+</span> <span class="nx">C4</span><span class="p">.</span><span class="nx">x</span><span class="o">*</span><span class="nx">B4</span><span class="p">(</span><span class="nx">percent</span><span class="p">);</span>  
+  <span class="nx">pos</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">C1</span><span class="p">.</span><span class="nx">y</span><span class="o">*</span><span class="nx">B1</span><span class="p">(</span><span class="nx">percent</span><span class="p">)</span> <span class="o">+</span> <span class="nx">C2</span><span class="p">.</span><span class="nx">y</span><span class="o">*</span><span class="nx">B2</span><span class="p">(</span><span class="nx">percent</span><span class="p">)</span> <span class="o">+</span> <span class="nx">C3</span><span class="p">.</span><span class="nx">y</span><span class="o">*</span><span class="nx">B3</span><span class="p">(</span><span class="nx">percent</span><span class="p">)</span> <span class="o">+</span> <span class="nx">C4</span><span class="p">.</span><span class="nx">y</span><span class="o">*</span><span class="nx">B4</span><span class="p">(</span><span class="nx">percent</span><span class="p">);</span>  
+  <span class="k">return</span> <span class="nx">pos</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div>
+<p>But it’s not enough. We need to project a point to the Bezier curve, in other words, we need to get the Y of a given X in the bezier curve, and we can’t just get it with the <code>percent</code> parameter of the Bezier computation.<br>
+<strong>We need an interpolation.</strong></p>
+
+<h3>Deep into Firefox implementation</h3>
+
+<p>In Mozilla Firefox, The bezier curve interpolation is implemented in nsSMILKeySpline.cpp : .</p>
+
+<p>What we can learn from it is:</p>
+
+<ul>
+<li>  A first optimization store <strong>sample values of the bezier curve</strong> in a small table used to roughly find a initial X guess.</li>
+<li>  Then, it use two different implementation strategies: One use the <a href="http://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a> and the other is just a <a href="http://en.wikipedia.org/wiki/Dichotomic_search">dichotomic search</a> (binary subdivision).</li>
+<li>  A <strong>criteria</strong> based on the <strong>slope</strong> give the best strategy to take.</li>
+</ul>
+
+<p>These sub-optimizations probably make the difference for the C++ version but are not really relevant for the JavaScript implementation. Moreover, I have only used the Newton’s method algorithm.<br>
+And this is the code:</p>
+
+<script src="https://gist.github.com/1926947.js?file=KeySpline.js"></script>
+
+<p>Now we can just alias some classic easing function – like CSS does.</p>
+
+<script src="https://gist.github.com/1926947.js?file=EasingFunctions.json"></script>
+
+<p>I’m working on the next version of <a href="http://sliderjs.org/">Slider.JS</a> which relies on 3 different technologies for image transitions: <strong>CSS Transitions</strong>, <strong>Canvas</strong> and <strong>GLSL shaders (from WebGL)</strong>.  </p>
+
+<hr>
+
+<p>I have now found <strong>a common way to describe easing functions for both CSS-based and Javascript-based animations</strong>!</p>
+
+<p>This example has shown that sometimes, finding a larger solution for a problem is more interesting than having specific solutions.<br>
+<strong>This is called the <a href="http://en.wikipedia.org/wiki/Inventor&#x27;s_paradox">Inventor’s paradox</a>.</strong></p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

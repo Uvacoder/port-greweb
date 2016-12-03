@@ -1,0 +1,411 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="The Same Game is available for 6 different platforms. And I can pump out new builds for them all in around 15 minutes. Here’s how…" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Same Game Gravity: 6 platforms, 1 codebase">
+    <meta name="twitter:description" content="The Same Game is available for 6 different platforms. And I can pump out new builds for them all in around 15 minutes. Here’s how…">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2011/07/gravity_exemple.png">
+    <link rel="image_src" href="http://greweb.me/images/2011/07/gravity_exemple.png">
+    
+
+    <title>@GreWeb - Same Game Gravity: 6 platforms, 1 codebase</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2011/07/same-game-gravity-technical-notes/">Same Game Gravity: 6 platforms, 1 codebase</a></h1>
+    <time class="date" datetime="2011-07-12">July 12, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/mobile.html">mobile</a>
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p>see also <a href="/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/">Same Game Gravity presentation</a>.</p>
+
+<p>2 years ago, I started to developed the <a href="http://gre.github.io/same-game-gravity">Same Game</a> as an HTML Canvas experiment. I’ve enjoyed developing this game, mostly because playing with HTML5 Canvas is so easy. Recently I’ve seen a nice increase in the user base (now around 250 visitors a day) – despite it being perhaps the simplest games I’ve ever developed. Simplicity is good, but my increase in users is thanks to the power of HTML5: The Same Game is available for 6 different platforms. And I can pump out new builds for them all in around 15 minutes. Here’s how…</p>
+
+<p><strong>It’s often the simplest games which work. Too much complexity is not good.</strong></p>
+
+<p><a href="http://gre.github.io/same-game-gravity"><br>
+<img src="/images/2011/07/gravity_exemple.png" alt="">
+</a></p>
+
+<!--more-->
+
+<p>In 2010, I learned how to make mobile web applications. It was also the year of the iPad. Out of interest I tried my same game canvas experiment on the iPad, and was surprised to find that it worked pretty well out of the box! Seeing it run on multiple devices was exciting – and the touch screens offered a new dimension for creating highly intuitive interactions. I mean, today, <strong>even my mum can play Same Game Gravity without any help!</strong> (That’s unfortunately not the case for her desktop)</p>
+
+<p>That’s why I wanted to make Same Game for mobile. I started out developing and testing it as an Android application – because I have an Android phone. I created my own micro framework with some MVC concept (views, controllers, a router, etc.). The goal was to create <strong>a simple and light web app that look like a native application</strong>. For views? Portions of HTML. For transitions between views? CSS transitions. Supporting the “back” button of Android devices as a native application? I played with the hash (onhashchange event). </p>
+
+<p>In short, the web is wide and worldly enough to do pretty much everything you want with…</p>
+
+<p>So I implemented the Same Game on Android. But (naturally) the game already existed on Android! I had to find something new! I was itching to fully exploit the possibilities of a new technology. Mobile has great potential – so it would be bad not to make use of new APIs. I discovered <strong>the Accelerometer</strong>. My idea was gravity: change the balls position by rotating the device.</p>
+
+<p>But, many of my friends don’t have Android phones!</p>
+
+<p>The Same Game Gravity is now available for iPad, iPhone, Android, Facebook, Chrome Store and desktop browsers. That’s a lot of platforms, with a lot of APIs to learn – and potentially a LOT of work in maintenance. But thankfully I didn’t have to go off learning Objective-C and Java Android, or keep track of arm-fulls of repositories! All the platforms are supported from <strong>a single codebase</strong>: thanks to the power and awesomeness of JavaScript, HTML, and CSS – combined with a nifty tool I developed <a href="/2011/06/automating-web-app-development-for-multiple-platforms/">WebAppBuilder</a> to easily build each instance.</p>
+
+<p><strong>I added a cool scoring system that spreads via multiple social networks simultaneously and easily – and now I have a truly cross-platform game!</strong></p>
+
+<h3>The code</h3>
+
+<p>Desktop version source code is available on <a href="https://github.com/gre/same-game-gravity">Github</a>.</p>
+
+<h4>The HTML</h4>
+
+<p>(see <a href="https://github.com/gre/same-game-gravity/blob/master/game.html">game.html</a>)</p>
+
+<p>The HTML code is pretty simple.<br>
+Basically, there is a <strong>container which contains different</strong>. Each section is a view of the game.</p>
+
+<p>For instance here is the game view :  </p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;section</span> <span class="na">id=</span><span class="s">&quot;game&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;turnleft&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;turnright&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;gameStatus&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;i18n-back back&quot;</span> <span class="na">href=</span><span class="s">&quot;#!/&quot;</span><span class="nt">&gt;</span>Back<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;timeline&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;remainingSeconds&quot;</span><span class="nt">&gt;&lt;span</span> <span class="na">class=</span><span class="s">&quot;remainingSecondsTime&quot;</span><span class="nt">&gt;&lt;/span&gt;</span> s<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;/span&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;gameContainer&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;canvas</span> <span class="na">class=</span><span class="s">&quot;highlight&quot;</span> <span class="na">width=</span><span class="s">&quot;400&quot;</span> <span class="na">height=</span><span class="s">&quot;300&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+    <span class="nt">&lt;canvas</span> <span class="na">class=</span><span class="s">&quot;main&quot;</span> <span class="na">width=</span><span class="s">&quot;400&quot;</span> <span class="na">height=</span><span class="s">&quot;300&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</code></pre></div>
+<p>In the desktop version, <strong>game.html</strong> is wrapped into <strong>index.html</strong> in an iframe to keep the game independent of the context.</p>
+
+<h4>The CSS</h4>
+
+<p>(see <a href="https://github.com/gre/same-game-gravity/blob/master/game.css">game.css</a>)</p>
+
+<p>CSS 3 is very rich.</p>
+
+<p>CSS Transitions and CSS Transforms has been used to do view change.  </p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="c">/* Pre conditions :</span>
+<span class="c"> * With Javascript: </span>
+<span class="c">   - A class &quot;current&quot; is setted for the current section view. </span>
+<span class="c">   - All section after &quot;current&quot; must take a &quot;after&quot; class. </span>
+<span class="c"> */</span>
+<span class="nf">#main</span><span class="nc">.enabletransition</span> <span class="o">&gt;</span> <span class="nt">section</span> <span class="p">{</span> <span class="c">/* #main must take &quot;enabletransition&quot; after the DOM load to avoid a first transition */</span>
+  <span class="n">transition</span><span class="o">-</span><span class="n">duration</span><span class="o">:</span> <span class="m">1s</span><span class="o">,</span> <span class="m">0s</span><span class="p">;</span>  <span class="c">/* transform takes 1s duration, opacity doesn&#39;t have transition */</span>
+<span class="p">}</span>
+<span class="nf">#main</span> <span class="o">&gt;</span> <span class="nt">section</span> <span class="p">{</span>
+  <span class="k">z-index</span><span class="o">:</span> <span class="m">-1</span><span class="p">;</span>
+  <span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="n">transition</span><span class="o">-</span><span class="n">delay</span><span class="o">:</span> <span class="m">0s</span><span class="o">,</span> <span class="m">1s</span><span class="p">;</span> <span class="c">/* opacity go to 0 in 1s */</span>
+  <span class="n">transition</span><span class="o">-</span><span class="n">property</span><span class="o">:</span> <span class="n">transform</span><span class="o">,</span> <span class="k">opacity</span><span class="p">;</span>
+  <span class="n">transform</span><span class="o">:</span> <span class="n">translateY</span><span class="p">(</span><span class="m">-100%</span><span class="p">);</span> <span class="c">/* go above the page */</span>
+<span class="p">}</span>
+<span class="nf">#main</span> <span class="o">&gt;</span> <span class="nt">section</span><span class="nc">.current</span> <span class="p">{</span>
+  <span class="k">z-index</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="k">opacity</span><span class="o">:</span> <span class="m">1</span><span class="p">;</span>
+  <span class="n">transition</span><span class="o">-</span><span class="n">delay</span><span class="o">:</span> <span class="m">0s</span><span class="o">,</span> <span class="m">0s</span><span class="p">;</span>
+  <span class="n">transition</span><span class="o">-</span><span class="n">transform</span><span class="o">:</span> <span class="n">translateY</span><span class="p">(</span><span class="m">0%</span><span class="p">);</span> <span class="c">/* go to the bottom */</span>
+<span class="p">}</span>
+<span class="nf">#main</span> <span class="o">&gt;</span> <span class="nt">section</span><span class="nc">.after</span> <span class="p">{</span> <span class="c">/* same as &quot;#main &gt; section.current ~ section&quot; but without bugs */</span>
+  <span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="n">transition</span><span class="o">-</span><span class="n">delay</span><span class="o">:</span> <span class="m">0s</span><span class="o">,</span> <span class="m">1s</span><span class="p">;</span>
+  <span class="n">transform</span><span class="o">:</span> <span class="n">translateY</span><span class="p">(</span><span class="m">100%</span><span class="p">);</span> <span class="c">/* go below the page */</span>
+<span class="p">}</span>
+
+<span class="c">/* Note that this is a part of the css code </span>
+<span class="c"> * (you need to add -webkit-, -moz-, ... in some properties)</span>
+<span class="c"> */</span>
+</code></pre></div>
+<h4>The game core</h4>
+
+<p>(see <a href="https://github.com/gre/same-game-gravity/blob/master/game.js">game.js</a>)</p>
+
+<p>Code is organized in different javascript “classes”.</p>
+
+<p>The main components are :</p>
+
+<ul>
+<li>  <a href="https://github.com/gre/same-game-gravity/blob/master/game.js#L324">game.Grid</a> contains all the algorithm of the game.</li>
+<li>  <a href="https://github.com/gre/same-game-gravity/blob/master/game.js#L687">game.GameCanvasRenderer</a> is a game renderer (graphic part of the game) based on HTML Canvas element. It contains different functions called by <strong>game.Game</strong>.</li>
+<li>  <a href="https://github.com/gre/same-game-gravity/blob/master/game.js#L850">game.Game</a> contains all the game logic, the game loop and bind DOM events (touch, click, …).</li>
+</ul>
+
+<h4>game.desktop.js: a game instance for the desktop</h4>
+
+<p>(see <a href="https://github.com/gre/same-game-gravity/blob/master/game.desktop.js">game.desktop.js</a>)</p>
+
+<p>This file contains all the specific code for the desktop version (it overrides existing classes). But it mainly contains the <a href="https://github.com/gre/same-game-gravity/blob/master/game.desktop.js#L137">game controller</a> handling different views and using all game classes.</p>
+
+<h5>Some significant code</h5>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// Colors.get(nb) : pick nb random colors </span>
+<span class="kd">var</span> <span class="nx">Colors</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">clrs</span> <span class="o">=</span> <span class="p">[</span> <span class="k">new</span> <span class="nx">Color</span><span class="p">(</span><span class="s1">&#39;#D34040&#39;</span><span class="p">),</span> <span class="k">new</span> <span class="nx">Color</span><span class="p">(</span><span class="s1">&#39;#82D340&#39;</span><span class="p">),</span> <span class="k">new</span> <span class="nx">Color</span><span class="p">(</span><span class="s1">&#39;#40C2D3&#39;</span><span class="p">),</span> <span class="k">new</span> <span class="nx">Color</span><span class="p">(</span><span class="s1">&#39;#8B40D3&#39;</span><span class="p">),</span> <span class="k">new</span> <span class="nx">Color</span><span class="p">(</span><span class="s1">&#39;#D3C840&#39;</span><span class="p">)</span> <span class="p">];</span>
+  <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">nb</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">clrs</span>
+      <span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span> <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">;</span> <span class="p">})</span>
+      <span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">nb</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}();</span>
+
+<span class="cm">/** Game instanciation **/</span>
+
+<span class="kd">var</span> <span class="nx">gridSizeByDifficulty</span> <span class="o">=</span> <span class="p">[</span> <span class="c1">// Size of grid for each difficulty</span>
+  <span class="p">{</span><span class="nx">w</span><span class="o">:</span><span class="mi">8</span><span class="p">,</span> <span class="nx">h</span><span class="o">:</span><span class="mi">8</span><span class="p">},</span>
+  <span class="p">{</span><span class="nx">w</span><span class="o">:</span><span class="mi">12</span><span class="p">,</span> <span class="nx">h</span><span class="o">:</span> <span class="mi">12</span><span class="p">},</span>
+  <span class="p">{</span><span class="nx">w</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span> <span class="nx">h</span><span class="o">:</span> <span class="mi">16</span><span class="p">}</span>
+<span class="p">];</span>
+<span class="kd">var</span> <span class="nx">colorNumberByDifficulty</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">];</span> <span class="c1">// Nb of colors for each difficulty</span>
+
+<span class="kd">var</span> <span class="nx">difficulty</span><span class="p">;</span> <span class="c1">// can be 0 (easy), 1 (normal) or 2 (hard)</span>
+<span class="nx">currentGame</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">game</span><span class="p">.</span><span class="nx">Game</span><span class="p">({</span>
+  <span class="nx">gridSize</span><span class="o">:</span> <span class="nx">gridSizeByDifficulty</span><span class="p">[</span><span class="nx">difficulty</span><span class="p">],</span>
+  <span class="nx">colors</span><span class="o">:</span> <span class="nx">colors</span><span class="o">=</span><span class="nx">Colors</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">colorNumberByDifficulty</span><span class="p">[</span><span class="nx">difficulty</span><span class="p">]),</span>
+  <span class="nx">container</span><span class="o">:</span> <span class="s1">&#39;#game&#39;</span><span class="p">,</span> <span class="c1">// container selector</span>
+  <span class="nx">rendererClass</span><span class="o">:</span> <span class="s1">&#39;GameCanvasRenderer&#39;</span><span class="p">,</span> <span class="c1">// The class to use for rendering the game</span>
+  <span class="nx">difficulty</span><span class="o">:</span> <span class="nx">difficulty</span><span class="p">,</span>
+  <span class="nx">drawHover</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">globalTimer</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Timer</span><span class="p">().</span><span class="nx">pause</span><span class="p">(),</span>
+  <span class="nx">keepSquare</span><span class="o">:</span> <span class="kc">true</span> <span class="c1">// Keep a square ratio</span>
+<span class="p">});</span>
+</code></pre></div>
+<h3>The gravity</h3>
+
+<p>The game gravity was maybe the hardest part of the game development. </p>
+
+<h4>Using device Accelerometer for mobile/tablet version</h4>
+
+<p>I needed to find ways to access to the device accelerometer. For Android I used <a href="http://docs.phonegap.com/phonegap_accelerometer_accelerometer.md.html">PhoneGap Accelerometer</a>. But on iPhone I wasn’t able to get PhoneGap’s accelerometer.getCurrentAcceleration to work properly, so I used DeviceMotion event supported by iOS 4.2 . (see <a href="http://dev.w3.org/geo/api/spec-source-orientation.html">DeviceOrientation spec</a>).</p>
+
+<p>(A big thanks to <a href="http://twitter.com/42loops">@42loops</a> for that: <a href="https://github.com/peutetre/test-mobile-safari/blob/master/devicemotionevent.html">devicemotionevent.html</a>)</p>
+
+<p><img src="/images/2011/07/c-rotation.png" alt="Device orientation schema"></p>
+
+<h4>CSS Transforms and Transitions for the desktop version</h4>
+
+<p>Computers don’t have an Accelerometer. <em>Except maybe some macbook but I’m not sure people would like to turn macbook in 360°!</em> but the gravity concept is crucial to the game. I ended up implementing “gravity” via the arrow keys.<br>
+The game is entirely rotated with <a href="https://github.com/gre/same-game-gravity/blob/master/game.desktop.js#L31">CSS Transforms</a> and animated with <a href="https://github.com/gre/same-game-gravity/blob/master/index.css#L35">CSS Transitions</a>.</p>
+
+<h3>The score system</h3>
+
+<p>I’ve written a web service with <a href="http://playframework.org/">Play! framework</a> to receive scores or retrieve them from Twitter, validate them and spread them with a json API and widgets.</p>
+
+<p><img src="/images/2011/07/same_game_gravity_schema.jpg" alt="tweet example"></p>
+
+<p><strong>This web service will be available soon for game developers.</strong></p>
+
+<p>The power of this web service is the usage of <strong>social networks</strong>. It will retrieve peoples names, avatars, and their social links without needing to prompt the user.<br>
+For game developers, social scores sharing is a nice way of <strong>advertising your game</strong>: someone shares his scores to his friends: so your game can spread virally.</p>
+
+<p>See that little hash “$4f005″? That’s a way to check if sent scores are valid.<br>
+In fact the web service allows you to handle your own security, via your own “twitter to scores” transformer. You can add a small Javascript function that is executed by the server when transforming a twit to scores – to ensure there hasn’t been any cheating.</p>
+
+<p>The web service also provides <strong>generic widgets</strong> to easily embed game scores in websites.<br>
+If a player has played a few different games using this web scores service, we can provide a “transversal” widget contains all scores of a player.</p>
+
+<h4>The Same Game Gravity Widget</h4>
+
+<p>Same Game Gravity use its own widget (<a href="http://same.greweb.fr/public/javascripts/same.scores.js">source code here</a>).</p>
+
+<p>This widget is very customizable. Here’s an example of the code used to embed the widget anywhere (like in this blog post) :</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://same.greweb.fr/public/javascripts/same.scores.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+  <span class="k">new</span> <span class="nx">same</span><span class="p">.</span><span class="nx">Scores</span><span class="p">({</span>
+    <span class="nx">width</span><span class="o">:</span> <span class="s1">&#39;250px&#39;</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span> <span class="s1">&#39;400px&#39;</span><span class="p">,</span>
+    <span class="nx">items</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">period</span><span class="o">:</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span>
+    <span class="nx">platform</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;web&#39;</span><span class="p">,</span> <span class="s1">&#39;mobile&#39;</span><span class="p">,</span> <span class="s1">&#39;tablet&#39;</span><span class="p">],</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;hs_hard&#39;</span><span class="p">,</span> <span class="s1">&#39;hs_normal&#39;</span><span class="p">,</span> <span class="s1">&#39;hs_easy&#39;</span><span class="p">],</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Best highscores ever&#39;</span><span class="p">,</span>
+    <span class="nx">theme</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">bg</span><span class="o">:</span> <span class="s1">&#39;rgb(218, 236, 244)&#39;</span><span class="p">,</span>
+      <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;#000&#39;</span><span class="p">,</span>
+      <span class="nx">scores_bg</span><span class="o">:</span> <span class="s1">&#39;rgba(255, 255, 255, 0.5)&#39;</span><span class="p">,</span>
+      <span class="nx">scores_color</span><span class="o">:</span> <span class="s1">&#39;rgba(0, 0, 0, 0.8)&#39;</span><span class="p">,</span>
+      <span class="nx">link</span><span class="o">:</span> <span class="s1">&#39;#1F98C7&#39;</span>
+    <span class="p">}</span>
+  <span class="p">}).</span><span class="nx">init</span><span class="p">().</span><span class="nx">fetch</span><span class="p">();</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+<h3>Conclusion</h3>
+
+<p>And here we are! 6 months to develop a game and release it on different platforms! I learn a lot about mobile development and I’m now more capable to develop other games.<br>
+I learned that you should avoid using Canvas if you can use DOM instead because performance are bad on some mobile device whereas CSS Transitions / Animations are hardware accelerated.</p>
+
+<p>Finally, I learned that game development is not only about programming! The marketing and the graphical parts are so important too.</p>
+
+<p>Want to checkout the code or contribute to the game i18n? Just fork the <a href="https://github.com/gre/same-game-gravity">game repository</a>.</p>
+
+<h4>Thanks</h4>
+
+<p>Big thanks to all game testers. Friends and colleagues, thank you very much!<br>
+Special thanks to @mrspeaker for English help !</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

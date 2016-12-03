@@ -1,0 +1,640 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="embrace standard web technologies for web, games and mobile apps" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="embrace standard web technologies for web, games and mobile apps">
+    <meta name="twitter:description" content="embrace standard web technologies for web, games and mobile apps">
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - embrace standard web technologies for web, games and mobile apps</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        
+<article>
+  
+  <header>
+    <h1><a href="/2013/07/deferred/">Qep2.: Deferred objects, Qimage</a></h1>
+    <time class="date" datetime="2013-07-13">July 13, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/awop.html">AWOP</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/promise.html">promise</a>
+     <a class="tag" href="/tag/q.html">Q</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <h1>A <a href="/pages/a-world-of-promises/">World Of Promises</a>, episode 2</h1>
+
+<p><img src="/images/2013/07/qimage_then_thumbnail.jpg" alt="" class="thumbnail-right" style="width: 200px" /></p>
+
+<p><em>This second article on <a href="http://github.com/kriskowal/q">Q</a> will introduce you how to easily 
+turn a callback API into a promise API using Deferred objects.
+It will also present the new W3C specification of Promise and finish
+with the implementation of <a href="http://github.com/gre/qimage">Qimage</a>, a simple Image Promise wrapper.</em></p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2013/07/deferred/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2013/07/deferred/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2013/07/q-a-promise-library/">Qep1.: Q, a Promise library</a></h1>
+    <time class="date" datetime="2013-07-10">July 10, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/awop.html">AWOP</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/promise.html">promise</a>
+     <a class="tag" href="/tag/q.html">Q</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <h1><a href="/pages/a-world-of-promises/">A World Of Promises</a>, episode 1</h1>
+
+<p><em>This article is the first of a series of small articles 
+on the Q Javascript library and its eco-system.
+This article is a brief introduction to Q Promises.</em></p>
+
+<p><img src="/images/2013/07/promise_then_thumbnail.jpg" alt="" class="thumbnail-left" /></p>
+
+<p><a href="http://github.com/kriskowal/q">Q</a> is a <strong>Promise library</strong> in <strong>Javascript</strong> 
+created 4 years ago by <a href="https://github.com/kriskowal">Kris Kowal</a> who is one of the main contributor to <a href="http://wiki.commonjs.org/">CommonJS</a>
+where we can find the <strong><a href="http://wiki.commonjs.org/wiki/Promises/A">Promises/A</a></strong> specification.</p>
+
+<p><a href="http://github.com/kriskowal/q">Q</a> is probably <strong>the most mature and powerful Promise library in Javascript</strong>
+which inspired a lot of libraries like <a href="http://jquery.com/">jQuery</a>.
+It exposes a complete API with, in my humble opinion, 
+good ideas like the separation of concerns between a &quot;Deferred&quot; object (the resolver) 
+and a &quot;Thenable&quot; Promise (the read-only promise).</p>
+
+<p>This article is a brief introduction to Q Promises with some examples.
+For more information on the subject, I highly recommend reading
+the article <a href="http://domenic.me/2012/10/14/youre-missing-the-point-of-promises/">&quot;You&#39;re Missing the Point of Promises&quot;</a> 
+and <a href="https://raw.github.com/kriskowal/q/master/design/README.js">the Q implementation design README</a>.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2013/07/q-a-promise-library/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2013/07/q-a-promise-library/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2013/05/playframework-simple-deployment-scripts/">Playframework simple deployment scripts</a></h1>
+    <time class="date" datetime="2013-05-07">May  7, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/sysadmin.html">sysadmin</a>
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <script src="https://gist.github.com/gre/5528826.js"></script>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2013/05/playframework-simple-deployment-scripts/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2013/05/playframework-simple-deployment-scripts/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/">glsl.js, a Javascript + GLSL library = DRY &#038; efficient</a></h1>
+    <time class="date" datetime="2013-02-11">February 11, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     <a class="tag" href="/tag/glsl.html">GLSL</a>
+     <a class="tag" href="/tag/webgl.html">WebGL</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><a href="http://gre.github.io/glsl.js/examples/balls"><img src="/images/2013/02/glsl_mario.jpg" alt="glsl_mario"></a></p>
+
+<p><strong>TL;DR. WebGL is super powerful and efficient. This library abuses this power for efficient 2D.</strong></p>
+
+<p>glsl.js is a subset of a WebGL library which focuses on making the GLSL (OpenGL Shading Language) easy and accessible for vizualisation and game purposes (2D or 3D).</p>
+
+<ul>
+<li>  <strong><a href="http://gre.github.io/glsl.js/examples/balls">Bouncing balls example video tutorial</a></strong></li>
+<li>  <a href="http://gre.github.io/glsl.js/examples">Open other examples</a></li>
+<li>  <a href="http://gre.github.io/glsl.js/docs">API Documentation</a></li>
+<li>  <a href="http://github.com/gre/glsl.js">Fork me on Github</a></li>
+<li>  <a href="http://gre.github.io/glsl.js/test">Unit tests</a></li>
+</ul>
+
+<p><a href="http://gre.github.io/glsl.js/examples/pong/"><img src="/images/2013/02/glsl_pong.jpg" alt="glsl_pong"></a></p>
+
+<h2>Why?</h2>
+
+<p><strong>WebGL is a very low level and stateful API</strong>. Actually the WebGL API <strong>is</strong> the OpenGL API.</p>
+
+<p>I wanted to make a graphic library where you wouldn’t have to know about this API but still have access to the powerful OpenGL Shading Language called GLSL.</p>
+
+<p>Do you know <a href="http://glsl.heroku.com">glsl.heroku.com</a>? It’s a cool platform for demoscene where you can experiment some nice effects in GLSL. My library extends this concept of rendering in one whole fragment shader (which takes the plain canvas) but also provides a way to inject your own Javascript variables.</p>
+
+<h3>DRY</h3>
+
+<p><strong>WebGL is not DRY at all</strong>, you always have to repeat yourself both on the GLSL and on the Javascript part (especially for synchronizing variables).<br>
+Worse than that, you have to know in your Javascript code what are the GLSL types of every variable to synchronize.</p>
+
+<p>How boring is that:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// Synchronizing the new values of 2 variables in pure WebGL.  </span>
+
+<span class="kd">var</span> <span class="nx">myInt</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>  
+<span class="kd">var</span> <span class="nx">myIntLocation</span> <span class="o">=</span> <span class="nx">gl</span><span class="p">.</span><span class="nx">getUniformLocation</span><span class="p">(</span><span class="nx">program</span><span class="p">,</span> <span class="s2">&quot;myInt&quot;</span><span class="p">);</span>  
+<span class="nx">myInt</span>  <span class="p">;</span>  
+<span class="nx">gl</span><span class="p">.</span><span class="nx">uniform1i</span><span class="p">(</span><span class="nx">myFloatLocation</span><span class="p">,</span> <span class="nx">myInt</span><span class="p">);</span> <span class="c1">// 1i means one integer  </span>
+
+<span class="kd">var</span> <span class="nx">myVector2</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="mf">1.3</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mf">2.4</span> <span class="p">};</span>  
+<span class="kd">var</span> <span class="nx">myVector2Location</span> <span class="o">=</span> <span class="nx">gl</span><span class="p">.</span><span class="nx">getUniformLocation</span><span class="p">(</span><span class="nx">program</span><span class="p">,</span> <span class="s2">&quot;myVector2&quot;</span><span class="p">);</span>  
+<span class="nx">gl</span><span class="p">.</span><span class="nx">uniform2f</span><span class="p">(</span><span class="nx">myVector2Location</span><span class="p">,</span> <span class="nx">myVector2</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">myVector2</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span> <span class="c1">// 2f means float[2]</span>
+</code></pre></div>
+<p><strong>glsl.js</strong> provides a DRY and simple way to synchronize Javascript variables.</p>
+
+<p>First, the library will handle for you the UniformLocations.</p>
+
+<p>More important, and unlike the WebGL API and many WebGL libraries, <strong>you will never have to define the type of your variables from the Javascript with glsl.js!</strong> You just define it once in your shader!</p>
+
+<p>How it works behind is the framework will statically parse your GLSL and infer types to use for the synchronization. The right <code>gl.uniform*</code> function is called by Javascript reflection.</p>
+
+<p>It now simply becomes:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// Set the values of 2 variables in glsl.js  </span>
+<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;myInt&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>  
+<span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;myVector2&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="mf">1.3</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mf">2.4</span> <span class="p">});</span>  
+<span class="c1">// ... see also this.sync() and this.syncAll()</span>
+</code></pre></div>
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2013/01/playcli-play-iteratees-unix-pipe/">PlayCLI: Play Iteratees + UNIX pipe</a></h1>
+    <time class="date" datetime="2013-01-30">January 30, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/iteratee.html">iteratee</a>
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     <a class="tag" href="/tag/reactive.html">reactive</a>
+     <a class="tag" href="/tag/unix.html">unix</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <blockquote>
+<p><strong>TL;DR.</strong> PlayCLI is a new <a href="http://scala-lang.org">Scala</a> library to work with UNIX commands and <a href="http://www.playframework.org/documentation/2.0/Iteratees">Play-Iteratees</a> (a scala implementation of Iteratees facilitating the handling of data streams reactively). Here’s an overview:</p>
+</blockquote>
+
+<iframe src="http://gre.github.io/playCLI-examples/embedder.html#index.html" frameborder="0" width="550" height="452"></iframe>
+
+<h2>Links</h2>
+
+<ul>
+<li>  <a href="http://gre.github.io/playCLI-examples/api">The scala API</a>.</li>
+<li>  <a href="http://github.com/gre/playCLI">PlayCLI source code (Github)</a>.</li>
+<li>  <a href="http://github.com/gre/playCLI-examples">PlayCLI Examples application (Github)</a>.</li>
+</ul>
+
+<h3>SBT</h3>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="s">&quot;fr.greweb&quot;</span> <span class="o">%%</span> <span class="s">&quot;playcli&quot;</span> <span class="o">%</span> <span class="s">&quot;0.1&quot;</span>
+</code></pre></div>
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2013/01/playcli-play-iteratees-unix-pipe/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2013/01/playcli-play-iteratees-unix-pipe/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2013/01/be-careful-with-js-numbers/">Be careful with JS numbers!</a></h1>
+    <time class="date" datetime="2013-01-10">January 10, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/float.html">float</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <blockquote class="twitter-tweet" lang="fr"><p>@<a href="https://twitter.com/greweb">greweb</a> : Let's do a kickstarter to build the 1st space rocket running on embedded Javascript... I think we can discover new physics rules!</p>&mdash; mandubian (@mandubian) <a href="https://twitter.com/mandubian/status/289422662101504000">10 janvier 2013</a></blockquote>
+
+<p>It is <a href="http://wtfjs.com/">common</a> in Javascript to have unexpected behaviors, but this one is particulary vicious.</p>
+
+<blockquote>
+<p>10000000000000000 === 10000000000000001</p>
+</blockquote>
+
+<p><strong>Javascript doesn’t have integer type but lets you think it has.</strong> <code>parseInt</code> and <code>parseFloat</code> built-in functions, the fact that “1″ is displayed as “1″ and not as “1.0″ (like many languages) contribute to the general misunderstood.</p>
+
+<p><strong>In Javascript, all numbers are floating numbers and are prone to <a href="https://en.wikipedia.org/wiki/Floating_point">floating point approximation</a>.</strong></p>
+
+<p>When you write <code>var i = 1;</code>, and you console.log it, Javascript is nice, you obtain <code>1</code> and not <code>1.0000000000000001</code>. </p>
+
+<p>But you can experiment that, in Javascript, <code>1.0000000000000001 === 1</code> is true…</p>
+
+<blockquote>
+<p>I hear you, telling me that <em>this sounds OK, floating point approximation rules, right?</em></p>
+</blockquote>
+
+<p>But the same thing occurs for big numbers:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="mi">10000000000000000</span> <span class="o">===</span> <span class="mi">10000000000000001</span>
+</code></pre></div>
+<p>Oh <strong>F**K</strong> !</p>
+
+<p>[edit] where in python:<br>
+<img src="https://pbs.twimg.com/media/BAg2wRyCIAAGuXW.png:large" alt=""></p>
+
+<h2>Termination of loops</h2>
+
+<p>The following is worse:</p>
+
+<script src="https://gist.github.com/4504986.js"></script>
+
+<p>is logging <code>10000000000000000</code> forever!</p>
+
+<p>Because 10000000000000001 can’t exist in Javascript with approximations, 10000000000000001 is 10000000000000000, so you can’t increment this value, and you are stuck in this crazy f**king loop. </p>
+
+<p>Conclusion, <em>Program termination proof</em> sounds hard to reach in Javascript!</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2013/01/be-careful-with-js-numbers/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2013/01/be-careful-with-js-numbers/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/11/play-framework-enumerator-outputstream/">Play Framework &#8211; Enumerator.outputStream</a></h1>
+    <time class="date" datetime="2012-11-12">November 12, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     <a class="tag" href="/tag/iteratee.html">iteratee</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>A few weeks ago, <a href="https://github.com/playframework/Play20/commit/0f1ec1479e490f2c8af4cd79dd0b6a14b0ea9f75">we’ve introduced</a> a new feature in <a href="http://www.playframework.org/">Play Framework</a>: the <code>Enumerator.outputStream</code> method, allowing you to work with Java API requiring an <code>OutputStream</code> to generate content, for instance the <code>java.util.zip</code> API.</p>
+
+<p><strong>Now, let’s see how easy it is to serve a big Zip generated on-the-fly without memory load with Play Framework.</strong></p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/11/play-framework-enumerator-outputstream/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/11/play-framework-enumerator-outputstream/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/">Zound, a PlayFramework 2 audio streaming experiment using Iteratees</a></h1>
+    <time class="date" datetime="2012-08-01">August  1, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/audio.html">audio</a>
+     <a class="tag" href="/tag/iteratee.html">iteratee</a>
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     <a class="tag" href="/tag/hackday.html">hackday</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><img src="/images/2012/07/ZOUND.png" alt="ZOUND"></p>
+
+<p>Last Friday was HackDay #7 at <a href="http://zenexity.com">Zenexity</a>, and we decided to work on a real-time audio <a href="http://github.com/gre/zound">experiment</a> made with <a href="http://playframework.org">Play Framework</a>. The plan was to use an audio generator (<a href="http://www.softsynth.com/jsyn/">JSyn</a>, an audio synthesizer), encode the output and stream it all using Play Iteratees to pipe everything in real-time.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/taDLKTcNHnQ?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
+
+<p><strong>First of all, let’s highlight some interesting part of the project, then get into some of the details.</strong></p>
+
+<p>Thanks to <a href="https://twitter.com/Sadache">@Sadache</a> for his Iteratee expertise, we ended up with a simple line of code that does all of the hard work:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="n">chunkedAudioStream</span> <span class="k">=</span> <span class="n">rawStream</span> <span class="o">&amp;&gt;</span> <span class="n">chunker</span> <span class="o">&amp;&gt;</span> <span class="n">audioEncoder</span>
+</code></pre></div>
+<p>You can think of the <code>&amp;&gt;</code> operator as the UNIX pipe <code>|</code>. So we simply take the <code>rawStream</code>, chunk it with a <code>chunker</code> and encode it with an <code>audioEncoder</code>.</p>
+
+<p>Now, <strong>rawStream</strong> is the raw stream of audio samples (numbers between -1 and 1) generated by the audio synthesizer. Next, the <strong>chunker</strong> buffers a data stream into chunk of bytes. For instance, if you send data stream at 1Kb/s to a 10Kb chunker, it will output one chunk of size 10Kb every 10 seconds. And finally, the <strong>audioEncoder</strong> takes <strong>audio samples</strong> and outputs encoded bytes implementing an audio format (like WAVE).</p>
+
+<p>We can then make a broadcast of the stream:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="o">(</span><span class="n">sharedChunkedAudioStream</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=</span>   
+<span class="err"> </span> <span class="nc">Concurrent</span><span class="o">.</span><span class="n">broadcast</span><span class="o">(</span><span class="n">chunkedAudioStream</span><span class="o">)</span>
+</code></pre></div>
+<p>And then the <strong>sharedChunkedAudioStream</strong> is now a shared stream for every consumer (clients). All that’s left to do is to stream it over HTTP:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">def</span> <span class="n">stream</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>  
+<span class="err"> </span> <span class="nc">Ok</span><span class="o">.</span><span class="n">stream</span><span class="o">(</span><span class="n">audioHeader</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">sharedChunkedAudioStream</span><span class="o">).</span>  
+<span class="err"> </span> <span class="err"> </span> <span class="err"> </span><span class="n">withHeaders</span><span class="o">(</span> <span class="o">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">,</span> <span class="n">audio</span><span class="o">.</span><span class="n">contentType</span><span class="o">)</span> <span class="o">)</span>  
+<span class="o">}</span>
+</code></pre></div>
+<p>The <code>&gt;&gt;&gt;</code> operator means “concatenation”, so here we’re concatenating the <strong>audio header</strong> (given by the format like WAVE) with the current <strong>chunked audio stream</strong>. We also send the right HTTP <strong>Content-Type</strong> header (like “audio/wav” for WAVE).</p>
+
+<p>Another interesting part of the project is the <strong>multi-user web user interface: allowing users to interact with the sound synthesis</strong>.</p>
+
+<p>Using <a href="https://twitter.com/mrspeaker">@mrspeaker</a>‘s audio synthesis expertise, we started creating a synthesizer generator – 3 oscillators, various wave shapes, frequency and volumes, and finally flowing through a high pass filter before entering our “rawStream” above.</p>
+
+<p>Thanks to the Play framework goodness, <strong>this audio stream can be both consumed by the web page with an HTML audio tag, and with a stream player such as VLC!</strong> Ok, that’s the project – let’s have a closer look at some of the concepts…</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week/">How I learned Backbone.js, Three.js &#038; GLSL in one week</a></h1>
+    <time class="date" datetime="2012-07-03">July  3, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/glsl.html">GLSL</a>
+     <a class="tag" href="/tag/webgl.html">WebGL</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><img src="/images/2012/07/dta1.png" alt=""></p>
+
+<p>Last week was the <a href="http://7dfps.org/">7dfps challenge</a>, an open challenge where participants had to make a FPS in only one week.
+Such contest are very very interesting for those who want to experiment with things. Challenging yourself is IMO the best way to learn new things. You may also know the famous <a href="http://www.ludumdare.com/">“Ludum Dare” contest</a>.</p>
+
+<p>I learned to use Backbone.js and Three.js (a famous library on top of WebGL) in only one week, so you have no excuse to not be able to do the same!</p>
+
+<p><a href="http://youcanmakevideogames.com/">-&gt; You can make games!</a></p>
+
+<blockquote>
+<p>“If Lawnmower Man f****d Tron on the bonnet of a tank”<br>
+<strong><em>YouBigNugget</em></strong></p>
+</blockquote>
+
+<p>I’ve only used web technologies, no need of any plugin, just a recent browser like Chrome / Firefox.</p>
+
+<p>This is the result:</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/g9CldBI9C6E?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
+
+<p>and you can play it here:</p>
+
+<p><strong><a href="http://gre.github.io/dta">Play the game</a></strong></p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2012/05/minimize-your-javascript-files-with-curl/">Minimize your Javascript files with cURL</a></h1>
+    <time class="date" datetime="2012-05-12">May 12, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/linux.html">linux</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>I’ve always been fascinated by the power of <strong>using existing web applications as external tools</strong>: you don’t need to install anything on your computer but you can <strong>rely on the web</strong>.</p>
+
+<p>We can <strong>externalize the intelligence of applications in servers</strong> and <strong>easily make updates</strong>, while having any terminal consuming them with a <strong>minimal OS environment</strong>.<br>
+<em>Cloud</em> or whatever you call it, it’s awesome.</p>
+
+<p>WOA is our common architecture for making applications. Clients of web servers can be anything you want, not only desktop browsers, but also mobiles, tablets, other web services, and… <strong>command-line</strong>!</p>
+
+<p>And today, as an example, we will use <a href="https://developers.google.com/closure/compiler/docs/api-ref">Google Closure Compiler web service</a> to <strong>minimize a Javascript file with only cURL</strong>.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2012/05/minimize-your-javascript-files-with-curl/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2012/05/minimize-your-javascript-files-with-curl/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+
+<nav class="pagination">
+  
+    
+    <a href="/page2" class="previous">Previous</a>
+    
+  
+  <span class="page_number ">Page: 3 of 6</span>
+  
+    <a href="/page4" class="next">Next</a>
+  
+</nav>
+
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

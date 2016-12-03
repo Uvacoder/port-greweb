@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="In this article, we will explain why we’d choose web technologies to make applications and introduce WebAppBuilder, a tool to easily build different instances of an application. We’ll examine the Same Game Gravity as an example." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Automating Web App development for multiple platforms">
+    <meta name="twitter:description" content="In this article, we will explain why we’d choose web technologies to make applications and introduce WebAppBuilder, a tool to easily build different instances of an application. We’ll examine the Same Game Gravity as an example.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2011/webappmaker.png">
+    <link rel="image_src" href="http://greweb.me/images/2011/webappmaker.png">
+    
+
+    <title>@GreWeb - Automating Web App development for multiple platforms</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2011/06/automating-web-app-development-for-multiple-platforms/">Automating Web App development for multiple platforms</a></h1>
+    <time class="date" datetime="2011-06-01">June  1, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/linux.html">linux</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p>In this article, we will explain why we’d choose web technologies to make applications and introduce <a href="/2011/06/automating-web-app-development-for-multiple-platforms/#webappbuilder"><strong>WebAppBuilder</strong></a>, a tool to easily build different instances of an application. We’ll examine the <a href="http://gre.github.io/same-game-gravity">Same Game Gravity</a> as an example.</p>
+
+<p>Using web to develop mobile applications is very <strong>productive</strong> and web technologies are <strong>rich</strong>.</p>
+
+<p><a href="https://github.com/gre/WebAppBuilder">Fork WebAppBuilder on Github.</a></p>
+
+<!--more-->
+
+<h2>Rich?</h2>
+
+<p>New web technologies have become rich with CSS3, HTML5 and new Javascript APIs are now being supported on most of smartphones. CSS3 animations, Web Service usage, local storage, Geolocation, drawing shapes (Canvas),.. are some example of new web features.</p>
+
+<p>I won’t expand more on this topic but invite you to <a href="http://diveintohtml5.org/">visit this link</a> for more details.</p>
+
+<h2>Productive?</h2>
+
+<p>Compared to a native application, the web application <strong>paradigm is reversed</strong>.<br>
+The Web provide a common way to make applications.<br>
+To develop a native application, you must adapt yourself for each device, each new API, or each new language,… but with Web, the device fits to you by proving bridges (accessible via JavaScript) to access device features!<br>
+I mean, you don’t need to dive into the Java Android API or Objective-C language (for iPhone/iPad), or any other API for other devices… You just have to learn <strong>web technologies</strong>.</p>
+
+<p>We are in 2011, the “only desktop application” model is over now, and mobile and tablet are two new platforms you should be aware of. So it changes everything about the technology to use.</p>
+
+<h3>Having a common language for all instances</h3>
+
+<p>Instances of a single application can be numerous.<br>
+In fact, an application can be projected in at least 3 axis of instance : The <strong>platform</strong> (mobile, tablet, desktop, …), the <strong>Operating System</strong> (Android, iPhone, webOS) and the <strong>application version</strong> (free version, full version, …).</p>
+
+<p><img src="/images/2011/application-axis3.png" alt=""></p>
+
+<p>That’s pretty expensive to develop X instances of an application. This is a problem for developing the first version and mainly for maintainability : You want to fix bugs and add features once, and only once.</p>
+
+<p><strong>So, the point is we need a common language to describe an application with multiple instances.</strong></p>
+
+<h3>Web is great for that!</h3>
+
+<p>Computers have browsers, mobiles and tablets device have recent browsers.</p>
+
+<p>To make your application development fully independent from the device, firstly you need a great <strong>framework</strong> to bridge your application and the device (like <a href="http://www.phonegap.com/">PhoneGap</a>), secondly you need a great tool to easily <strong>build</strong> all applications from your common source code.</p>
+
+<p>First of all, let’s see how to organize a web project.</p>
+
+<h3>Good practice</h3>
+
+<p>This is how I’ve organize my project :</p>
+
+<h4>The source code directory</h4>
+
+<p>This directory contains all your web app source code. You should keep your application source code (with HTML, CSS, Javascripts, images, sounds, …) in one directory (like <em>/src</em> ).<br>
+You should <strong>avoid specific code</strong>, but sometimes you still need some specific behaviors for different devices. If so, I recommend you to put these differences inside different files (for exemple: <em>mobile.html</em>, <em>tablet.html</em>, <em>computer.html</em>,…).</p>
+
+<h4>Project skeletons</h4>
+
+<p>Keep one skeleton directory for each instance of your application.<br>
+A skeleton directory will contains all the specific code related to the platform/device/version.<br>
+<strong>Frameworks like PhoneGap bring you these skeletons.</strong></p>
+
+<hr>
+
+<h2>WebAppBuilder</h2>
+
+<p><img src="/images/2011/webappmaker.png" alt=""></p>
+
+<p>I created <strong>WebAppBuilder : a lightweight Makefile to build your project</strong>. This is a mashup of existing cool stuff like : a small template system (Mustache), SASS with Compass, Javascript minimizer, …</p>
+
+<h3>Features of WebAppBuilder</h3>
+
+<ul>
+<li>  Template easily your HTML files with <a href="http://mustache.github.com/">Mustache</a>.</li>
+<li>  Copy, concatenate, minimize Javascripts however you want.</li>
+<li>  Retrieve Javascript files from URLs (useful for libraries).</li>
+<li>  Compile SASS files into CSS files (if you use <a href="http://sass-lang.com">this awesome stylesheets language</a>)</li>
+<li>  Support <a href="http://compass-style.org">Compass</a> if installed (you don’t need to provide it in your source, only an import works)</li>
+<li>  Merge your CSS files.</li>
+<li>  Copy and optionally rename resources you want to include (images, fonts, sounds,…).</li>
+<li>  Error handling and atomicity : if one operation fail, the make fail (javascript syntax error, sass syntax error, …)</li>
+</ul>
+
+<p>You must have one Makefile per project skeleton, so you can easily define what to do with the <em>/src</em> for the related platform/device/OS.</p>
+
+<h3>Download or Contribute</h3>
+
+<p><a href="https://github.com/gre/WebAppBuilder">Fork me on Github</a></p>
+
+<h3>Example with my Same Game Gravity game</h3>
+
+<p>I developed these tools during the <a href="http://gre.github.io/same-game-gravity">Same Game Gravity</a> game development. </p>
+
+<p>A <strong>make</strong> inside my android/ skeleton gives me :</p>
+
+<p><img src="/images/2011/webappmaker-term.png" alt=""></p>
+
+<p>And here is the Makefile I use :</p>
+
+<h4>Android Makefile</h4>
+<div class="highlight"><pre><code class="language-makefile" data-lang="makefile"><span class="c"># Same Game Gravity - Android full version #</span>
+
+<span class="c">        ###             ~ Web App Builder ~               ###</span>
+<span class="c">        #       a Makefile to compile a web project.        #</span>
+<span class="c">        #  designed for web project with different devices  #</span>
+<span class="c">        #  (mobile, tablet, desktop) but with common code.  #</span>
+<span class="c">        ###        by @greweb  -  http://greweb.fr/       ###</span>
+
+<span class="c"># BUILD_DIR : PATH to Web App Builder /build directory (the directory containing all build tools)</span>
+<span class="nv">BUILD_DIR</span> <span class="o">=</span> ../build
+
+<span class="c"># SRC_DIR : the source directory</span>
+<span class="nv">SRC_DIR</span> <span class="o">=</span> ../app
+
+<span class="c"># DIST_DIR : the dist directory (ex: assets for android, www for iphone)</span>
+<span class="nv">DIST_DIR</span> <span class="o">=</span> assets
+
+<span class="c"># RESOURCES : Your assets (images, sounds, fonts... and other static files)</span>
+<span class="c"># You can rename dist file by prefix newname= ( ex: index.html=iphone_version.html )</span>
+<span class="nv">RESOURCES</span> <span class="o">=</span> Chewy.ttf logo.png background.jpg pop.mp3 swosh.mp3 gravity_exemple.png
+
+<span class="c"># VIEWS : Views will be interpreted by Mustache.js</span>
+<span class="c"># You can pass arguments with JSON format.</span>
+<span class="c"># Example: index.html:&quot;{key1:value1,key2:value2,...}&quot;  &lt;= no spaces!</span>
+<span class="nv">VIEWS</span> <span class="o">=</span> index.html<span class="o">=</span>mobile.html:<span class="s2">&quot;{versionType:&#39;&#39;,version:&#39;1.0&#39;,platform:&#39;mobile&#39;,android:true,free:false}&quot;</span>
+
+<span class="c">### SCRIPTS : all javascripts</span>
+<span class="c"># - You can pass an URL to retrieve</span>
+<span class="c"># - if you want to minimize the JS, prefix with &#39;!&#39;</span>
+<span class="c"># - to mix scripts, concat them with a comma &#39;,&#39;</span>
+<span class="c"># - to set the destination name, you can prefix scripts with &#39;myname.js=&#39; else the first script name is used ( exemple: all.js=util.js,ui.js,main.js ).</span>
+<span class="nv">SCRIPTS</span> <span class="o">=</span> game.min.js<span class="o">=</span>!game.js,!game.mobile.js,!md5.js <span class="se">\</span>
+          phonegap.min.js<span class="o">=</span>!phonegap.js,!phonegap.webintent.js <span class="se">\</span>
+          jquery.min.js<span class="o">=</span>http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js,jquery.ba-hashchange.min.js,jquery.tmpl.min.js
+
+<span class="c">### STYLES : all styles : CSS or SASS</span>
+<span class="c"># - For .sass files, we compile them to css</span>
+<span class="c"># - Like before, you can mix styles with &#39;,&#39; and you can name your target by prefixing &#39;name=&#39;</span>
+<span class="nv">STYLES</span> <span class="o">=</span> game.css<span class="o">=</span>mobile.sass
+
+<span class="c">########################################################################</span>
+
+
+<span class="nf">all</span><span class="o">:</span> <span class="n">welcome</span> <span class="n">clean</span> <span class="n">assets_views</span> <span class="n">assets_scripts</span> <span class="n">assets_styles</span> <span class="n">assets_files</span>
+
+<span class="nf">welcome</span><span class="o">:</span>
+    @@<span class="k">${</span><span class="nv">BUILD_DIR</span><span class="k">}</span>/welcome.sh
+
+<span class="nf">assets_base</span><span class="o">:</span> 
+    @@mkdir -p <span class="k">${</span><span class="nv">DIST_DIR</span><span class="k">}</span>
+
+<span class="nf">assets_views</span><span class="o">:</span> <span class="n">assets_base</span>
+    @@<span class="k">${</span><span class="nv">BUILD_DIR</span><span class="k">}</span>/compile_views.sh <span class="k">${</span><span class="nv">SRC_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">DIST_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">VIEWS</span><span class="k">}</span>
+
+<span class="nf">assets_scripts</span><span class="o">:</span> <span class="n">assets_base</span>
+    @@<span class="k">${</span><span class="nv">BUILD_DIR</span><span class="k">}</span>/compile_scripts.sh <span class="k">${</span><span class="nv">SRC_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">DIST_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">SCRIPTS</span><span class="k">}</span>
+
+<span class="nf">assets_styles</span><span class="o">:</span> <span class="n">assets_base</span>
+    @@<span class="k">${</span><span class="nv">BUILD_DIR</span><span class="k">}</span>/compile_styles.sh <span class="k">${</span><span class="nv">SRC_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">DIST_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">STYLES</span><span class="k">}</span>
+
+<span class="nf">assets_files</span><span class="o">:</span> <span class="n">assets_base</span>
+    @@<span class="k">${</span><span class="nv">BUILD_DIR</span><span class="k">}</span>/copy_resources.sh <span class="k">${</span><span class="nv">SRC_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">DIST_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">RESOURCES</span><span class="k">}</span>
+
+<span class="nf">clean</span><span class="o">:</span> 
+    @@rm -rf <span class="k">${</span><span class="nv">DIST_DIR</span><span class="k">}</span>
+
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">welcome</span> <span class="n">clean</span> <span class="n">assets_views</span> <span class="n">assets_scripts</span> <span class="n">assets_styles</span> <span class="n">assets_files</span>
+</code></pre></div>
+<h3>Configuring your IDE</h3>
+
+<p>I use mainly komodo and geany as an IDE. They both have a build system. I recommand you to configure your IDE to make &amp;&amp; open the page just by pressing a shortcut key.</p>
+
+<h3>Features planned</h3>
+
+<ul>
+<li>  make should build the .apk for Android app</li>
+</ul>
+
+<h2>Special thanks</h2>
+
+<ul>
+<li>  to <a href="http://mrspeaker.net/">mrspeaker</a> for English review.</li>
+<li>  to <a href="https://github.com/jquery/jquery/tree/master/build">jQuery build system</a> (js minifier)</li>
+</ul>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

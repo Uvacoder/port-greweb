@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CSS Transitions - navigation bar examples</title>
+    <script type="text/javascript">
+      // make IE style compliant
+      document.createElement('nav');
+      document.createElement('section');
+      document.createElement('footer');
+    </script>
+    <style>
+    
+    @font-face {
+      font-family: Delicious;
+      src: url('Delicious-Bold.otf');
+    }
+    @font-face {
+      font-family: Luxis;
+      src: url('luxisr.ttf');
+    }
+    @font-face {
+      font-family: Luxis;
+      font-weight: bold;
+      src: url('luxisb.ttf');
+    }
+    
+    body {
+      width: 950px;
+    }
+    
+    section {
+      padding: 10px 0;
+      margin: 10px 0;
+      border-bottom: #ddd 1px dotted;
+      display: block;
+      clear: both;
+      overflow: auto;
+    }
+    
+    nav {
+      clear: both;
+      display: block;
+    }
+    
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    
+    footer {
+      margin-top: 40px;
+      padding-top: 5px;
+      border-top: 1px dashed #aaa;
+      color: #777;
+    }
+    
+    
+    
+/***   DEMO 1   ***/
+
+    #demo1 nav {
+      background: black;
+      height: 75px;
+      width: 900px;
+    }
+    #demo1 nav a {
+      -moz-transition-duration: 0.5s;
+      -webkit-transition-duration: 0.5s;
+      -o-transition-duration: 0.5s;
+      
+      -moz-border-radius: 5px 5px 0 0;
+      -webkit-border-radius: 5px 5px 0 0;
+      
+      float: left;
+      height: 20px;
+      line-height: 20px;
+      margin: 54px 2px 0 2px;
+      padding: 0 10px;
+      background: #fff;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.2)), #fff;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.2))), #fff;
+      color: #888;
+      border: #F0F0F0 1px solid;
+      border-bottom: none;
+      font-size: 0.8em;
+      line-height: 1.8em;
+    }
+    #demo1 nav a:hover {
+      margin-top: 39px;
+      height: 35px;
+      color: #00A7FD;
+      border-color: #00A7FD;
+    }
+    #demo1 nav a.selected {
+      margin-top: 39px;
+      height: 35px;
+      color: #00A7FD;
+      border-color: #00A7FD;
+      background: #FFF;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0.1), rgba(0,0,0,0)), #fff;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.1)), to(rgba(0,0,0,0))), #fff;
+    }
+    #demo1 nav a {
+      text-decoration: none;
+    }
+
+
+/***   DEMO 2   ***/
+
+    #demo2 nav {
+      overflow: hidden;
+      width: 900px;
+      padding: 4px;
+      display: block;
+    }
+    #demo2 nav li {
+      text-align: center;
+    }
+    #demo2 nav li:first-child a {
+      -moz-border-radius: 20px 0 0 20px;
+      -webkit-border-radius: 20px 0 0 20px;
+    }
+    #demo2 nav li:last-child a {
+      -moz-border-radius: 0 20px 20px 0;
+      -webkit-border-radius: 0 20px 20px 0;
+    }
+    #demo2 nav a {
+      -moz-transition-duration: 0.5s;
+      -webkit-transition-duration: 0.5s;
+      -o-transition-duration: 0.5s;
+
+      float: left;
+      -moz-box-shadow: 0px 0px 1px black;
+      -wekit-box-shadow: 0px 0px 1px black;
+      box-shadow: 0px 0px 1px black;
+      
+      padding: 0 25px;
+      line-height: 1.8em;
+      font-size: 1.2em;
+      font-family: Delicious;
+      text-transform: uppercase;
+      text-shadow: 0px 0px 2px rgba(0,0,0,1);
+      text-decoration: none;
+      
+      color: #EEE;
+      background: #606060;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #606060;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #606060;
+      border-left: 1px solid rgba(255,255,255,0.2);
+      border-right: 1px solid rgba(0,0,0,0.2);
+    }
+    #demo2 nav a:hover {
+      padding: 0 35px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #FFF;
+      text-shadow: 0px 0px 1px rgba(255,255,255,0.8);
+      background: #777;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #777;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #777;
+    }
+    
+    #demo2 nav.coloredhover li:nth-child(4n) a:hover {
+      background: #7BAEBE;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #7BAEBE;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #7BAEBE;
+    }
+    #demo2 nav.coloredhover li:nth-child(4n+1) a:hover {
+      background: #7FBE7B;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #7FBE7B;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #7FBE7B;
+    }
+    #demo2 nav.coloredhover li:nth-child(4n+2) a:hover {
+      background: #BE977B;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #BE977B;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #BE977B;
+    }
+    #demo2 nav.coloredhover li:nth-child(4n+3) a:hover {
+      background: #887BBE;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #887BBE;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #887BBE;
+    }
+    
+    
+/***   DEMO 3   ***/
+    #demo3 {
+      overflow: auto;
+      height: 240px;
+    }
+    #demo3 nav {
+      position: absolute;
+      width: 900px;
+      padding: 4px;
+    }
+    #demo3 nav li.category {
+      -moz-transition-duration: 1s;
+      -webkit-transition-duration: 1s;
+      -o-transition-duration: 1s;
+      float: left;
+      padding: 5px 20px;
+      width: 160px;
+      background: #606060;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #606060;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #606060;
+      border-left: 1px solid rgba(255,255,255,0.2);
+      border-right: 1px solid rgba(0,0,0,0.2);
+      -moz-box-shadow: 0px 0px 1px black;
+      -webkit-box-shadow: 0px 0px 1px black;
+      box-shadow: 0px 0px 1px black;
+    }
+    #demo3 nav li.category:hover {
+      background: #777;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #777;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #707070;
+      -moz-border-radius: 0 0 10px 10px;
+      -webkit-border-radius: 0 0 10px 10px;
+      border-radius: 0 0 10px 10px;
+    }
+    #demo3 nav a {
+      -moz-transition-duration: 0.5s;
+      -webkit-transition-duration: 0.5s;
+      -o-transition-duration: 0.5s;
+      
+      display: block;
+      text-align: center;
+      
+      line-height: 1.8em;
+      font-size: 1.2em;
+      font-family: Luxis;
+      font-weight: bold;
+      text-shadow: 0px 0px 3px rgba(0,0,0,1);
+      text-decoration: none;
+      
+      color: #DDD;
+    }
+    #demo3 nav a:hover {
+      text-shadow: 0px 0px 1px rgba(255,255,255,0.5);
+      color: #FFF;
+    }
+    #demo3 nav li.category:hover > a {
+      -moz-transition-duration: 0.5s;
+      -webkit-transition-duration: 0.5s;
+      -o-transition-duration: 0.5s;
+      padding: 5px;
+    } 
+    #demo3 nav li.category span {
+      line-height: 2em;
+      font-family: Luxis;
+      font-size: 0.9em;
+      color: #EEE;
+    }
+    
+    #demo3 nav .submenu a {
+      font-size: 1em;
+      color: #FFF;
+      text-shadow: none;
+    }
+    #demo3 nav .submenu a:hover {
+      text-shadow: 0px 0px 2px rgba(255,255,255,1);
+    }
+    #demo3 nav li .submenu {
+      -moz-transition-duration: 0.5s;
+      -webkit-transition-duration: 0.5s;
+      -o-transition-duration: 0.5s;
+      -moz-transition-delay: 0.1s;
+      -webkit-transition-delay: 0.1s;
+      -o-transition-delay: 0.1s;
+    }
+    #demo3 nav li:hover .submenu {
+      height: 90px;
+    }
+    #demo3 nav li .submenu {
+      height: 0px;
+    }
+    #demo3 nav li:hover .submenu li {
+      display: block;
+    }
+    #demo3 nav li .submenu li {
+      display: none;
+    }
+    #demo3 nav li .submenu li {
+      padding-top: 0px;
+      margin-top: 5px;
+      border-top: 1px solid rgba(255,255,255,0.4);
+    }
+    #demo3 nav li .submenu li a {
+      font-size: 0.9em;
+    }
+    
+
+/***   DEMO 4   ***/
+    #demo4 nav {
+      width: 800px;
+      padding: 4px;
+      background: #606060;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0), rgba(0,0,0,0.5)), #606060;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.5))), #606060;
+      overflow: auto;
+      -moz-border-radius: 20px;
+      -webkit-border-radius: 20px;
+      border-radius: 20px;
+    }
+    #demo4 nav li {
+      float: left;
+      margin: 5px 20px;
+      padding: 0 0;
+      width: 110px;
+      
+      -moz-border-radius: 20px;
+      -webkit-border-radius: 20px;
+      border-radius: 20px;
+      
+      -moz-transition-duration: 0.8s;
+      -webkit-transition-duration: 0.8s;
+      -o-transition-duration: 0.8s;
+    }
+    #demo4 nav li:hover {
+      -moz-box-shadow: 0px 1px 4px black;
+      -webkit-box-shadow: 0px 1px 4px black;
+      box-shadow: 0px 1px 4px black;
+      background: #fff;
+      background: -moz-linear-gradient(-90deg, rgba(0,0,0,0.2), rgba(0,0,0,0)), #fff;
+      background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(0,0,0,0))), #fff;
+    }
+    #demo4 nav li a {
+      -moz-transition-duration: 0.8s;
+      -webkit-transition-duration: 0.8s;
+      -o-transition-duration: 0.8s;
+      
+      display: block;
+      text-align: center;
+      
+      line-height: 1.8em;
+      font-size: 1.2em;
+      font-family: Delicious;
+      font-weight: bold;
+      text-shadow: 0px 0px 3px rgba(0,0,0,1);
+      text-decoration: none;
+      
+      color: #DDD;
+    }
+    #demo4 nav li:hover a {
+      color: #333;
+      text-shadow: 0px 0px 3px rgba(255,255,255,1);
+    }
+    
+    
+
+    </style>
+  </head>
+
+  <body>
+  
+    <h2>Here are some navigation bar examples using CSS3 Transitions</h2>
+    
+    <section id="demo1">
+      <h3>1. Simple</h3>
+      <nav>
+        <ul>
+          <li><a href="#demo1" class="selected">home</a></li>
+          <li><a href="#demo1">exhibition</a></li>
+          <li><a href="#demo1">reference</a></li>
+          <li><a href="#demo1">learning</a></li>
+          <li><a href="#demo1">download</a></li>
+          <li><a href="#demo1">community</a></li>
+          <li><a href="#demo1">blog</a></li>
+        </ul>
+      </nav>
+      <p>This navigation bar is inspirated from the <a href="http://processingjs.org/">Processing.js website</a>.</p>
+    </section>
+    
+    <section id="demo2">
+      <h3>2. Simple dark bar</h3>
+      <nav>
+        <ul>
+          <li><a href="#demo2">Home</a></li>
+          <li><a href="#demo2">Products</a></li>
+          <li><a href="#demo2">Services</a></li>
+          <li><a href="#demo2">About</a></li>
+        </ul>
+      </nav>
+      
+      <nav class="coloredhover">
+        <ul>
+          <li><a href="#demo2">Home</a></li>
+          <li><a href="#demo2">Products</a></li>
+          <li><a href="#demo2">Services</a></li>
+          <li><a href="#demo2">About</a></li>
+        </ul>
+      </nav>
+    </section>
+    
+    
+    <section id="demo3">
+      <h3>3. Dark bar with menus</h3>
+      <nav>
+        <ul>
+          <li class="category">
+            <a href="#demo3">Home</a>
+            <span>Home page.</span>
+          </li>
+          <li class="category">
+            <a href="#demo3">Products</a>
+            <span>Our latest products.</span>
+            <ul class="submenu">
+              <li><a href="#demo3">Desktop Computers</a></li>
+              <li><a href="#demo3">Laptops</a></li>
+              <li><a href="#demo3">Printers</a></li>
+            </ul>
+          </li>
+          <li class="category">
+            <a href="#demo3">Services</a>
+            <span>Our services.</span>
+            <ul class="submenu">
+              <li><a href="#demo3">Web hosting</a></li>
+              <li><a href="#demo3">Cloud computing</a></li>
+              <li><a href="#demo3">Auditing</a></li>
+            </ul>
+          </li>
+          <li class="category">
+            <a href="#demo3">About</a>
+            <span>About the company.</span>
+            <ul class="submenu">
+              <li><a href="#demo3">Blog</a></li>
+              <li><a href="#demo3">Contact</a></li>
+              <li><a href="#demo3">Careers</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </section>
+    
+    <section id="demo4">
+      <h3>4. Dark bar with hover effect</h3>
+      <nav>
+        <ul>
+          <li><a href="#demo4">Home</a></li>
+          <li><a href="#demo4">Projects</a></li>
+          <li><a href="#demo4">Twitter</a></li>
+          <li><a href="#demo4">Blog</a></li>
+          <li><a href="#demo4">Contact</a></li>
+        </ul>
+      </nav>
+    </section>
+    
+    <div>
+      <h2>Author note</h2>
+      <p>These navigation bars are made in CSS3, without images or javascript.</p>
+      <p>For a better experience, please use a recent browser with CSS3 transitions support.</p>
+      <p>For more demos and explanations, please go to <a href="http://blog.grenlibre.fr/2010/05/css3-transitions-available-on-firefox-3-7">this article from my blog</a>.</p>
+      
+      <h3>Hackability</h3>
+      <p>Web is open, you are free to hack codes with your browser (View Page Source - Ctrl+U).</p>
+      
+    </div>
+    
+    <footer>CSS Transitions - navigation bar examples - by Gaetan Renaudeau - 2010 - <a href="http://grenlibre.fr/">grenlibre.fr</a></footer>
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9919624-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

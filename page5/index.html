@@ -1,0 +1,609 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="embrace standard web technologies for web, games and mobile apps" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="embrace standard web technologies for web, games and mobile apps">
+    <meta name="twitter:description" content="embrace standard web technologies for web, games and mobile apps">
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - embrace standard web technologies for web, games and mobile apps</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        
+<article>
+  
+  <header>
+    <h1><a href="/2011/07/improve-your-web-navigation-experience-flexible-nav-jquery-library/">Improve your web navigation experience &#8211; Flexible Nav jQuery library</a></h1>
+    <time class="date" datetime="2011-07-30">July 30, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     <a class="tag" href="/tag/navigation.html">navigation</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <h2><a href="http://gre.github.io/flexible-nav/demo">Demo</a></h2>
+
+<blockquote>
+<p>Flexible Nav is a small jQuery library which add a smart navigation bar on the right of the page. It improves a web page navigation and helps to visualize different sections of a document, an article,.. any web page.</p>
+
+<p>Nav links are distributed proportionally to the page sections. See how your scrollbar “weds” these links.</p>
+</blockquote>
+
+<p>Flexible Nav is both a <strong>library</strong> and a <strong>bookmarklet</strong> which can be used easily in any website.</p>
+
+<p>The bookmarklet demonstrate the <strong>hackability of the web</strong> by using the semantic of web headings (<em>h1, h2, h3, ..</em>).</p>
+
+<h3>Links</h3>
+
+<ul>
+<li><a href="http://gre.github.io/flexible-nav/demo">Documentation and Demos</a></li>
+<li><a href="https://github.com/gre/flexible-nav">fork me on Github</a></li>
+<li><a href="javascript:(function()%7Bwindow.flexibleNavBase=&#x27;http://gre.github.io/flexible-nav/lib/&#x27;;var%20a=document.getElementsByTagName(&#x27;head&#x27;)%5B0%5D,b=document.createElement(&#x27;script&#x27;);b.type=&#x27;text/javascript&#x27;;b.src=flexibleNavBase+&#x27;bookmarklet.min.js&#x27;;a.appendChild(b);%7D)();%20void%200">FlexibleNav bookmarklet</a> (drag me in your bookmarks bar)</li>
+</ul>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2011/07/improve-your-web-navigation-experience-flexible-nav-jquery-library/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2011/07/improve-your-web-navigation-experience-flexible-nav-jquery-library/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2011/07/same-game-gravity-technical-notes/">Same Game Gravity: 6 platforms, 1 codebase</a></h1>
+    <time class="date" datetime="2011-07-12">July 12, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/mobile.html">mobile</a>
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>see also <a href="/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/">Same Game Gravity presentation</a>.</p>
+
+<p>2 years ago, I started to developed the <a href="http://gre.github.io/same-game-gravity">Same Game</a> as an HTML Canvas experiment. I’ve enjoyed developing this game, mostly because playing with HTML5 Canvas is so easy. Recently I’ve seen a nice increase in the user base (now around 250 visitors a day) – despite it being perhaps the simplest games I’ve ever developed. Simplicity is good, but my increase in users is thanks to the power of HTML5: The Same Game is available for 6 different platforms. And I can pump out new builds for them all in around 15 minutes. Here’s how…</p>
+
+<p><strong>It’s often the simplest games which work. Too much complexity is not good.</strong></p>
+
+<p><a href="http://gre.github.io/same-game-gravity"><br>
+<img src="/images/2011/07/gravity_exemple.png" alt="">
+</a></p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2011/07/same-game-gravity-technical-notes/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2011/07/same-game-gravity-technical-notes/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/">Same Game Gravity for iPad, iPhone, Android, Facebook, Chrome, and Web!</a></h1>
+    <time class="date" datetime="2011-07-12">July 12, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/mobile.html">mobile</a>
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>see also <a href="/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/">Same Game Gravity Technical Notes</a>.</p>
+
+<h1><a href="http://gre.github.io/same-game-gravity">Click to play</a></h1>
+
+<p><img src="/images/2011/07/promo.png" alt=""></p>
+
+<p><a href="http://gre.github.io/same-game-gravity">Same Game Gravity</a> is today available on <strong><a href="http://itunes.apple.com/us/app/same-game-gravity-for-ipad/id446790701">iPad</a>, <a href="http://itunes.apple.com/us/app/same-game-gravity/id445606743">iPhone</a>, <a href="http://market.android.com/details?id=fr.gaetanrenaudeau.samegame.free">Android</a>, <a href="http://gre.github.io/same-game-gravity">Web</a>, <a href="http://apps.facebook.com/samegamegravity/">Facebook Apps</a> and <a href="https://chrome.google.com/webstore/detail/eibjpmiiheipmgfhffjpdmojoagccijb">Chrome Web Store</a></strong>.</p>
+
+<p><img src="/images/2011/07/same_platform.png" alt=""></p>
+
+<blockquote>
+<p>Un principe simple remis au goût du jour. Trés bon!! <em>(bobylito)</em></p>
+
+<p>Great twist (excuse the pun) on the “same” game! <em>(mrspeaker)</em></p>
+
+<p>A fresh spin on Same Game the use of gravity is pretty clever. <em>(erwan)</em></p>
+</blockquote>
+
+<p>Same Game Gravity is a mind-bending ball removal puzzle game where you try to remove all of the balls from the board. Balls can only be removed when they are grouped with more balls of the same color. The balls are influenced by gravity. On mobile, you change gravity by rotating your mobile, on desktop you have arrows.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2011/06/automating-web-app-development-for-multiple-platforms/">Automating Web App development for multiple platforms</a></h1>
+    <time class="date" datetime="2011-06-01">June  1, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/linux.html">linux</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>In this article, we will explain why we’d choose web technologies to make applications and introduce <a href="/2011/06/automating-web-app-development-for-multiple-platforms/#webappbuilder"><strong>WebAppBuilder</strong></a>, a tool to easily build different instances of an application. We’ll examine the <a href="http://gre.github.io/same-game-gravity">Same Game Gravity</a> as an example.</p>
+
+<p>Using web to develop mobile applications is very <strong>productive</strong> and web technologies are <strong>rich</strong>.</p>
+
+<p><a href="https://github.com/gre/WebAppBuilder">Fork WebAppBuilder on Github.</a></p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2011/06/automating-web-app-development-for-multiple-platforms/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2011/06/automating-web-app-development-for-multiple-platforms/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2011/04/releasing-same-game-gravity-android/">Releasing Same Game Gravity (Android)</a></h1>
+    <time class="date" datetime="2011-04-24">April 24, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/mobile.html">mobile</a>
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>Following on from the success of my Same game made in HTML5 Canvas, I’ve decided to extend it to a (web) mobile game.</p>
+
+<p>It’s now available on Android market.</p>
+
+<p>More infos on <a href="http://gre.github.io/same-game-gravity">http://gre.github.io/same-game-gravity</a>.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/Qyd69g9hmIY?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
+
+<p>This ball removal puzzle game is made with HTML5 technologies and PhoneGap. Source code will be published within a few months.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2011/04/releasing-same-game-gravity-android/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2011/04/releasing-same-game-gravity-android/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2011/03/html-canvas-pour-les-neophytes/">HTML Canvas pour les néophytes</a></h1>
+    <time class="date" datetime="2011-03-12">March 12, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     <a class="tag" href="/tag/html.html">html</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>Cette vidéo de 20 minutes présente les possibilités du Canvas à travers quelques démos et l’implémentation pas à pas d’un exemple basique.<br>
+Elle est destinée à des développeurs débutant dans l’utilisation de Canvas.</p>
+
+<iframe src="http://player.vimeo.com/video/20957255?portrait=0" width="550" height="410" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+<p><em>Dans la suite de l’article : les liens et codes de la vidéo …</em></p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2011/03/html-canvas-pour-les-neophytes/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2011/03/html-canvas-pour-les-neophytes/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2011/01/how-to-make-dlink-dwa-140-perfectly-work-on-linux/">How to make DLink DWA-140 B2 perfectly work on Linux</a></h1>
+    <time class="date" datetime="2011-01-05">January  5, 2011</time>
+   <span class="tags">
+     <a class="tag" href="/tag/linux.html">linux</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><strong>[EDIT] Note: the DWA-140 B2 is now supported by recent Linux version.</strong></p>
+
+<p>I’m using ArchLinux and I finally make my DWA-140 B2 Wifi USB adaptor work !</p>
+
+<p>If you have the same problem, you can read this article to fix it !</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2011/01/how-to-make-dlink-dwa-140-perfectly-work-on-linux/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2011/01/how-to-make-dlink-dwa-140-perfectly-work-on-linux/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2010/05/css3-transitions-available-on-firefox-3-7/">CSS3 Transitions</a></h1>
+    <time class="date" datetime="2010-05-05">May  5, 2010</time>
+   <span class="tags">
+     <a class="tag" href="/tag/css.html">css</a>
+     <a class="tag" href="/tag/animation.html">animation</a>
+     <a class="tag" href="/tag/transition.html">transition</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p><a href="http://www.w3.org/TR/css3-transitions/">CSS3 transitions</a> are now available on Firefox, Chrome, Safari, Opera and … IE9!, and it’s awesome.</p>
+
+<blockquote>
+<p>CSS Transitions allows property changes in CSS values to occur smoothly over a specified duration.</p>
+</blockquote>
+
+<p><strong>Javascript is not anymore required for simple animation.</strong></p>
+
+<p>Specifically, we don’t need Javascript to manage animation with <strong>setInterval</strong> or with any library like <strong>jQuery.animate</strong> : Forget the animation management, stay focused on the real work.</p>
+
+<p>In this article, I will try to explain why and how using css3-transition with some examples.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2010/05/css3-transitions-available-on-firefox-3-7/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2010/05/css3-transitions-available-on-firefox-3-7/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2010/04/automatiser-lexportation-dun-site-statique-avec-wget/">Automatiser l&#039;exportation d&#039;un site statique avec wget</a></h1>
+    <time class="date" datetime="2010-04-04">April  4, 2010</time>
+   <span class="tags">
+     <a class="tag" href="/tag/playframework.html">playframework</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>Il est préférable d’<strong>utiliser un framework web</strong> même si l’on veut réaliser un <strong>site vitrine simple (statique)</strong>, car l’on bénéficie des avantages du framework notamment de l’héritage (entre autre) des templates, de l’internationalisation, de la configuration des <em>routes</em>, du <em>SASS</em>, etc.</p>
+
+<p>De plus, cela permet de rendre la maintenabilité moins longue et couteuse.</p>
+
+<p>Néanmoins, son hébergeur ne permet pas toujours de faire tourner son site avec le framework utilisé (par exemple <em>ruby on rails</em> ou <em>play! framework</em>).</p>
+
+<p>Pour remédier à ce problème, il suffit d’<strong>exporter son site statique en simples pages HTML</strong>.</p>
+
+<p>Cet article est donc destiné aux particuliers ne voulant pas investir dans un serveur dédié, fans de framework avancés qui ne sont pas supportés par les offres d’entrée de gamme des hébergeurs (qui n’offrent généralement que le support du php). </p>
+
+<p><strong>D’ailleurs, pour ce type de site, pourquoi utiliser un framework MVC si l’on utilise que des vues ?</strong></p>
+
+<h2>La démarche</h2>
+
+<h3>Le site web</h3>
+
+<p><strong>Réalisez le site</strong> avec votre framework préféré et faites en sorte que la page principale (<strong>/</strong>) <strong>permette l’accès à toutes les pages du site</strong> par des liens (pas forcément directs).</p>
+
+<h3>Exportation</h3>
+
+<p>Avec <strong>wget</strong> récupérez votre site à la ligne de commande :</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">wget -r -k -np <span class="s2">&quot;http://localhost:9000/&quot;</span>
+</code></pre></div>
+<p>A l’instar d’un moteur de recherche, c’est cette commande qui va s’occuper de <strong>retracer toutes les pages web de votre site</strong>, mais aussi toutes ses ressources (images, css, js, ..). En plus de cela, elle va <strong>préserver le fonctionnement des liens</strong> entre pages. </p>
+
+<p>Adaptez <em>http://localhost:9000/</em> à l’url de votre site.</p>
+
+<p>Cela va créer le dossier <em>localhost:9000</em>, il ne vous restera plus qu’à l’envoyer sur votre serveur http.</p>
+
+<h2>Internationalisation</h2>
+
+<p>Voici une solution pour exporter son internationalisation.</p>
+
+<p>Elle consiste à rediriger l’utilisateur, depuis la page principale, sur la bonne page internationalisée en fonction de sa langue (indiquée par le navigateur), tout <strong>en gardant les fichiers publics en commun</strong> (css, images).</p>
+
+<h3>Préparer ses routes</h3>
+
+<p>préparez les uri pour qu’elles soient de la forme <strong>/{lang}/*/</strong> avec <strong>lang</strong> désignant la langue désirée.</p>
+
+<h4>Exemples de routes</h4>
+<div class="highlight"><pre><code class="language-text" data-lang="text">/en/  
+/en/about/  
+/fr/  
+/fr/about/
+</code></pre></div>
+<h3>Ajouter des liens dans les templates pour changer de langue</h3>
+
+<p>Cette action est délicate car, comme précisé auparavant, <strong>wget</strong> essaye de retracer tous les liens entre pages.</p>
+
+<p>Ainsi, si l’on crée des liens entre les différentes langues, <strong>wget</strong> créera un dossier <em>public</em> pour chaque langue internationalisée. </p>
+
+<p>Pour contourner ce problème et ainsi factoriser les fichiers communs, <strong>une solution est de créer les liens à posteriori</strong>.</p>
+
+<h4>Solution exemple avec play framework</h4>
+<div class="highlight"><pre><code class="language-text" data-lang="text">&lt;p&gt;
+#{if lang!=&#39;en&#39;}
+  &lt;a ADD_HERE_ENGLISH_LINK_ATTRIBUTES&gt;english version&lt;/a&gt;
+#{/if}
+#{if lang!=&#39;fr&#39;}
+  &lt;a ADD_HERE_FRENCH_LINK_ATTRIBUTES&gt;french version&lt;/a&gt;
+#{/if}
+&lt;/p&gt;
+</code></pre></div><div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
+<span class="c"># script bash</span>
+wget -r -k -np <span class="s2">&quot;http://localhost:9000/&quot;</span>
+sed -i s/ADD_HERE_ENGLISH_LINK_ATTRIBUTES/href<span class="o">=</span><span class="se">\&quot;\\</span>/en<span class="se">\\</span>/<span class="se">\&quot;</span>/g <span class="k">$(</span>find . -name <span class="s2">&quot;*.html&quot;</span><span class="k">)</span>
+sed -i s/ADD_HERE_FRENCH_LINK_ATTRIBUTES/href<span class="o">=</span><span class="se">\&quot;\\</span>/fr<span class="se">\\</span>/<span class="se">\&quot;</span>/g <span class="k">$(</span>find . -name <span class="s2">&quot;*.html&quot;</span><span class="k">)</span>
+</code></pre></div>
+<h3>Préparer une page de redirection</h3>
+
+<p><strong>Placez à posteriori un script de redirection à l’url /</strong> pour rediriger vers la page adéquat.</p>
+
+<h4>Par exemple un script php</h4>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$langs</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_ACCEPT_LANGUAGE&#39;</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="nb">preg_match_all</span><span class="p">(</span><span class="s1">&#39;/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i&#39;</span><span class="p">,</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_ACCEPT_LANGUAGE&#39;</span><span class="p">],</span> <span class="nv">$lang_parse</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">count</span><span class="p">(</span><span class="nv">$lang_parse</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="nv">$langs</span> <span class="o">=</span> <span class="nb">array_combine</span><span class="p">(</span><span class="nv">$lang_parse</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nv">$lang_parse</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$langs</span> <span class="k">as</span> <span class="nv">$lang</span> <span class="o">=&gt;</span> <span class="nv">$val</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$val</span> <span class="o">===</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="nv">$langs</span><span class="p">[</span><span class="nv">$lang</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nb">arsort</span><span class="p">(</span><span class="nv">$langs</span><span class="p">,</span> <span class="nx">SORT_NUMERIC</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$langs</span> <span class="k">as</span> <span class="nv">$lang</span> <span class="o">=&gt;</span> <span class="nv">$val</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">strpos</span><span class="p">(</span><span class="nv">$lang</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: fr&#39;</span><span class="p">);</span>
+    <span class="k">die</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">strpos</span><span class="p">(</span><span class="nv">$lang</span><span class="p">,</span> <span class="s1">&#39;en&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: en&#39;</span><span class="p">);</span>
+    <span class="k">die</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Location: en&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2010/04/automatiser-lexportation-dun-site-statique-avec-wget/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2010/04/automatiser-lexportation-dun-site-statique-avec-wget/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+<article>
+  
+  <header>
+    <h1><a href="/2010/04/realiser-une-maquette-web-avec-le-css-3/">Réaliser une maquette web avec le CSS 3</a></h1>
+    <time class="date" datetime="2010-04-03">April  3, 2010</time>
+   <span class="tags">
+     <a class="tag" href="/tag/css.html">css</a>
+     <a class="tag" href="/tag/sass.html">sass</a>
+     
+   </span>
+  </header>
+
+    <div class="entry-content excerpt">
+    
+      <p>Le CSS depuis sa version 3 constitue une <strong>bonne évolution technologique pour palier l’utilisation abusive d’images</strong> dans la réalisation d’une application web.</p>
+
+<p>Il n’est ainsi plus nécessaire de recourir à des images pour réaliser des <strong>ombres</strong>, des <strong>dégradés</strong>, des <strong>bordures arrondis</strong> ou encore utiliser des <strong>polices spécifiques</strong>.</p>
+
+<p>L’avenir du CSS3 nous promet encore plus : il est d’ores et déjà possible sur certains navigateurs d’effectuer des <strong>animations</strong>, des <strong>transitions</strong>, des <strong>effets de reflets</strong>,… sans devoir recourir au <em>javascript</em>, au <em>canvas</em> ou, pire encore, au <em>flash</em>.</p>
+
+    
+    </div>
+    <footer>
+      <a class="comments" href="http://greweb.me/2010/04/realiser-une-maquette-web-avec-le-css-3/#disqus_thread">Comments</a>
+      
+      <a class="continue-reading" href="/2010/04/realiser-une-maquette-web-avec-le-css-3/">Continue reading »</a>
+      
+    </footer>
+</article>
+
+
+<nav class="pagination">
+  
+    
+    <a href="/page4" class="previous">Previous</a>
+    
+  
+  <span class="page_number ">Page: 5 of 6</span>
+  
+    <a href="/page6" class="next">Next</a>
+  
+</nav>
+
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

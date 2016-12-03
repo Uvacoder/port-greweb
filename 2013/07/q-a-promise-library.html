@@ -1,0 +1,371 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="This article is the first of a series of small articles on the Q Javascript library and its eco-system. It is a brief introduction to Q Promises." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Qep1.: Q, a Promise library">
+    <meta name="twitter:description" content="This article is the first of a series of small articles on the Q Javascript library and its eco-system. It is a brief introduction to Q Promises.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2013/07/promise_then_thumbnail.jpg">
+    <link rel="image_src" href="http://greweb.me/images/2013/07/promise_then_thumbnail.jpg">
+    
+
+    <title>@GreWeb - Qep1.: Q, a Promise library</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/07/q-a-promise-library">Qep1.: Q, a Promise library</a></h1>
+    <time class="date" datetime="2013-07-10">July 10, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/awop.html">AWOP</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/promise.html">promise</a>
+     <a class="tag" href="/tag/q.html">Q</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <h1><a href="/pages/a-world-of-promises/">A World Of Promises</a>, episode 1</h1>
+
+<p><em>This article is the first of a series of small articles 
+on the Q Javascript library and its eco-system.
+This article is a brief introduction to Q Promises.</em></p>
+
+<p><img src="/images/2013/07/promise_then_thumbnail.jpg" alt="" class="thumbnail-left" /></p>
+
+<p><a href="http://github.com/kriskowal/q">Q</a> is a <strong>Promise library</strong> in <strong>Javascript</strong> 
+created 4 years ago by <a href="https://github.com/kriskowal">Kris Kowal</a> who is one of the main contributor to <a href="http://wiki.commonjs.org/">CommonJS</a>
+where we can find the <strong><a href="http://wiki.commonjs.org/wiki/Promises/A">Promises/A</a></strong> specification.</p>
+
+<p><a href="http://github.com/kriskowal/q">Q</a> is probably <strong>the most mature and powerful Promise library in Javascript</strong>
+which inspired a lot of libraries like <a href="http://jquery.com/">jQuery</a>.
+It exposes a complete API with, in my humble opinion, 
+good ideas like the separation of concerns between a &quot;Deferred&quot; object (the resolver) 
+and a &quot;Thenable&quot; Promise (the read-only promise).</p>
+
+<p>This article is a brief introduction to Q Promises with some examples.
+For more information on the subject, I highly recommend reading
+the article <a href="http://domenic.me/2012/10/14/youre-missing-the-point-of-promises/">&quot;You&#39;re Missing the Point of Promises&quot;</a> 
+and <a href="https://raw.github.com/kriskowal/q/master/design/README.js">the Q implementation design README</a>.</p>
+
+<!--more-->
+
+<h2>What is a Promise</h2>
+
+<p>A <strong>Promise</strong> is an object representing a <strong>possible future value</strong> which has 
+a <code>then</code> method to access this value via callback. A Promise is initially 
+in a <em>pending</em> state and is then either <em>fulfilled</em> with a value or <em>rejected</em> with an error.</p>
+
+<p><img src="/images/2013/07/promise.png" alt="Schema representing Promise states: pending -&gt; fulfilled|rejected"></p>
+
+<h3>Some properties</h3>
+
+<p>It is <strong>immutable</strong> because the Promise value never changes and each <code>then</code> creates a new Promise. 
+As a consequence, one same Promise can be shared between different code.</p>
+
+<p>It is <strong>chainable</strong> through the <code>then</code> method (and other Q shortcut methods),
+which transforms a Promise into a new Promise without knowing what&#39;s inside.</p>
+
+<p>It is <strong>composable</strong> because the <code>then</code> method will unify any Promise returned as 
+a result of the callback with the current Promise (act like a map or flatmap). 
+<a href="http://github.com/kriskowal/q">Q</a> also has a <code>Q.all</code> helper for combining an Array of Promise into one big Promise.</p>
+
+<h2>A solution against the <a href="http://tritarget.org/blog/2012/11/28/the-pyramid-of-doom-a-javascript-style-trap/">Pyramid of Doom</a> effect</h2>
+
+<p><em>Javascript</em> is by nature an <strong>asynchronous language</strong> based on an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/EventLoop">event loop</a> which enqueue events.
+As a consequence, there is no way to block long actions (like Image Loading, ajax requests, other events), but everything is instead asynchronous:
+Most of Javascript APIs are using <strong>callbacks</strong> - functions called when the event has succeeded.</p>
+
+<p><strong>Problem with callbacks</strong> is when you start having a lot of asynchronous actions.
+It quickly becomes a <a href="http://callbackhell.com/">Callback Hell</a>.</p>
+
+<h3>Example</h3>
+
+<p>Here is a simple illustration, let&#39;s say we have 2 functions, 
+one for <strong>retrieving some photos meta-infos from Flickr</strong> with a search criteria: <code>getFlickrJson(search, callback)</code>, 
+another for <strong>loading an image from one photo meta-info</strong>: <code>loadImage(json, callback)</code>. 
+Of-course both functions are asynchonous so they need a callback to be called with a result.</p>
+
+<p>With this callback approach, we can then write:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// search photos for &quot;Paris&quot;, load and display the first one</span>
+<span class="nx">getFlickrJson</span><span class="p">(</span><span class="s2">&quot;Paris&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">imagesMeta</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">loadImage</span><span class="p">(</span><span class="nx">imagesMeta</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">image</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">displayImage</span><span class="p">(</span><span class="nx">image</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><em>(Imagine what it can look like with more nested steps.)</em></p>
+
+<blockquote>
+<p>we can easily turn a <em>callback</em> API into a <em>Promise</em> API</p>
+</blockquote>
+
+<h4>Promise style</h4>
+
+<p><code>getFlickrJson</code> and <code>loadImage</code> can now be rewritten as Promise APIs:</p>
+
+<p>Each function has clean signatures:</p>
+
+<ul>
+<li><code>getFlickrJson</code> is a <code>(search: String) =&gt; Promise[Array of ImageMeta]</code>.</li>
+<li><code>loadImage</code> is a <code>(imageMeta: ImageMeta) =&gt; Promise[DOM Image]</code>.</li>
+<li><code>displayImage</code> is a <code>(image: DOM Image) =&gt; undefined</code>.</li>
+</ul>
+
+<p>...and are easily pluggable together:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">getFlickrJson</span><span class="p">(</span><span class="s2">&quot;Paris&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">imagesMeta</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">imagesMeta</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="p">})</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">loadImage</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayImage</span><span class="p">,</span> <span class="nx">displayError</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>This is much more flatten, concise, maintainable and beautiful!</strong></p>
+
+<p>Note that if we want to be safer we can write:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Q</span><span class="p">.</span><span class="nx">fcall</span><span class="p">(</span><span class="nx">getFlickrJson</span><span class="p">,</span> <span class="s2">&quot;Paris&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">imagesMeta</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">imagesMeta</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="p">})</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">loadImage</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayImage</span><span class="p">,</span> <span class="nx">displayError</span><span class="p">);</span>
+</code></pre></div>
+<p><code>Q.fcall</code> will call the function with the given parameters and ensure wrapping the returned value into a <strong>Promise</strong>.
+So my code should continue working even if we change signatures to:</p>
+
+<ul>
+<li><code>getFlickrJson</code> is a <code>(search: String) =&gt; Array of ImageMeta</code>.</li>
+<li><code>loadImage</code> is a <code>(imageMeta: ImageMeta) =&gt; DOM Image</code>.</li>
+</ul>
+
+<p>One other cool thing about this chain of Promises is <strong>we can easily add more steps</strong> between two <code>then</code> step, for instance a DOM animation, a little delay, etc.</p>
+
+<h3>Error Handling</h3>
+
+<p>But a much important benefit is, unlike the callbacks approach,
+we can properly <strong>handle the error in one row</strong> because one of the following steps eventually fails:</p>
+
+<ul>
+<li><code>getFlickrJson</code> fails to perform the ajax request to retrieve the Flickr JSON data.</li>
+<li>The array returned by Flickr was empty so <code>loadImage</code> throws an exception.</li>
+<li>The <code>loadImage</code> fails (e.g. the image is unavailable).</li>
+</ul>
+
+<p>This is called <strong>propagation</strong> and is exactly how <strong>exceptions</strong> work.</p>
+
+<p><strong>Promise Error Handling</strong> really looks like <strong>Exception Handling</strong>.</p>
+
+<p>If it would be possible to have two methods:</p>
+
+<ul>
+<li><code>getFlickrJsonSync</code> is a <code>(search: String) =&gt; Array of ImageMeta</code>.</li>
+<li><code>loadImageSync</code> is a <code>(imageMeta: ImageMeta) =&gt; DOM Image</code>.</li>
+</ul>
+
+<p>Then, the blocking code would look like this:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">try</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">imagesMeta</span> <span class="o">=</span> <span class="nx">getFlickrJsonSync</span><span class="p">(</span><span class="s2">&quot;Paris&quot;</span><span class="p">)</span>
+  <span class="kd">var</span> <span class="nx">firstImageMeta</span> <span class="o">=</span> <span class="nx">imagesMeta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="kd">var</span> <span class="nx">image</span> <span class="o">=</span> <span class="nx">loadImageSync</span><span class="p">(</span><span class="nx">firstImageMeta</span><span class="p">)</span>
+  <span class="nx">displayImage</span><span class="p">(</span><span class="nx">image</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">displayError</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><em>...which is very close to Promise style.</em></p>
+
+<p><strong>Q Promises also unify Exceptions and Rejected Promises</strong>:
+throwing an exception in any Q callback will result in a rejected Promise.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">safePromise</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">fcall</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// following eventually throws an exception</span>
+  <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">someUnsafeJsonString</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="c1">// safePromise is either fulfilled with a JSON Object</span>
+<span class="c1">// or rejected with an error.</span>
+</code></pre></div>
+<blockquote>
+<p>Error handling with the callbacks approach is hell:</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">getFlickrJson</span><span class="p">(</span><span class="s2">&quot;Paris&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">imagesMeta</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">imagesMeta</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">displayError</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">loadImage</span><span class="p">(</span><span class="nx">imagesMeta</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">image</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">displayImage</span><span class="p">(</span><span class="nx">image</span><span class="p">);</span>
+    <span class="p">},</span> <span class="nx">displayError</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">},</span> <span class="nx">displayError</span><span class="p">);</span>
+</code></pre></div>
+<h2>Next episode</h2>
+
+<p>Next episode, we will show you how to create your own Promises with <em>Deferred</em> objects.
+We will introduce <strong>Qimage</strong>, a simple Image loader wrapped with Q.</p>
+
+<hr>
+
+<p>Special Kudos to <a href="http://twitter.com/42loops">@42loops</a> &amp; <a href="http://twitter.com/bobylito">@bobylito</a>
+for bringing Q in my developer life :-P</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/03/panzer-dragoon-1k">Panzer Dragoon 1k</a>
+            </li>
+            
+            <li>
+              <a href="/2014/01/promisify-your-games">Promisify your games</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

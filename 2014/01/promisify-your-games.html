@@ -1,0 +1,475 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="a game showcase using Q Promise as first-class citizen and driven with CSS3 Animations via Zanimo." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Promisify your games">
+    <meta name="twitter:description" content="a game showcase using Q Promise as first-class citizen and driven with CSS3 Animations via Zanimo.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2014/01/ld28.png">
+    <link rel="image_src" href="http://greweb.me/images/2014/01/ld28.png">
+    
+
+    <title>@GreWeb - Promisify your games</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2014/01/promisify-your-games">Promisify your games</a></h1>
+    <time class="date" datetime="2014-01-12">January 12, 2014</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/promise.html">promise</a>
+     <a class="tag" href="/tag/q.html">Q</a>
+     <a class="tag" href="/tag/ludumdare.html">ludumdare</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p>One month ago was the <a href="http://www.ludumdare.com/compo/">LudumDare</a> #28 gamejam theming <em>&quot;You Only Get One&quot;</em>.</p>
+
+<p><a href="http://greweb.me/ld28/">
+  <img src="/images/2014/01/ld28.png" alt="" class="thumbnail-left" />
+</a></p>
+
+<p>I <a href="http://www.ludumdare.com/compo/ludum-dare-28/?action=preview&amp;uid=18803">submitted</a> a <a href="http://greweb.me/ld28/">mini-game</a> which ranked 105th out of 2064 entries and also 26th in the &quot;theme&quot; category.</p>
+
+<p>This is of-course a web game implemented in JavaScript and using HTML and CSS.</p>
+
+<p>But actually, my main goal was not really making a game done 
+but more about technically <strong>making a state-of-the-art Promise-based game</strong>.</p>
+
+<p>I think <a href="/2013/07/q-a-promise-library/">Promises</a> contains very interesting advantages in a game development design:
+<em>Resource loading managment</em>, <em>game scenes chaining</em>, <em>animations</em>... are some use-cases.</p>
+
+<ul>
+<li>Checkout the <a href="https://github.com/gre/ld28">source code</a> on Github - <a href="https://github.com/gre/ld28/tree/master/src/app.js"><code>src/app.js</code></a> is the entry point</li>
+<li>LudumDare entry is <a href="http://www.ludumdare.com/compo/ludum-dare-28/?action=preview&amp;uid=18803">here</a>.</li>
+<li><a href="http://greweb.me/ld28/">Play the Game</a>.</li>
+</ul>
+
+<!--more-->
+
+<h2>FP in game development</h2>
+
+<p>Using some Functional Programming paradigm in game development is interesting,
+and here I&#39;m just talking at least about the basic stuff:
+<strong>Avoid globals, Minimize state variables</strong>.</p>
+
+<p>I&#39;ve written a few games where restarting the game without using <code>location.reload()</code> was a challenge
+because the game variable states was so spread everywhere!</p>
+
+<p>By doing more FP, you can have this restart feature by design without need to &quot;reset&quot; all variables
+because your start function just takes everything it needs in parameter and restarting is just about re-calling that function.</p>
+
+<h2>Promises as first-class citizen</h2>
+
+<h3>Game scenes chaining</h3>
+
+<p>Like maybe 99% of games, my game has an <strong>intro</strong> (menu), a <strong>main</strong> scene and an <strong>outro</strong> scene (gameover / finish).</p>
+
+<p>When you develop a game with just one big <code>render()</code> loop,
+it easily becomes a pain when you want to add more steps to the scene,
+it doesn&#39;t scale and fastly become spaghetti code:
+you tend to have to figure out in which state you are (or which part of the animation timeline) from the game state.</p>
+
+<p>Hopefully, scene management is very easy to do with Promises:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">start</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">Q</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">intro</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">partial</span><span class="p">(</span><span class="nx">runMiniGames</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">outro</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span><span class="cm">/*..something to load..*/</span><span class="p">])</span>
+ <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">start</span><span class="cm">/*, ..*/</span><span class="p">)</span> <span class="c1">// start game when ready</span>
+ <span class="p">.</span><span class="nx">done</span><span class="p">();</span> <span class="c1">// just help Q to trigger errors if some.</span>
+</code></pre></div>
+<p>How beautiful to read! Call <code>intro</code> then run 20 mini-games then perform <code>outro</code>.</p>
+
+<h4>No game state shared, pure functions</h4>
+
+<p><strong>intro</strong> is the menu screen where you can choose the game difficulty.
+<strong>outro</strong> is the game end screen where the final score is displayed.
+There is however <strong>no global variables shared</strong>, those are just passed from one function to another.</p>
+
+<p>Let&#39;s look deeper in how it works:</p>
+
+<ul>
+<li>The <code>intro()</code> function just returns a Promise resolved when the user made a &quot;difficulty&quot; choice. That Promise actually contains the difficulty (0, 1 or 2).</li>
+<li>The <code>runMiniGames</code> function takes 2 parameters: the number of games and the difficulty. <code>_.partial(runMiniGames, 20)</code> is just an helper for making a 20 mini-games function which takes the difficulty in parameter. This difficulty is given by the previous Promise. The <code>runMiniGames</code> function returns a Promise of Score (integer).</li>
+<li>That score is then fed into the <code>outro(score)</code> function which displays this score to the user.</li>
+</ul>
+
+<blockquote>
+<p><strong>TL;DR.</strong> This is just about plumbing 3 functions together!</p>
+</blockquote>
+
+<p>Checkout also the <a href="https://github.com/gre/ld28/blob/master/src/app.js#L24-L37"><code>runMiniGames</code> implementation</a>.</p>
+
+<h4>Speed up the development</h4>
+
+<p>And you know what? It make development easier and faster because you can easily skip some part in any Promises chain:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">start</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">Q</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1">//.then(intro) // Directly jump to the games</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">partial</span><span class="p">(</span><span class="nx">runMiniGames</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">outro</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>I used that a lot and not only for this part, but for all part during the game development.</p>
+
+<h3>Loading resources</h3>
+
+<p>Promises also help you to wait resources before starting the game.
+You don&#39;t have to make yet another loading library, Promise already are ready for that, 
+and you can also have proper error managment or even &quot;progress&quot; loading display (Q has Progress event in a Promise).</p>
+
+<p>Each loading resource is a Promise and you can combine them all using <code>Q.all</code>.</p>
+
+<p>Here is an example using <a href="https://npmjs.org/package/qajax">Qajax</a> and <a href="https://npmjs.org/package/qimage">Qimage</a>.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+  <span class="nx">Qajax</span><span class="p">(</span><span class="s2">&quot;music.wav&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">mapToAudio</span><span class="p">),</span>
+  <span class="nx">Qajax</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;map.json&quot;</span><span class="p">),</span>
+  <span class="nx">Qimage</span><span class="p">(</span><span class="s2">&quot;images/logo.png&quot;</span><span class="p">),</span>
+  <span class="nx">Qimage</span><span class="p">(</span><span class="s2">&quot;images/textures.png&quot;</span><span class="p">)</span>
+<span class="p">]).</span><span class="nx">spread</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">music</span><span class="p">,</span> <span class="nx">map</span><span class="p">,</span> <span class="nx">logo</span><span class="p">,</span> <span class="nx">textures</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Start the game !</span>
+
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// display proper error</span>
+
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">progressEvent</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// maybe you want to display a loading progress bar </span>
+  <span class="c1">// with that third progress callback.</span>
+
+<span class="p">});</span>
+</code></pre></div>
+<p>Here is a similar example:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">musicPromise</span> <span class="o">=</span> <span class="nx">Qajax</span><span class="p">(</span><span class="s2">&quot;music.wav&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">mapToAudio</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">mapPromise</span> <span class="o">=</span> <span class="nx">Qajax</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;map.json&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">texturesPromise</span> <span class="o">=</span> <span class="nx">Qimage</span><span class="p">(</span><span class="s2">&quot;images/textures.png&quot;</span><span class="p">);</span>
+<span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span> <span class="nx">mapPromise</span><span class="p">,</span> <span class="nx">texturesPromise</span> <span class="p">]).</span><span class="nx">spread</span><span class="p">(</span><span class="nx">startGame</span><span class="p">,</span> <span class="nx">errorLoading</span><span class="p">);</span>
+<span class="c1">// because maybe you don&#39;t want to wait the music for starting the game:</span>
+<span class="nx">musicPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span> <span class="nx">a</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span> <span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">startGame</span> <span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="nx">textures</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">errorLoading</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Mini games workflow</h3>
+
+<p>My games is divided into a set of mini-games which are all independent but share a common interface.
+This interface was quite a WIP at the end of the weekend development but it does the job.</p>
+
+<p>Here is the template I used for my game: <a href="https://github.com/gre/ld28/blob/master/src/games/_template.js">src/games/_template.js</a>.</p>
+
+<p>A Game instance has different methods, and especially <code>enter</code> and <code>leave</code> method which are call on game enter and on game leave. It also has a <code>.end</code> Promise which is resolved when the Game end.</p>
+
+<ul>
+<li>A mini-game when solved gives a score depending on how well the user succeed it (through the <code>end</code> Promise).</li>
+<li>A mini-game have a timeout and if the player doesn&#39;t terminate it, it passes to the next game without scores.</li>
+</ul>
+
+<p>Those <code>enter()</code> and <code>leave()</code> methods return Promise in order to be plugged in the game workflow (we can wait them to finish before moving to next state).</p>
+
+<p>For instance, we don&#39;t start the game timeout before it actually starts (just wait the <code>enter()</code> Promise to be resolved) and also we don&#39;t switch to the next game before the <code>leave()</code> Promise is done).</p>
+
+<p>Checkout also the <a href="https://github.com/gre/ld28/blob/master/src/app.js#L51-L76"><code>nextMiniGame</code> implementation</a>.
+The result of that function is the score of the mini-game and that we sum up all scores from the previous score.</p>
+
+<h4>Composability</h4>
+
+<p>The <code>enter()</code> and <code>leave()</code> methods can be composed of animations which can themselves be composed of animations.</p>
+
+<p><strong>We can easily subdivided work into different level of Promises chain.</strong>
+Here is a little schema to summary that composability:</p>
+
+<p><img src="/images/2014/01/ld28_composition_schema.svg" alt=""></p>
+
+<h3>Promise Animations</h3>
+
+<p>In my game, all the animations are controlled with Promises more exactly using CSS3 Transitions 
+via <strong><a href="https://github.com/peutetre/Zanimo">Zanimo</a> Promise library</strong> because it fits my game (DOM-based game).
+The fact that a Promise can be waited and chained <strong>gives a powerful controls over CSS Transitions for making animations</strong>.</p>
+
+<p>You can easily trigger animations <strong>one after another</strong> for moving an element in multiple places.
+You can also perform <strong>multiple animations at the same times</strong> (on 2 different elements) and <strong>wait for both to finish</strong>
+before triggering a third animation.</p>
+
+<p>See for instance how <code>enter()</code> and <code>leave()</code> animations are done in mini-games.</p>
+
+<p>In the animation ending the &quot;memo&quot; game I used concurrent animations:
+all memo cards are randomly moved out.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/* // FYI</span>
+<span class="cm">Card.prototype.transform = function (x, y, scale, duration) {</span>
+<span class="cm">  return Zanimo.transition(this.el, &quot;transform&quot;,</span>
+<span class="cm">    &quot;translate(&quot;+x+&quot;px, &quot;+y+&quot;px) scale(&quot;+scale+&quot;)&quot;, duration||0);</span>
+<span class="cm">};</span>
+<span class="cm">*/</span>
+
+<span class="kd">function</span> <span class="nx">animateOut</span> <span class="p">(</span><span class="nx">dispersion</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">cards</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">card</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">card</span><span class="p">.</span><span class="nx">destroyed</span><span class="p">)</span> <span class="k">return</span> <span class="nx">Q</span><span class="p">();</span> <span class="c1">// no animation because card is destroyed</span>
+    <span class="k">return</span> <span class="nx">Q</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="k">return</span> <span class="nx">card</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="nx">card</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">card</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> <span class="nx">card</span><span class="p">.</span><span class="nx">number</span> <span class="o">===</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">((</span><span class="nx">card</span><span class="p">.</span><span class="nx">number</span><span class="o">===</span><span class="mi">1</span> <span class="o">?</span> <span class="mi">500</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span><span class="o">+</span><span class="mi">300</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()))</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">((</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">&lt;</span><span class="mf">0.5</span> <span class="o">?</span> <span class="o">-</span><span class="nx">card</span><span class="p">.</span><span class="nx">w</span><span class="o">/</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">width</span><span class="o">-</span><span class="nx">dispersion</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">:</span> <span class="mi">1</span><span class="o">+</span><span class="nx">dispersion</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">())</span><span class="o">*</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">width</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">y</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">((</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">&lt;</span><span class="mf">0.5</span> <span class="o">?</span> <span class="o">-</span><span class="nx">card</span><span class="p">.</span><span class="nx">h</span><span class="o">/</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">height</span><span class="o">-</span><span class="nx">dispersion</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">:</span> <span class="mi">1</span><span class="o">+</span><span class="nx">dispersion</span><span class="o">*</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">())</span><span class="o">*</span><span class="nx">dimensions</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">card</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">);</span>
+      <span class="p">});</span>
+  <span class="p">}));</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage in Memo.leave() :</span>
+<span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span> <span class="k">return</span> <span class="nx">animateOut</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span> <span class="p">})</span>
+  <span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+</code></pre></div>
+<p>In the calculation game I used a chain of animations subdivided in functions:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">fadeOutInvalids</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displaySolution</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">displayEquality</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">fadeOut</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">hideEquality</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+</code></pre></div>
+<p><a href="https://github.com/gre/ld28/blob/master/src/games/calculation.js#L411-L500">Full code here</a>.</p>
+
+<h3>&quot;Wait for next click&quot;</h3>
+
+<p>While my game are just based on click user interaction,
+I&#39;ve made a <a href="https://github.com/gre/ld28/blob/master/src/waitNextClick.js"><code>waitNextClick</code></a> function
+which returns a Promise of click for the given element.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">Q</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">waitNextClick</span> <span class="p">(</span><span class="nx">btn</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="nx">btn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="nx">listener</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">btn</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="nx">listener</span><span class="p">);</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>This was quite an interesting solution which is just like a jQuery &quot;once&quot; event but in Promise paradigm.</p>
+
+<p>I was able to combine that function with <code>Q.race</code> which wait for one of the given Promise to be redeemed.</p>
+
+<blockquote>
+<p><code>Q.race(_.map(btns, waitNextClick))</code></p>
+</blockquote>
+
+<p>For instance in the cats game, I just wait the first &quot;This one&quot; button to be clicked:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">houseChoice</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">race</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">houses</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">catHouse</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">waitNextClick</span><span class="p">(</span><span class="nx">catHouse</span><span class="p">.</span><span class="nx">btn</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">catHouse</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="c1">// houseChoice is a Promise of House choosen by the player.</span>
+</code></pre></div>
+<h3>Using the &quot;progress&quot; event</h3>
+
+<p>I also used a bit the &quot;progress&quot; event of a Q Promise, which is a way to notify that a Promise is being resolved.</p>
+
+<ul>
+<li>I used that &quot;progress&quot; event on the <code>game.end</code> Promise for notifying that the player is winning some scores in a mini-game while playing.</li>
+<li>I also used it to make a timeout ticking the remaining time before the timeout is reached and that Promise resolved.</li>
+</ul>
+
+<p>See both usages <a href="https://github.com/gre/ld28/blob/master/src/app.js#L62-L70">here</a>:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">race</span><span class="p">([</span>
+  <span class="nx">gameEnd</span>
+    <span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">score</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">stats</span><span class="p">.</span><span class="nx">setScore</span><span class="p">(</span><span class="nx">totalScore</span><span class="o">+</span><span class="nx">score</span><span class="p">);</span>
+    <span class="p">}),</span>
+  <span class="nx">timeoutWithTicks</span><span class="p">(</span><span class="nx">gameEnd</span><span class="p">,</span> <span class="nx">timeout</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">progress</span><span class="p">(</span><span class="nx">stats</span><span class="p">.</span><span class="nx">setTimeProgress</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">game</span><span class="p">.</span><span class="nx">submit</span><span class="p">,</span> <span class="nx">game</span><span class="p">))</span>
+<span class="p">]);</span>
+</code></pre></div>
+<h2>Code organization using NPM + Browserify</h2>
+
+<p>NPM &amp; Browserify has also been used because I find this stack very productive,
+especially when writing a game from scratch.</p>
+
+<p>Browserify has been trendy the last past year, but there is here an interesting way of organizing your code
+and especially reusing it.
+You can find a lot of <a href="https://npmjs.org/">available modules using NPM</a>, 
+Browserify will just make you able to require them using <code>require(&quot;modulename&quot;)</code>.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/03/panzer-dragoon-1k">Panzer Dragoon 1k</a>
+            </li>
+            
+            <li>
+              <a href="/2014/01/promisify-your-games">Promisify your games</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

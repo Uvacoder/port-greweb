@@ -1,0 +1,349 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="Here is Beez, a web real-time audio experiment using smartphones as synthesizer effect controllers. This is our second Web Audio API experiment made in one Hackday at Zenexity." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Beez, WebRTC + Audio API">
+    <meta name="twitter:description" content="Here is Beez, a web real-time audio experiment using smartphones as synthesizer effect controllers. This is our second Web Audio API experiment made in one Hackday at Zenexity.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2013/09/beez.png">
+    <link rel="image_src" href="http://greweb.me/images/2013/09/beez.png">
+    
+
+    <title>@GreWeb - Beez, WebRTC + Audio API</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/09/beez">Beez, WebRTC + Audio API</a></h1>
+    <time class="date" datetime="2013-09-04">September  4, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/webrtc.html">WebRTC</a>
+     <a class="tag" href="/tag/audio.html">audio</a>
+     <a class="tag" href="/tag/hackday.html">hackday</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><img src="/images/2013/09/beez.png" alt="" class="thumbnail-left" /></p>
+
+<p>Here is <strong>Beez</strong>, a web real-time audio experiment 
+using smartphones as synthesizer effect controllers.</p>
+
+<p>This is our second <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> experiment made in one Hackday at <a href="http://zenexity.com">Zenexity</a> (now Zengularity).</p>
+
+<p>This time, we were much more focused on having the best <strong>latency performance</strong>:
+we used the bleeding-edge <a href="http://www.w3.org/TR/webrtc/">WebRTC</a> technology,
+which allows you to link clients in Peer-to-Peer instead of a classical Client-Server architecture.</p>
+
+<ul>
+<li><a href="http://github.com/gre/beez">The project on Github</a></li>
+<li><a href="http://beez.greweb.fr/">Test it now!</a> (Chrome)</li>
+</ul>
+
+<h3>Live demo of the Hackday application</h3>
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/QwU6IMNLF0o" frameborder="0" allowfullscreen></iframe>
+
+<p><em>Bonus for the one who recognizes the melody :-)</em></p>
+
+<!--more-->
+
+<h2>The Experiment</h2>
+
+<p>The experiment consists in controlling an audio stream running on a desktop web page with 
+some audio effect pads running on phones via a mobile web interface.
+<strong>Our main goal was to make the best real-time experience.</strong></p>
+
+<h3>Hive and Bees</h3>
+
+<p>An <strong>Hive</strong> is controlled by different <strong>Bees</strong>, eventhing connected in Peer-to-Peer (via WebRTC).</p>
+
+<h4>The Hive</h4>
+
+<p>The <strong>Hive</strong> is a web page where the sound is generated and visualized <em>(Web Audio API)</em>.
+It also shows you in real-time the different effects XY pads and allows you to control them.</p>
+
+<p><img src="/images/2013/09/hive.png" alt=""></p>
+
+<h4>A Bee</h4>
+
+<p>The <strong>Bee</strong> is a mobile web page which allows you to control the different sound effects with XY pads.
+It only works on Android Chrome now <em>(WebRTC required)</em>.</p>
+
+<p><img src="/images/2013/09/bee.png" alt=""></p>
+
+<h3>Audio tech</h3>
+
+<p>We used <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> for generating the sound client-side on the Hive:</p>
+
+<p>We have a note sequencer which plays a <strong><em>famous melody</em></strong> through a <a href="/2013/08/FM-audio-api">Frequency Modulator</a> and different other effects.
+Some controls allow you to change the <strong>BPM</strong>, <strong>gain</strong> of the carrier and the modulator, <strong>finetune</strong>, 
+frequency <strong>multiplicator</strong> (0.25, 0.5, 1, 1.5, 2) of the carrier and the modulator,
+<strong>reverbation</strong>, <strong>filter</strong> (frequency and resonance).
+There is also a delay effect made on both left and right channels to produce a cool stereo effect.</p>
+
+<p>That&#39;s quite basic audio stuff so far, I can&#39;t wait to experiment deeper and try to generate more complex sounds with that awesome Audio API.
+Again, our main goal was to make a P2P connection between the hive and its bees.</p>
+
+<h3>Network architecture</h3>
+
+<p><img src="/images/2013/09/beez_arch.png" alt="" class="thumbnail-left" />
+<strong>Every bee are connected to the hive with a bi-directionnal Peer-to-Peer connection thanks to <a href="http://www.webrtc.org/">WebRTC</a>.</strong></p>
+
+<p>Everytime a (bee) user moves an effect controller with his phone, a position event is sent to the hive.</p>
+
+<p>Basically:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">xyAxis</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;change:x change:y&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">hive</span><span class="p">.</span><span class="nx">send</span><span class="p">([</span><span class="s2">&quot;tabxy&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;tab&quot;</span><span class="p">),</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)]);</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><em>As you can see, we used Backbone.js models for events.</em></p>
+
+<p>However, A lot of Touch events per second can be triggered by an Android device, and it may depends on the device speed. We shouldn&#39;t send to the network all of these events because it can saturate it and cause some lags. To avoid that we need to <strong>throttle the touch events before sending the event to the network</strong>.</p>
+
+<p>This is done transparently with the <a href="http://underscorejs.org/#throttle"><code>_.throttle</code></a> function and we choose to <strong>throttle by 50 milliseconds</strong> which is <strong>about 20 events per second</strong> which is ok for human eye.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">xyAxis</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;change:x change:y&quot;</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">throttle</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">hive</span><span class="p">.</span><span class="nx">send</span><span class="p">([</span><span class="s2">&quot;tabxy&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;tab&quot;</span><span class="p">),</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)]);</span>
+<span class="p">},</span> <span class="mi">50</span><span class="p">));</span>
+</code></pre></div>
+<p>We use different other events:</p>
+
+<ul>
+<li>A bee can send <code>&quot;tabxychanging&quot;</code> and <code>&quot;tabopen&quot;</code> respectively to informs the cursor has been pressed/released and to inform a new tab has been opened.</li>
+<li>When a Hive receive a <code>&quot;tabopen&quot;</code>, it will send back to the bee a <code>&quot;tabxy&quot;</code> event in order to inform what is the current value of that tab so we can init the cursor to the current xy axis position on the bee interface.</li>
+</ul>
+
+<h2>WebSockets vs WebRTC</h2>
+
+<p><img src="/images/2013/09/websocket.png" class="thumbnail-left" /></p>
+
+<p>Most &quot;real-time&quot; web experiments you see on the Internet today use <a href="http://www.w3.org/TR/websockets/">WebSockets</a>.
+WebSockets are good, it&#39;s a significant evolution from the Ajax years.</p>
+
+<p>WebSocket is a protocol on top of TCP, which <strong>links a browser with a server in a bidirectional text communication</strong>.
+Getting 2 clients to communicate generally consists in broadcasting messages from the server to all clients 
+(see the schema).</p>
+
+<p><strong>This architecture has some advantages:</strong></p>
+
+<ul>
+<li>Simple to understand, Easy to use.</li>
+<li>We can easily implement some server validation.</li>
+</ul>
+
+<p><strong>But also has some drawbacks:</strong></p>
+
+<ul>
+<li>Not always easy to traverse <strong>proxies</strong>. <em>(e.g. through an nginx front server)</em></li>
+<li>Only text communication.</li>
+<li><strong>bandwith</strong> intensive. <em>(all the bandwidth goes back and forth with your server)</em></li>
+<li><strong>CPU</strong> intensive. <em>(e.g. receiving 20 messages per second from 10 clients can be a lot for a small server, especially if you are doing some message processing)</em></li>
+</ul>
+
+<p>(The last two &quot;cons&quot; are scalability issues)</p>
+
+<p><hr style="clear:both" /></p>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Logo-webrtc.png" class="thumbnail-left" /></p>
+
+<p><a href="http://www.webrtc.org/">WebRTC</a> (<em>Web Real Time Communication</em>), 
+is a new web technology which helps to connect browsers in a <strong>Peer to Peer</strong> way.</p>
+
+<p>WebRTC has been designed for transfering binary data like files, audio, video (e.g. a webcam stream).
+Of-course, we can still use it for text.</p>
+
+<p><br style="clear:both" /></p>
+
+<p><img src="/images/2013/09/webrtc.png" class="thumbnail-right" /></p>
+
+<p>Unlike WebSockets, multiple steps are required to <strong>establish a P2P connection between two web clients</strong>.
+It is due to the fact that the two clients must resolve the closest network path to communicate with each other.
+That resolving phase requires a communication between the clients, and for that we can use WebSockets as a <em>&quot;Control Channel&quot;</em>.</p>
+
+<p>But once the two web clients are connected, they basically don&#39;t need the web server anymore and can <strong>communicate directly together</strong>.
+If the two clients are in the same local network, they should directly communicate through that local network.
+That <strong>reduces the server load</strong> and should significantly <strong>decrease the latency</strong>.</p>
+
+<h3>Playframework / Akka Actors</h3>
+
+<p><a href="http://playframework.com/">Playframework</a> has been used on the server side for making that WebSocket Control Channel,
+and akka was convenient for handling peer communication and rooms management.</p>
+
+<h2>About the melody</h2>
+
+<p>You still didn&#39;t guess where does the melody came from?</p>
+
+<p>Well, here is the answer:</p>
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/3rU_ei_x0Ag" frameborder="0" allowfullscreen></iframe>
+
+<h2>Awesome team!</h2>
+
+<p>Finally I want to thanks my team-mates: <a href="http://twitter.com/mrspeaker">@mrspeaker</a>, <a href="http://twitter.com/etaty">@etaty</a>, <a href="http://twitter.com/NicuPrinFum">@NicuPrinFum</a>, <a href="http://twitter.com/drfars">@drfars</a>, <a href="http://twitter.com/srenaultcontact">@srenaultcontact</a>
+with who we were able to make that demo from scratch in one day!</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/03/panzer-dragoon-1k">Panzer Dragoon 1k</a>
+            </li>
+            
+            <li>
+              <a href="/2014/01/promisify-your-games">Promisify your games</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

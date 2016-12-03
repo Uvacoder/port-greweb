@@ -1,0 +1,433 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="gl-react has been reimplemented from scratch, feedback from previous mistake and overview of new features." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="gl-react v3">
+    <meta name="twitter:description" content="gl-react has been reimplemented from scratch, feedback from previous mistake and overview of new features.">
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - gl-react v3</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2016/12/gl-react-v3/">gl-react v3</a></h1>
+    <time class="date" datetime="2016-12-03">December  3, 2016</time>
+   <span class="tags">
+     <a class="tag" href="/tag/react.html">react</a>
+     <a class="tag" href="/tag/gl-react.html">gl-react</a>
+     <a class="tag" href="/tag/webgl.html">webgl</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <h1>Happy to release <strong><a href="https://gl-react-cookbook.surge.sh">https://gl-react-cookbook.surge.sh</a></strong> containing 43 unique examples and API documentation!</h1>
+
+<p><a href="https://gl-react-cookbook.surge.sh"><img src="/images/2016/12/gl-react-v3.gif" alt=""></a></p>
+
+<blockquote>
+<p>If you don&#39;t want to be &quot;spoiled&quot; by this article, go through <a href="https://gl-react-cookbook.surge.sh">the cookbook examples</a>. This article will explore some of them.</p>
+</blockquote>
+
+<!--more-->
+
+<h2>gl-react has been rewritten from scratch</h2>
+
+<p><strong>gl-react v3 is a complete rewrite of the v2 implementation for better performance and compatibility with React paradigm.</strong></p>
+
+<p>This is not yet published on NPM as it&#39;s <a href="https://github.com/gre/gl-react">still in development</a> (the Web version is pretty ready, React Native version is not implemented).</p>
+
+<p>Most features provided by gl-react v2 are preserved (API haven&#39;t changed, <a href="https://gl-react-cookbook.surge.sh/hellogl">see how similar is the HelloGL example</a>), but v3 fixes most Github issues accumulated for a year.</p>
+
+<h3>The biggest mistake of the previous implementation</h3>
+
+<p>If there is one lesson learned from previous gl-react implementation: <strong>&quot;unfolding&quot; / consuming the <code>children</code> prop by yourself is (probably) wrong, let React solve this job!</strong> Using React, you can benefit <a href="https://facebook.github.io/react/docs/reconciliation.html">React reconciliation and diff algorithm</a>.
+In other words, always prefer to keep users&#39; VDOM tree rather than consuming it with <code>React.Children.*</code> functions.</p>
+
+<p>I feel dumb not having discovered this before, but if you are not actually rendering DOM it&#39;s an easy path for a library to just map, traverse, consume the children tree and just render what you needs (like just a <code>&lt;canvas/&gt;</code>). But this is probably a mistake! First, this makes it impossible to use React Devtools and see the original tree, but more importantly, it breaks interoperability with other libraries (e.g. don&#39;t forbid someone to use <a href="https://github.com/chenglou/react-motion">react-motion</a> or <a href="https://github.com/ReactTraining/react-router">React Router</a> in the middle of your components!).</p>
+
+<p>A better idea is to preserve the user <code>children</code>. Keep your logic in each Component and use the React lifecycle to create and destroy things, and <strong>use <a href="https://facebook.github.io/react/docs/context.html">React context</a> to connect children to parent</strong>.</p>
+
+<blockquote>
+<p>You should better keep user <code>children</code>, even if it means rendering it in an empty <code>&lt;span&gt;</code>, <em>current workaround of <code>gl-react</code>, looking forward to hearing from you, idea inspired from the great <a href="https://github.com/FormidableLabs/react-music">react-music</a></em></p>
+</blockquote>
+
+<h3>What it means for gl-react</h3>
+
+<p>The gl-react v3 implementation truly uses React lifecycle: <strong>a React Component update triggers a GL redraw</strong>. That way, <code>shouldComponentUpdate</code> allows to do partial GL re-rendering. Each Node holds a <a href="https://www.opengl.org/wiki/Framebuffer_Object">framebuffer object</a> (created on mount, destroyed on unmount) that only get redrawn when component updates and schedules a Surface reflow.</p>
+
+<p><code>&lt;Node&gt;</code> receives the <code>gl: WebGLRenderingContext</code> from the ancestor <code>&lt;Surface&gt;</code> thanks to <a href="https://facebook.github.io/react/docs/context.html">React context</a>. There is also a <code>glParent</code> context (a Surface or another Node) that is used to make GL components discoverable each other so we can build a dependency graph. This dependency graph allows to implement the correct <code>draw</code> pipeline (and it&#39;s pretty trivial, see <a href="#under_the_hook_redraw"><em>Section &quot;under the hood of Surface and Node redraw&quot;</em></a>).</p>
+
+<h2><code>&lt;Bus&gt;</code>, a better way to share computation</h2>
+
+<p><a href="http://greweb.me/2016/06/glreactconf/">gl-react used to automatically factorize the duplicates elements of the GL tree</a> but <strong>it has been decided to remove this feature</strong>: <em>This was actually a complex mechanism (a bit too &quot;magic&quot;), hard to implement and a premature optimization that can have slower performance.</em></p>
+
+<p>The new gl-react embraces the React paradigm: The new way to express a Graph (and share computation) is <strong>using a <a href="https://gl-react-cookbook.surge.sh/api#bus"><code>&lt;Bus&gt;</code></a></strong>...</p>
+
+<h3>The <code>`()=&gt;ref`</code> pattern</h3>
+
+<p>The problem we want to solve is to <strong>express a graph with React</strong>, which, at first glance, only allow to represent trees, not graphs!</p>
+
+<p>The way we can solve this is by using refs and a &quot;ref getter function&quot;:</p>
+
+<ol>
+<li><strong>a Bus with a ref:</strong> <code>&lt;Bus ref=&quot;myBus&quot;&gt;{content to inject}&lt;/Bus&gt;</code>.</li>
+<li><strong>pass a function that resolves the ref</strong> to pipe Bus into another Node. e.g: <code>()=&gt;this.refs.myBus</code>.</li>
+</ol>
+
+<p><a href="https://gl-react-cookbook.surge.sh/blurmapdyn">blurmapdyn example <img src="/images/2016/12/blurmapdyn.gif" alt=""></a>
+a single ConicalGradient should be used for all blur pass:
+<img src="/images/2016/12/blurmapdynschema.png" alt=""></p>
+
+<p>There are a few other good examples of ref usages:</p>
+
+<ul>
+<li><a href="https://gl-react-cookbook.surge.sh/blurmapmouse">blurmapmouse</a></li>
+<li><a href="https://gl-react-cookbook.surge.sh/blurimgtitle">blurimgtitle</a> (same example that was features in 2016 React conf!)</li>
+<li><a href="https://gl-react-cookbook.surge.sh/behindasteroids">behindasteroids</a>, crazy port of a game I made for js13k.</li>
+</ul>
+
+<blockquote>
+<p>The <code>()=&gt;ref</code> pattern works only if you call the function after component did update (refs are set at this time).</p>
+</blockquote>
+
+<h2>The good ol&#39; children function</h2>
+
+<p>There is another pattern for more specific needs: instead of composing by giving an element, you can also compose by giving a <strong>Function that returns an element</strong>. Why that? Because, it&#39;s a way to nicely give you the redraw function: <code>redraw =&gt; &lt;Video onFrame={redraw} /&gt;</code>:</p>
+
+<p><a href="https://gl-react-cookbook.surge.sh/video?menu=true">Checkout video example <img src="/images/2016/12/videoredraw.png" alt=""></a></p>
+
+<blockquote>
+<p>We really just want to redraw if there is a new video frame.</p>
+</blockquote>
+
+<p>We have merged the 2 patterns into one: if you provide a function, it&#39;s just called with <code>redraw</code>, and the returned value is used as a texture. We have a few cases to detect what kind of texture it is (and also an <a href="https://gl-react-cookbook.surge.sh/api#textureloaders">extensible mechanism</a> used by implementations to load platform specific objects).
+<a href="https://github.com/gre/gl-react/blob/a33e6aa685479d588646b20dd62e1e25a64a5a47/packages/gl-react/src/Node.js#L704-L783">(checkout this if you want to see the code)</a></p>
+
+<h2>Node backbuffering &amp; Backbuffer symbol</h2>
+
+<p>A new feature allows to inject the previous Node state as a texture. This is called backbuffering. One simple usecase is to implement Motion Blur persistence (like the GIF on top of this article).</p>
+
+<p>We can also accumulate a state, for instance, to implement Game of Life!</p>
+
+<p><a href="https://gl-react-cookbook.surge.sh/golglider">Game of life glider example <img src="/images/2016/12/gol.gif" alt=""></a></p>
+
+<p>And the whole idea of gl-react (and React) is about composition. For instance, doing a rotating effect of that Game of Life is basically just <code>&lt;Rotate&gt; &lt;GameOfLife /&gt; &lt;/Rotate&gt;</code>.</p>
+
+<p>An interesting part is that you can update the GameOfLife at a rate that is independent from the <strong>Rotate</strong> rendering: just by making GameOfLife a pure component that receives a tick, or implementing shouldComponentUpdate update (you have as many choices as React have to <a href="https://facebook.github.io/react/docs/react-api.html#react.purecomponent">shortcut the rendering</a>).</p>
+
+<p><a href="https://gl-react-cookbook.surge.sh/golrotscu">golrotscu example<img src="/images/2016/12/golrot.gif" alt=""></a></p>
+
+<blockquote>
+<p>See the counters that indicate the number of redraw. (the capture preview in the Box only get snapshot each 100ms, but in the real canvas, it runs at 60 FPS)</p>
+</blockquote>
+
+<p>Finally, please checkout <a href="https://gl-react-cookbook.surge.sh/ibex">ibex example</a> (extracted from another JS13K game! xD).</p>
+
+<blockquote>
+<p>You can&#39;t leave this article before seeing <a href="https://gl-react-cookbook.surge.sh/ibex">ibex example</a>! I&#39;m serious, this is probably the most accomplished code I ever wrote! xD</p>
+</blockquote>
+
+<h2><a name="under_the_hook_redraw"></a> under the hood of Surface and Node redraw</h2>
+
+<p>In order to make redraw efficient, <code>gl-react</code> have 2 phases: the <code>redraw()</code> phase and the <code>flush()</code> phase (reflecting the respective methods available both on <code>Surface</code> and <code>Node</code>). This is a bit like a rendering engine:</p>
+
+<ul>
+<li><strong><code>redraw()</code> phase</strong> sets a dirty flag to a Node and all its &quot;dependents&quot; (other nodes, buses, surface). <em>redraws happen generally bottom-up to the Surface.</em></li>
+<li><strong><code>flush()</code> phase</strong> draws all nodes that have the redraw flag. <em>draws happens top-down from the Surface.</em></li>
+</ul>
+
+<p><code>redraw()</code> is directly hooked to React update lifecycle (re-rendering a Node will calls <code>redraw()</code> for you).
+To make this system efficient, <strong>the flush() is by default asynchronous</strong>, i.e. <code>redraw()</code> means scheduling a new gl draw.
+Surface have a main loop that runs at 60 fps and call <code>flush()</code>. This is very efficient because if Surface does not have the redraw flag,  <code>flush()</code> does nothing.</p>
+
+<blockquote>
+<p>In gl-react inspector, clicking on the redraw count will call <code>redraw()</code> on the node / bus. We can illustrate that only &quot;dependents&quot; get redrawn using the advanced <a href="https://gl-react-cookbook.surge.sh/blurimgtitle">blurimgtitle example</a>:</p>
+</blockquote>
+
+<p><a href="https://gl-react-cookbook.surge.sh/blurimgtitle">only &quot;dependents&quot; get redrawn <img src="/images/2016/12/blurimgtitle-redraw.gif" alt=""></a></p>
+
+<p>This redraw/flush phases allow to prevent and skip rendering multiple times a Node. In some cases, we still want to redraw synchronously: with <code>&lt;Node/&gt;</code> <code>sync</code> prop. For instance, in Game of Life, we don&#39;t want to skip an update (the initial update set the initial GoL state, if it was async it might get skipped).</p>
+
+<h2>Bonus</h2>
+
+<h3>Flow types</h3>
+
+<p>Flow types has been used for more robust code and better user experience. BTW, <a href="https://github.com/facebook/flow/pull/2764">WebGLRenderingContext will soon be released in flow</a>.</p>
+
+<h3>Atom highlighting</h3>
+
+<p>If you are using Atom Editor, you can have JS inlined GLSL syntax highlighted.</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/211411/20623048/0527cce2-b306-11e6-85ee-5020be994c10.png" alt=""></p>
+
+<p><em>To configure this:</em></p>
+
+<ul>
+<li>add <code>language-babel</code> package.</li>
+<li>Configure <code>language-babel</code> to add <code>GLSL:source.glsl</code> in settings &quot;<em>JavaScript Tagged Template Literal Grammar Extensions</em>&quot;.</li>
+<li>(Bonus) Add this CSS to your <em>Atom &gt; Stylesheet</em>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="c">/* language-babel blocks */</span>
+<span class="nt">atom-text-editor</span><span class="o">:</span><span class="nd">:shadow</span> <span class="nc">.line</span> <span class="nc">.ttl-grammar</span> <span class="p">{</span>
+  <span class="c">/* NB: designed for dark theme. can be customized */</span>
+  <span class="k">background-color</span><span class="o">:</span> <span class="n">rgba</span><span class="p">(</span><span class="m">0</span><span class="o">,</span><span class="m">0</span><span class="o">,</span><span class="m">0</span><span class="o">,</span><span class="m">0</span><span class="o">.</span><span class="m">3</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nt">atom-text-editor</span><span class="o">:</span><span class="nd">:shadow</span> <span class="nc">.line</span> <span class="nc">.ttl-grammar</span><span class="nd">:first-child:last-child</span> <span class="p">{</span>
+  <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span> <span class="c">/* force background to take full width only if ttl-grammar is alone in the line. */</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Tests: almost 100% coverage!</h3>
+
+<p>The library is tested directly on the command line, thanks to <a href="https://github.com/facebook/jest">Jest</a> and <a href="https://github.com/stackgl/headless-gl">headless-gl</a> <em>(Big up to <a href="https://github.com/mikolalysenko">mikolalysenko</a> for <a href="https://github.com/stackgl/headless-gl">headless-gl</a>!)</em>.
+<strong>gl-react have 2000 line of tests, involving a lot of gl calls, and readPixels, and it runs... in a few seconds!</strong> <em>(to Jest devs: you are wizards!)</em></p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"> PASS  ./all.test.js
+  ✓ renders a red shader (75ms)
+  ✓ renders HelloGL (15ms)
+  ✓ ndarray texture (27ms)
+  ✓ renders a color uniform (18ms)
+  ✓ composes color uniform with LinearCopy (21ms)
+  ✓ no needs to flush if use of sync (24ms)
+  ✓ Node can have a different size and be scaled up (18ms)
+  ✓ Surface can be resized (32ms)
+  ✓ bus uniform code style (17ms)
+  ✓ bus example 1 (17ms)
+  ✓ bus example 2 (18ms)
+  ✓ bus example 3 (17ms)
+  ✓ bus example 4 (22ms)
+  ✓ bus example 5 (14ms)
+  ✓ bus example 6 (24ms)
+  ✓ bus: same texture used in multiple sampler2D is fine (14ms)
+  ✓ a surface can be captured and resized (16ms)
+  ✓ a node can be captured and resized (17ms)
+  ✓ Uniform children redraw=&gt;el function (22ms)
+  ✓ Bus redraw=&gt;el function (16ms)
+  ✓ many Surface updates don&#39;t result of many redraws (18ms)
+  ✓ many Surface flush() don&#39;t result of extra redraws (10ms)
+  ✓ GL Components that implement shouldComponentUpdate shortcut Surface redraws (27ms)
+  ✓ nested GL Component update will re-draw the Surface (24ms)
+  ✓ Node `clear` and discard; (24ms)
+  ✓ Node `backbuffering` (32ms)
+  ✓ Node `backbuffering` in `sync` (36ms)
+  ✓ texture can be null (12ms)
+  ✓ array of textures (22ms)
+  ✓ Node uniformsOptions texture interpolation (17ms)
+  ✓ can be extended with addTextureLoaderClass (70ms)
+  ✓ Surface `preload` prevent to draw anything (59ms)
+  ✓ Surface `preload` that fails will trigger onLoadError (59ms)
+  ✓ renders a shader inline in the Node (15ms)
+  ✓ testing connectSize() feature (17ms)
+  ✓ handle context lost nicely (43ms)
+  ✓ Bus#uniform and Bus#index (25ms)
+  ✓ VisitorLogger + bunch of funky extreme tests (140ms)
+
+-------------------------------|----------|----------|----------|----------|----------------|
+File                           |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+-------------------------------|----------|----------|----------|----------|----------------|
+All files                      |    97.85 |     88.8 |    95.96 |    99.35 |                |
+ src                           |    97.82 |    88.95 |     95.9 |    99.35 |                |
+  Backbuffer.js                |      100 |      100 |      100 |      100 |                |
+  Bus.js                       |    96.15 |    74.29 |      100 |      100 |                |
+  GLSL.js                      |      100 |       50 |      100 |      100 |                |
+  LinearCopy.js                |      100 |      100 |      100 |      100 |                |
+  NearestCopy.js               |      100 |      100 |      100 |      100 |                |
+  Node.js                      |    97.65 |    92.71 |    97.01 |    99.01 |    214,216,358 |
+  Shaders.js                   |      100 |    76.92 |      100 |      100 |                |
+  Texture2DLoader.js           |      100 |      100 |      100 |      100 |                |
+  TextureLoader.js             |      100 |      100 |      100 |      100 |                |
+  TextureLoaderNDArray.js      |      100 |      100 |      100 |      100 |                |
+  TextureLoaders.js            |      100 |      100 |      100 |      100 |                |
+  Visitor.js                   |      100 |      100 |       75 |      100 |                |
+  VisitorLogger.js             |      100 |    92.59 |      100 |      100 |                |
+  Visitors.js                  |      100 |      100 |      100 |      100 |                |
+  connectSize.js               |      100 |    85.71 |      100 |      100 |                |
+  copyShader.js                |      100 |      100 |      100 |      100 |                |
+  createSurface.js             |    97.09 |    83.61 |    94.55 |    99.32 |            361 |
+  genId.js                     |      100 |      100 |      100 |      100 |                |
+  index.js                     |      100 |      100 |      100 |      100 |                |
+ src/helpers                   |      100 |       75 |      100 |      100 |                |
+  disposable.js                |      100 |       50 |      100 |      100 |                |
+  invariantNoDependentsLoop.js |      100 |      100 |      100 |      100 |                |
+-------------------------------|----------|----------|----------|----------|----------------|
+Test Suites: 1 passed, 1 total
+Tests:       38 passed, 38 total
+Snapshots:   4 passed, 4 total
+Time:        2.655s
+Ran all test suites.
+</code></pre></div>
+<p>One limitation is that all tests need to be in a single file. <a href="https://github.com/facebook/jest/issues/2029">I created an issue here</a>. I think it&#39;s either an issue in <a href="https://github.com/facebook/jest">Jest</a> or in <a href="https://github.com/stackgl/headless-gl">headless-gl</a>.</p>
+
+<h2>Tradeoffs and remaining work</h2>
+
+<p>The library tradeoffs are written in <a href="https://github.com/gre/gl-react/blob/master/TRADEOFFS.md">TRADEOFFS.md</a>. We might cover some unexplored direction in a near future and solve some of them.</p>
+
+<p>v3 is still in development, the main unfinished part is the React Native implementation which is now the main priority of the library.
+It will probably rely on an awesome initiative: a React Native WebGL implementation started in Exponent by <a href="https://github.com/nikki93">@nikki</a>!</p>
+
+<p>For more information, see <a href="https://github.com/gre/gl-react#v3-alpha-development-in-progress">v3 alpha: development in progress</a>.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="Illuminated.js is designed to add some awesome effects to your existing applications. Adding a cool atmosphere for your applications and games can make the difference!" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Illuminated.js &#8211; 2D lights and shadows rendering engine for HTML5 applications">
+    <meta name="twitter:description" content="Illuminated.js is designed to add some awesome effects to your existing applications. Adding a cool atmosphere for your applications and games can make the difference!">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2012/05/illuminatedjs.jpg">
+    <link rel="image_src" href="http://greweb.me/images/2012/05/illuminatedjs.jpg">
+    
+
+    <title>@GreWeb - Illuminated.js &#8211; 2D lights and shadows rendering engine for HTML5 applications</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/">Illuminated.js &#8211; 2D lights and shadows rendering engine for HTML5 applications</a></h1>
+    <time class="date" datetime="2012-05-10">May 10, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/canvas.html">canvas</a>
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/library.html">library</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><a href="http://bit.ly/LZ2dq1"><img src="/images/2012/05/illuminatedjs.jpg" alt=""></a></p>
+
+<p><a href="http://bit.ly/LZ2dq1">Click on the image to open it!</a></p>
+
+<h2>Wow! what’s this?</h2>
+
+<p>It’s a <strong>2D scene</strong> containing 2 <strong>lights</strong> and 13 different <strong>objects</strong> rendered in <strong>real-time</strong> by a <strong>Javascript library</strong> I made called <strong>Illuminated.js</strong>.</p>
+
+<p>The library is designed to add some <strong>awesome effects to your existing applications</strong>. Adding <strong>a cool atmosphere for your applications and games</strong> can make the difference!</p>
+
+<p><strong><a href="http://gre.github.io/illuminated.js">Try the editor</a></strong> and <strong><a href="http://github.com/gre/illuminated.js">Get the source code</a></strong>.</p>
+
+<p>In this article, we will introduce the basic usages of <em>Illuminated.js</em> and APIs, and then explain how the engine works step-by-step.</p>
+
+<ul>
+<li>  <a href="/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/#gettingstarted">API – Getting started</a></li>
+<li>  <a href="/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/#underthehood">Technical notes – how does it work?</a></li>
+</ul>
+
+<!--more-->
+
+<h2>How can I use it?</h2>
+
+<p>The library uses <a href="http://en.wikipedia.org/wiki/Canvas_element">HTML5 Canvas</a> to draw lights and shadows – so you can simply drop it straight into your existing Canvas applications: you just need to add some code in your render function and maintaining a binding between your application logic and the <em>Illuminated.js</em> objects.<br>
+Not using canvas? No worries! In theory, if you have an existing application or game made in full DOM, you could use <em>Illuminated.js</em> behind this, playing with z-index.</p>
+
+<h2><a id="gettingstarted"></a> Getting started</h2>
+
+<h3>Basic concepts</h3>
+
+<p>All the classes of the package live in <code>window.illuminated</code>.</p>
+
+<p>A <strong>Light</strong> describes a light emit source.<br>
+An <strong>OpaqueObject</strong> specifies an 2D object used by a Lighting.<br>
+A <strong>Lighting</strong> defines the lighting of a light through a set of opaque objects, each object stops the light and casts shadows.<br>
+A <strong>DarkMask</strong> defines a dark layer which hides dark area not lighted by a set of lights. It should be drown on the top-layer to hide objects which are far from the light. This effect produces a better atmosphere and is perfect for game where light are essential (where hiding invisible area is part of the difficulty).</p>
+
+<h3>Example of a basic scene rendering</h3>
+
+<p><a href="http://gre.github.io/illuminated.js/gettingstarted.html"><br>
+Click here to open this example.<br>
+<img src="/images/2012/05/gettingstarted.jpg" alt="">
+</a></p>
+
+<h2>Lights and Objects</h2>
+
+<h3>Vec2</h3>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">new</span> <span class="nx">Vec2</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+</code></pre></div>
+<p>Vec2 represents a 2d position or a 2d vector. It is used everywhere in <em>Illuminated.js</em>.</p>
+
+<p>Vec2 is inspired from Box2d’s Vec2 except that in <em>Illuminated.js</em> a Vec2 vector is immutable. It means every methods create a new Vec2 instance and you can safely use a same Vec2 instance everywhere because the immutability guarantees the non-modification of properties.</p>
+
+<h3>Lights</h3>
+
+<p>For now, we have only implemented one kind of light: a <strong>Lamp</strong> which is basically a radial gradient. A Lamp can also be “oriented”, it means lighting more far in a given direction.</p>
+
+<h4>Lamp</h4>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">new</span> <span class="nx">Lamp</span><span class="p">()</span>
+
+<span class="k">new</span> <span class="nx">Lamp</span><span class="p">({</span> <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Vec2</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">)</span> <span class="p">})</span>
+</code></pre></div>
+<p>every parameters:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">new</span> <span class="nx">Lamp</span><span class="p">({</span>  
+<span class="err"> </span> <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Vec2</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">34</span><span class="p">),</span>  
+<span class="err"> </span> <span class="nx">distance</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>  
+<span class="err"> </span> <span class="nx">diffuse</span><span class="o">:</span> <span class="mf">0.8</span><span class="p">,</span>  
+<span class="err"> </span> <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;rgba(250,220,150,0.8)&#39;</span><span class="p">,</span>  
+<span class="err"> </span> <span class="nx">radius</span><span class="o">:</span> <span class="p">,</span>  
+<span class="err"> </span> <span class="nx">samples</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>  
+<span class="err"> </span> <span class="nx">angle</span><span class="o">:</span> <span class="p">,</span>  
+<span class="err"> </span> <span class="nx">roughness</span><span class="o">:</span>   
+<span class="p">})</span>
+</code></pre></div>
+<p>It defines a <strong>Lamp</strong> placed at a <strong>position</strong>, with a maximum emiting <strong>distance</strong>, a <strong>diffuse</strong> parameters to define the light penetration in objects.<br>
+The <strong>radius</strong> defines the size of the light. Bigger the size is, Higher shadows are smoothed. The <strong>samples</strong> is an important parameters to define the quality of this smooth.<br>
+The <strong>angle</strong> and <strong>roughness</strong> parameters are used for oriented lamp: angle defines the orientation while roughness defines the roughness of the effect.</p>
+
+<h3>Light methods</h3>
+
+<p>You can easily create your own Light type by implementing its methods.</p>
+
+<h4>.mask(ctx)</h4>
+
+<p>Render a mask representing the visibility (used by DarkMask).</p>
+
+<h4>.render(ctx)</h4>
+
+<p>Render the light (without any shadows).</p>
+
+<h4>.bounds()</h4>
+
+<p>Return the Rectangle bound of the light representing where the light emission limit. <code>{ topleft: vec2, bottomright: vec2 }</code></p>
+
+<h4>.forEachSample(fn)</h4>
+
+<p>Apply a function fn for each light sample position. By default it’s called once with the light position.</p>
+
+<h3>Opaque Objects</h3>
+
+<p>In <em>Illuminated.js</em>, an object which cast shadows is called an opaque object. That’s why every types inherits OpaqueObject. </p>
+
+<p>DiscObject and PolygonObject are the two available primitive objects.</p>
+
+<h4>DiscObject</h4>
+
+<p>A “DiscObject” is basically a 2D circlar object. You must define its center <strong>position</strong> and its <strong>radius</strong>:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">new</span> <span class="nx">DiscObject</span><span class="p">({</span> <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Vec2</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="nx">radius</span><span class="o">:</span> <span class="mi">20</span> <span class="p">})</span>
+</code></pre></div>
+<h4>PolygonObject</h4>
+
+<p>PolygonObject also has some derivated classes you can use: <strong>RectangleObject</strong>, <strong>LineObject</strong>.</p>
+
+<p>You can instanciate these different objects like this:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">new</span> <span class="nx">PolygonObject</span><span class="p">([</span> <span class="k">new</span> <span class="nx">Vec2</span><span class="p">(,</span> <span class="p">),</span> <span class="k">new</span> <span class="nx">Vec2</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">...</span> <span class="p">])</span> <span class="c1">// an array of points  </span>
+<span class="k">new</span> <span class="nx">RectangleObject</span><span class="p">(</span><span class="nx">topleft</span><span class="p">,</span> <span class="nx">bottomright</span><span class="p">)</span> <span class="c1">// topleft and bottomright positions of the rectangle  </span>
+<span class="k">new</span> <span class="nx">LineObject</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="c1">// an object defined by the line from a to b.</span>
+</code></pre></div>
+<h3>OpaqueObject methods</h3>
+
+<p>You can easily create your own object type by implementing OpaqueObject methods.</p>
+
+<h4>.bounds()</h4>
+
+<p>Return the Rectangle bound of the object. <code>{ topleft: vec2, bottomright: vec2 }</code></p>
+
+<h4>.contains(point)</h4>
+
+<p>Return <code>true</code> if the object contains a <strong>point</strong>.</p>
+
+<h4>.path(ctx)</h4>
+
+<p>Build the path of the object shape in a 2d context <strong>ctx</strong>.</p>
+
+<h4>.cast(ctx, origin, bounds)</h4>
+
+<p>Fill every shadows with <strong>ctx</strong> projected by the <strong>origin</strong> point in the object and in a given <strong>bounds</strong>.</p>
+
+<h2>Lighting and DarkMask</h2>
+
+<p>Previous defined classes was representing datas we will now use to perform lightings and masks.</p>
+
+<h3>Lighting</h3>
+
+<p>A Lighting defines the lighting of one light through a set of opaque objects.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">new</span> <span class="nx">Lighting</span><span class="p">({</span> <span class="nx">light</span><span class="o">:</span> <span class="nx">light</span><span class="p">,</span> <span class="nx">objects</span><span class="o">:</span> <span class="p">[</span> <span class="nx">object1</span><span class="p">,</span> <span class="nx">object2</span><span class="p">,</span> <span class="p">...</span> <span class="p">]</span> <span class="p">})</span>
+</code></pre></div>
+<h4>.compute(width, height)</h4>
+
+<p>will compute shadows casting.</p>
+
+<h4>.cast(ctx)</h4>
+
+<p>will draw black shadows on the <strong>ctx</strong> canvas 2d context.<br>
+You usually don’t have to use it if you use <code>render()</code>.</p>
+
+<h4>.render(ctx)</h4>
+
+<p>will draw the light with its shadows on <strong>ctx</strong> canvas 2d context.</p>
+
+<h3>DarkMask</h3>
+
+<p>A DarkMask defines a dark layer which hides dark area not lighted by a set of lights.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">new</span> <span class="nx">DarkMask</span><span class="p">({</span> <span class="nx">lights</span><span class="o">:</span> <span class="p">[</span><span class="nx">light1</span><span class="p">,</span> <span class="nx">light2</span><span class="p">,</span> <span class="p">...],</span> <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;rgba(0,0,0,0.9)&#39;</span> <span class="p">})</span>
+</code></pre></div>
+<h4>.compute(width, height)</h4>
+
+<p>will compute the dark mask.</p>
+
+<h4>.render(ctx)</h4>
+
+<p>will draw the computed dark mask on <strong>ctx</strong> canvas 2d context.</p>
+
+<h3>about compute and render</h3>
+
+<p>Both Lighting and DarkMask objects have <code>compute()</code> and <code>render()</code> methods.</p>
+
+<p>We think that <strong>you</strong> know the best when to recompute the lights because it’s closely link to the application you are making (we will not check at each time if something has changed, you know it).<br>
+Call the <code>compute()</code> method when something has changed in your scene so we can recompute lights and shadows.</p>
+
+<h2><a id="underthehood"></a> How does it work under the hood?</h2>
+
+<p><em>Illuminated.js</em> divides its work into several layers.</p>
+
+<h3>Real-time example</h3>
+
+<iframe src="http://gre.github.io/illuminated.js/howdoesitwork.html" border="0" height="2700" width="450"></iframe>
+
+<h3>The art of composing layers</h3>
+
+<p>The layers are all stored in a Canvas which allows us to cache it. The light is drawn using a Canvas Radial Gradient in a cache canvas only once. This is interesting because canvas gradient are processor intensive<br>
+At the end, layers are combine on the global canvas with <code>drawImage</code>.<br>
+But the library lets you reuse these layers to combine them the way you want.</p>
+
+<p>Canvas’ <code>globalCompositeOperation</code> is very useful to compose layers together.<br>
+For instance, in the following example, the “Light shadow casting” layer is combined with the “Light rendering” layer to generate the “Light rendering with shadows” layer. The composition mode used is “destination-out” which remove the color of the destination image where the source image has color.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">light</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>  
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">globalCompositeOperation</span> <span class="o">=</span> <span class="s2">&quot;destination-out&quot;</span><span class="p">;</span>  
+<span class="k">this</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+</code></pre></div>
+<p>Another very useful composite operation is <code>&quot;lighter&quot;</code> which adds color values. It is used to combine two lightings.</p>
+
+<h3>How shadows are projected</h3>
+
+<p>Some rendering engine use <a href="http://en.wikipedia.org/wiki/Ray_tracing_(graphics)">ray tracing</a> to render a scene, a concept very close to physics which trace from a light source a lot of rays with different paths which will collide with object and will be subject of absorption/diffraction/reflexion in accordance with the object properties…<br>
+Ray casting is a very <strong>realistic</strong> rendering solution <strong>but consuming</strong> (you need a lot of rays to avoid noises in the result image).<br>
+<em>Illuminated.js</em> doesn’t use ray tracing because it aims to be efficient for a real-time usage. It uses some heuristics for casting shadows.</p>
+
+<h4>Let’s see how shadows are projected for a polygon object.</h4>
+
+<p>We have a scene with a light and a triangle.</p>
+
+<p><img src="/images/2012/05/step11.jpg" alt=""></p>
+
+<p>We select each edge of the polygon which is visible by the light (and in the light bounds).</p>
+
+<p><img src="/images/2012/05/step21.jpg" alt=""></p>
+
+<p>For every selected edge, we project it to generate a polygon area. </p>
+
+<blockquote>
+<p><strong>N.B.</strong> In the current implementation, we generate an hexagon projection to ensure it goes outside of the light bounds because a quadrilateral didn’t garantee it, if a light is very close to it. The projecting vector used is enough big to work for most case, but it’s still an heuristic.</p>
+</blockquote>
+
+<p><img src="/images/2012/05/step31.jpg" alt=""></p>
+
+<p>We draw black color in this polygon area. Some improvments can be made by not drawing black in the shape / ajusting the opacity of the color.</p>
+
+<p><img src="/images/2012/05/step4.jpg" alt=""></p>
+
+<p>For casting blured shadows, we repeat this algorithm for each “samples” of the light. Samples are distribute around the light with a <a href="http://blog.marmakoide.org/?p=1">“spiral algorithm”</a>.</p>
+
+<p><img src="/images/2012/05/sampling.jpg" alt=""></p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">GOLDEN_ANGLE</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
+<span class="nx">Lamp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">forEachSample</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">s</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">s</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">samples</span><span class="p">;</span> <span class="o">++</span><span class="nx">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">s</span> <span class="o">*</span> <span class="nx">GOLDEN_ANGLE</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sqrt</span><span class="p">(</span><span class="nx">s</span><span class="o">/</span><span class="k">this</span><span class="p">.</span><span class="nx">samples</span><span class="p">)</span><span class="o">*</span><span class="k">this</span><span class="p">.</span><span class="nx">radius</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">delta</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vec2</span><span class="p">(</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="o">*</span><span class="nx">r</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="o">*</span><span class="nx">r</span> <span class="p">);</span>
+    <span class="nx">f</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">delta</span><span class="p">)</span> <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2>To be continued…</h2>
+
+<p>The current version of <em>Illuminated.js</em> needs more work, I’m aware of some bugs and some parts I need to improve:</p>
+
+<ul>
+<li>Implementing new kinds of lights like “Spot”, “Neon”, …</li>
+<li>The dark mask doesn’t follow the Lamp orientation.</li>
+<li>The shadow casting of Circle objects are not projected nicely, I need to compute <a href="http://en.wikipedia.org/wiki/Tangent_lines_to_circles">tangent lines to the circle</a>.</li>
+<li>Shadows go sometimes wrong especially when having objects behind objects</li>
+<li>The shadow sampling implementation is a bit hacky and wrong (changing the samples parameter changes the shadow opacity…)</li>
+</ul>
+
+<h2>Get involved</h2>
+
+<p><a href="http://gre.github.io/illuminated.js">Try the editor</a> and <a href="http://github.com/gre/illuminated.js">Get the source code</a>.</p>
+
+<p>This article is translated to <a href="http://science.webhostinggeeks.com/masina-za-renderovanje">Serbo-Croatian</a> language by Jovana Milutinovich from Webhostinggeeks.com.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

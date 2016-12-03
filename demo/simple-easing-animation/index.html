@@ -1,0 +1,31 @@
+<style type="text/css">
+#moving {
+  padding: 4px 10px;
+  background: #09f;
+  color: white;
+  display: inline-block;
+}
+#moving {
+  -webkit-animation: cssAnimation 4s infinite ease;
+  -moz-animation: cssAnimation 4s infinite ease;
+  -ms-animation: cssAnimation 4s infinite ease;
+}
+
+@-webkit-keyframes cssAnimation {
+  from { -webkit-transform: translate(0px, 0px); }
+  to { -webkit-transform: translate(200px, 0px); }
+}
+
+@-moz-keyframes cssAnimation {
+  0%, 100% { -moz-transform: translate(0px, 0px); }
+  50% { -moz-transform: translate(200px, 0px); }
+}
+
+@-ms-keyframes cssAnimation {
+  0%, 100% { -ms-transform: translate(0px, 0px); }
+  50% { -ms-transform: translate(200px, 0px); }
+}
+</style>
+
+
+<div id="moving">ease</div>

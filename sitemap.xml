@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>http://example.com</loc>
+    <lastmod>2016-12-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>http://example.com/2016/12/gl-react-v3//</loc>
+    <lastmod>2016-12-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2016/09/relay-scrolling-connections//</loc>
+    <lastmod>2016-09-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2016/07/projectseptember-opengl//</loc>
+    <lastmod>2016-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2016/06/glreactconf//</loc>
+    <lastmod>2016-06-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2015/10/introducing-gl-react//</loc>
+    <lastmod>2015-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2015/08/making-performant-react-applications//</loc>
+    <lastmod>2015-08-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2014/10/webglparis//</loc>
+    <lastmod>2014-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2014/09/ibex-cellular-automata//</loc>
+    <lastmod>2014-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2014/09/ibex//</loc>
+    <lastmod>2014-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2014/05/ld29//</loc>
+    <lastmod>2014-05-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2014/03/panzer-dragoon-1k//</loc>
+    <lastmod>2014-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2014/01/promisify-your-games//</loc>
+    <lastmod>2014-01-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/11/functional-rendering//</loc>
+    <lastmod>2013-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/09/webaudioapi//</loc>
+    <lastmod>2013-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/09/timelapse//</loc>
+    <lastmod>2013-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/09/beez//</loc>
+    <lastmod>2013-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/08/FM-audio-api//</loc>
+    <lastmod>2013-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/08/zound-wip-v1//</loc>
+    <lastmod>2013-08-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/07/zound-live//</loc>
+    <lastmod>2013-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/07/QanimationFrame//</loc>
+    <lastmod>2013-07-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/07/deferred//</loc>
+    <lastmod>2013-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/07/q-a-promise-library//</loc>
+    <lastmod>2013-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/05/playframework-simple-deployment-scripts//</loc>
+    <lastmod>2013-05-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient//</loc>
+    <lastmod>2013-02-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/01/playcli-play-iteratees-unix-pipe//</loc>
+    <lastmod>2013-01-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2013/01/be-careful-with-js-numbers//</loc>
+    <lastmod>2013-01-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/11/play-framework-enumerator-outputstream//</loc>
+    <lastmod>2012-11-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees//</loc>
+    <lastmod>2012-08-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/07/how-i-learned-backbone-js-three-js-glsl-in-one-week//</loc>
+    <lastmod>2012-07-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/05/minimize-your-javascript-files-with-curl//</loc>
+    <lastmod>2012-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications//</loc>
+    <lastmod>2012-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/05/html5-canvas-as-a-color-converter//</loc>
+    <lastmod>2012-05-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/04/work-in-progress//</loc>
+    <lastmod>2012-04-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/04/blender-as-a-2d-game-map-editor-proof-of-concept//</loc>
+    <lastmod>2012-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version//</loc>
+    <lastmod>2012-03-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/03/30-minutes-to-make-a-multi-user-real-time-paint-with-play-2-framework-canvas-and-websocket//</loc>
+    <lastmod>2012-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/03/chart-libraries-headaches-finding-the-best-grid-step//</loc>
+    <lastmod>2012-03-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation//</loc>
+    <lastmod>2012-02-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2012/02/css-selector-based-templating-example-with-javascript//</loc>
+    <lastmod>2012-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2011/10/how-to-deploy-your-play-applications-on-archlinux-with-daemons//</loc>
+    <lastmod>2011-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2011/07/improve-your-web-navigation-experience-flexible-nav-jquery-library//</loc>
+    <lastmod>2011-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2011/07/same-game-gravity-technical-notes//</loc>
+    <lastmod>2011-07-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2011/07/same-game-gravity-for-ipad-iphone-android-facebook-chrome-and-web//</loc>
+    <lastmod>2011-07-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2011/06/automating-web-app-development-for-multiple-platforms//</loc>
+    <lastmod>2011-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2011/04/releasing-same-game-gravity-android//</loc>
+    <lastmod>2011-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2011/03/html-canvas-pour-les-neophytes//</loc>
+    <lastmod>2011-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2011/01/how-to-make-dlink-dwa-140-perfectly-work-on-linux//</loc>
+    <lastmod>2011-01-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2010/05/css3-transitions-available-on-firefox-3-7//</loc>
+    <lastmod>2010-05-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2010/04/automatiser-lexportation-dun-site-statique-avec-wget//</loc>
+    <lastmod>2010-04-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2010/04/realiser-une-maquette-web-avec-le-css-3//</loc>
+    <lastmod>2010-04-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2010/03/sass-levolution-du-css//</loc>
+    <lastmod>2010-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2010/02/the-same-game-in-html5-canvas//</loc>
+    <lastmod>2010-02-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/2010/02/tutoriel-canvas-realiser-une-banniere-animee-en-quelques-lignes-de-code/</loc>
+    <lastmod>2010-02-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>http://example.com/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/pages/a-world-of-promises/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/animation/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/canvas/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/javascript/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/bezier/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/gamedev/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/css/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/sass/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/playframework/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/transition/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/linux/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/html/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/mobile/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/library/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/navigation/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/sysadmin/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/templating/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/math/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/websocket/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/blender/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/color/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/glsl/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/webgl/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/audio/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/iteratee/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/hackday/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/float/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/reactive/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/unix/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/awop/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/promise/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/q/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/midi/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/zound/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/fm/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/webrtc/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/js13k/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/functional/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/rendering/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/ludumdare/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/js1k/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/phaser/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/webgl/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/react/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/vdom/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/gl-react/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/opengl/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/tag/relay/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/page2/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/page3/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/page4/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/page5/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/page6/</loc>
+    <lastmod>2016-12-03</lastmod>
+    
+    
+  </url>
+  
+</urlset>

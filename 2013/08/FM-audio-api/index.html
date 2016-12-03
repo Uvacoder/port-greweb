@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Frequency Modulation (FM) with Web Audio API">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:creator" content="@greweb">
+    
+
+    <title>@GreWeb - Frequency Modulation (FM) with Web Audio API</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2013/08/FM-audio-api/">Frequency Modulation (FM) with Web Audio API</a></h1>
+    <time class="date" datetime="2013-08-21">August 21, 2013</time>
+   <span class="tags">
+     <a class="tag" href="/tag/fm.html">fm</a>
+     <a class="tag" href="/tag/audio.html">audio</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p>The main principle of <a href="http://en.wikipedia.org/wiki/Frequency_modulation_synthesis">Frequency Modulation (FM)</a> is to <strong>pipe an Oscillator (the Modulator)
+into the frequency of another Oscillator (the Carrier)</strong>.</p>
+
+<p>This article will explain to you how FM Synthesis works with <strong>interactive demos</strong>.
+In the meantime, all demos are implemented with the brand new <strong>Web Audio API</strong>,
+so feel free to hack the code for your own purpose.</p>
+
+<p>This article will also introduce some Audio concepts like <strong>LFO</strong>, <strong>Envelope</strong> and <strong>Finetuning</strong>.</p>
+
+<p>I&#39;ve recently implemented a very first FM in <a href="/2013/07/zound-live/">ZOUND live</a> - <em>a HTML5 collaborative audio tracker</em>,
+giving much more powerful Synthesizers (see in the following video).</p>
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/El4JvaDWQUM" frameborder="0" allowfullscreen></iframe>
+
+<p><a href="https://github.com/gre/zound-live/blob/master/app/assets/javascripts/modules/SimpleFM.js"><em>(here is the implementation of that FM)</em></a></p>
+
+<!--more-->
+
+<h2>Dive into Frequency Modulation Synthesis</h2>
+
+<p>As mentioned previously, FM is about <strong>piping an Oscillator (the <u>Modulator</u>) into the frequency of another Oscillator (the <u>Carrier</u>)</strong>.</p>
+
+<p>The Modulator oscillation only affects the oscillation frequency of the Carrier but is not directly an audio signal.</p>
+
+<p><img src="/images/2013/08/fm_principle.png" alt=""></p>
+
+<p>The result of that modulation differs depending on each oscillator <strong>frequency</strong> and <strong>amplitude</strong>:</p>
+
+<p><a href="http://en.wikipedia.org/wiki/File:Frequencymodulationdemo-td.png"><img src="/images/2013/08/Frequencymodulationdemo-td.png" alt=""></a></p>
+
+<p><strong><em>N.B.</em></strong> <em>Our interactive demos in this article will always play a sound and visualize it (waveform / spectrum analyzer).
+You will have different kind of controls depending on each specific aspect I want to illustrate.</em></p>
+
+<p><em>The demos should work on Chrome. <strong>However if you get an AudioContext failure, please reload the page</strong> (you may not be able to start them all in one row).</em></p>
+
+<h3>LFO</h3>
+
+<p><strong>Low-Frequency Oscillation (LFO)</strong> is very used in electronic music for making rythmic audio effects.</p>
+
+<p>LFO is simply a specific subset of a oscillator in a sense that <strong>its oscilation frequency is under
+the human audible range (20 Hz)</strong> and is then not generally used as an audio signal but as an effect controller.</p>
+
+<p>For instance the frequency / the amplitude of an oscillator, or in the following example the frequency of the cut-off filter:</p>
+
+<audio src="http://upload.wikimedia.org/wikipedia/commons/e/e4/Lfo-cutoff-frequency-wobble-bass.ogg" controls></audio>
+
+<p>Now, as a first demo,
+let&#39;s see what happens if our <strong>FM Modulator is an LFO</strong>,
+<em>(i.e. if that Modulator is in low frequency range)</em>.</p>
+
+<iframe width="100%" height="310" src="http://fiddle.jshell.net/FvnJx/58/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<p><a href="http://jsfiddle.net/FvnJx/58/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a></p>
+
+<p>Observe in the Carrier graphs how <strong>the waveform is regulary compressed and decompressed</strong>. If you increase the Modulator frequency, it will speed up this effect. A real FM is about speeding up that effect up to the audible range...</p>
+
+<p><strong><em>N.B.</em></strong> <em>With <em>Web Audio API</em> (more generally with any modular synthesizers) we can easily control any module parameter with an LFO:</em></p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">lfo</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">carrier</span><span class="p">.</span><span class="nx">frequency</span><span class="p">);</span>
+</code></pre></div>
+<h4>Modulator in audible range</h4>
+
+<p>Now, if we increase the frequency to the hearing range, here is what happens:
+<em>(in that example you can also change the Carrier frequency)</em></p>
+
+<iframe width="100%" height="310" src="http://fiddle.jshell.net/x4CWR/36/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<p><a href="http://jsfiddle.net/x4CWR/36/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a></p>
+
+<p>It&#39;s as if that <strong>once the Modulator reaches that audible barrier, it kind of becomes a second audible synthesizer</strong>,
+even if it only modulate the frequency of the actual synthesizer.
+However, it&#39;s completely different than playing the two synthesizers directly into the output,
+again the modulator influence the frequency of the carrier and is not directly piped into the output audio signal.</p>
+
+<p><em>There is especially cool sound produced when the Modulator frequency is closed to the Carrier frequency. For more infos, see the <u>Finetuning</u> section.</em></p>
+
+<h3>Frequency ratios: harmonic or dissonant sounds</h3>
+
+<p>One thing you may also have notice in the previous example is that most of the generated sounds was quite dissonant, non harmonic.</p>
+
+<p>Now, if we add more restrictions and only <strong>snap the possible modulator frequencies</strong>
+to a <strong>multiple of the carrier frequency</strong>, here is what happens:</p>
+
+<iframe width="100%" height="310" src="http://fiddle.jshell.net/Euezv/17/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<p><a href="http://jsfiddle.net/Euezv/17/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a></p>
+
+<p>This harmonic result is due a simple fact in music: <strong>Mutiplying a note frequency by 2 is equivalent to Increasing that note by one octave,</strong> meaning the note has the same tone but is one-octave higher. (and vice versa for the division). <em>BTW, you may have noticed that fact by repetition of peaks in the previous example Spectrum Visualization.</em></p>
+
+<p>Now we can release some restrictions by also allowing frequencies multiple of <code>carrier frequency / 4</code>, which means allowing to increase/decrease by an <strong>octave</strong>, a <strong>semi-octave</strong> or a <strong>quarter-of-octave</strong>.</p>
+
+<iframe width="100%" height="310" src="http://fiddle.jshell.net/DFSwN/13/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<p><a href="http://jsfiddle.net/DFSwN/13/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a></p>
+
+<p><em>Eventually you could even allow more freedom using multiple of <code>carrier freq / 12</code>, because an octave is equally divided by 12 in the <a href="http://en.wikipedia.org/wiki/Chromatic_scale">Chromatic scale</a>.</em></p>
+
+<h3>Mixing the power of the Modulator effect</h3>
+
+<p>A very interesting part of the job is also to change the <strong>amplitude of the modulator</strong>. So far, we used a full amplitude modulating the carrier frequency from 0 to 2-times its original frequency which produces a quite rough sound.</p>
+
+<p>Try to change the modulator amplitude on the following demo:</p>
+
+<iframe width="100%" height="310" src="http://fiddle.jshell.net/DAT5S/12/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<p><a href="http://jsfiddle.net/DAT5S/12/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a></p>
+
+<p>Technically, we can easily control that range to any by changing the gain of the Modulator with a <code>GainNode</code> which is just a tool to scale the amplitude of a signal.</p>
+
+<h3>Envelope</h3>
+
+<p>Now, we need to add an <strong>Envelope</strong> for automating that amplitude change you just experiment with.</p>
+
+<p>An envelope in electronic music will generally look like this:</p>
+
+<p><a href="http://en.wikipedia.org/wiki/File:ADSR_parameter.svg"><img src="/images/2013/08/500px-ADSR_parameter.svg.png" alt=""></a></p>
+
+<p>An Envelope corresponds to a <strong>note lifespan</strong>.
+It is the minimum required for making our Synth.</p>
+
+<p>We will generally <strong>automate that amplitude through time for each note triggered</strong>.</p>
+
+<p>Here is a demo.
+Play, try to hold and release a note (using the Play button or SPACE), and observe how the Spectrum Analyzer is moving:</p>
+
+<iframe width="100%" height="400" src="http://fiddle.jshell.net/tyEKr/32/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<p><a href="http://jsfiddle.net/tyEKr/32/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a></p>
+
+<p><strong>Two different envelopes</strong> has been used: one for the <strong>Modulator</strong> and one for the <strong>Carrier</strong> which produce <strong>different sound effects in a note lifespan</strong>.</p>
+
+<p><em>We won&#39;t make an interactive demo for changing these envelope parameters,
+but you can try them in the ZOUND project (or see again the video).</em></p>
+
+<h3>Finetuning</h3>
+
+<p>Another interesting effect occurs <strong>when the frequency of the Modulator is very close to the frequency of the Carrier</strong>.
+In the following example, we have set both oscillators to the same frequency but we expose a &quot;detune&quot; parameter which allows to change a bit the frequency of the Modulator.</p>
+
+<iframe width="100%" height="400" src="http://fiddle.jshell.net/X95S6/10/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<p><a href="http://jsfiddle.net/X95S6/10/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a></p>
+
+<p>You can slightly notice that a sound is regulary looping like if it was an LFO effect. You can also visualize it on the graph.</p>
+
+<p>This effect corresponds to the <strong><a href="http://tinyurl.com/nzkus8">phase</a> change between both oscillators</strong>: it regulary change from <strong>&quot;in-phase&quot;</strong> state (where it have exactly the same sine waveform at the same time) to a desynchronize <strong>&quot;out-of-phase&quot;</strong> (because of the small detune), and then slightly go to the next &quot;in-phase&quot; step. More the frequencies are close, more it takes time to oscillate from phase to phase.</p>
+
+<p>This effect is especially awesome when you start mixing multiple synths together and finetune a bit each one so they don&#39;t sound exactly on the same frequency.</p>
+
+<h3>Modulating the Modulator</h3>
+
+<p>There is so much more possibilites to play with,
+for instance, the previously introduced Envelope could be mixed
+with an LFO to change the Modulator effect in a rythm,
+but now let&#39;s see how we can...</p>
+
+<p><strong>...modulate the modulator!</strong></p>
+
+<p>Eventually we can make a stack of modulators and use different kind of waveforms
+for more powerful effects:</p>
+
+<p><img src="/images/2013/08/fm_multiple.png" alt=""></p>
+
+<blockquote>
+<p>Be careful when playing with stack of modulators, it is quite easy to have saturated or noisy sounds.</p>
+</blockquote>
+
+<p>As an example, I made this experiment which randomly takes different frequencies and amplitude for a stack of 5 modulators:</p>
+
+<p><a href="http://jsfiddle.net/s2MMR/45/"><strong>-&gt; http://jsfiddle.net/s2MMR/45/ &lt;-</strong></a></p>
+
+<p>Careful! this experiment is a bit crazy! but it shows how different patterns can be when playing with FM.</p>
+
+<!-- TODO soon...
+## Last demo, polished FMs playing a famous song...
+
+As a last demo example, and in a more readable & simple code, here is a polished example of FM.
+-->
+
+<hr>
+
+<p>Also, <strong>If you are interested by ZOUND live, <a href="http://github.com/gre/zound-live/">fork it on Github</a>.</strong></p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

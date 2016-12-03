@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="If you have ever made a chart library in your life, you’ve probably asked yourself how to find the best scale for the grid in order to have nice values to display in the axis." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl,relay," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Chart libraries headaches &#8211; finding the best grid step">
+    <meta name="twitter:description" content="If you have ever made a chart library in your life, you’ve probably asked yourself how to find the best scale for the grid in order to have nice values to display in the axis.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2012/02/wrong-chart-scale.png">
+    <link rel="image_src" href="http://greweb.me/images/2012/02/wrong-chart-scale.png">
+    
+
+    <title>@GreWeb - Chart libraries headaches &#8211; finding the best grid step</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2012/03/chart-libraries-headaches-finding-the-best-grid-step/">Chart libraries headaches &#8211; finding the best grid step</a></h1>
+    <time class="date" datetime="2012-03-06">March  6, 2012</time>
+   <span class="tags">
+     <a class="tag" href="/tag/javascript.html">javascript</a>
+     <a class="tag" href="/tag/math.html">math</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><img src="/images/2012/02/wrong-chart-scale.png" class="thumbnail-left" /></p>
+
+<p>If you have ever made a chart library in your life, you’ve probably asked yourself how to find the best scale for the grid in order to have <strong>nice values to display in the axis</strong>.</p>
+
+<p>Most of the time, <strong>data ranges are unknown</strong>, hence we need to <strong>adapt the grid step</strong> to provide the best display.</p>
+
+<h2>Check this out</h2>
+
+<iframe src="/demo/grid-utils/" frameborder="0" width="525" height="140"></iframe>
+
+<p>Let’s explain the algorithm…</p>
+
+<!--more-->
+
+<h2>About scientific notation</h2>
+
+<p>Any number can be formatted in scientific notation. It is written in the form of <strong>A x 10N</strong> and is noted <strong>AeN</strong>.</p>
+
+<p>For instance, 2300 becomes <strong>2.3e3</strong> (because 2300 = 2.3 x 103), 12 becomes <strong>1.2e1</strong>, and 0.23 becomes <strong>2.3e-1</strong>.</p>
+
+<p>Scientific notation is exactly made for <strong>displaying huge or tiny values in a few characters</strong>.<br>
+We can use the same principle for finding good values for the step scale, we can just <strong>keep the pow of 10</strong> part (<strong>N</strong>) and <strong>round the value part</strong> (<strong>A</strong>). </p>
+
+<h2>Magic numbers</h2>
+
+<p>But <strong>rounding is not enough</strong>, I have found that good pattern numbers of step range is those divisible by 2, 5 and 10.</p>
+
+<p>In math term, we need to find a step range <em>sr</em>, where</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">∀ n ∈ |N, ∀ a ∈ {1, 2, 5}, ∃ sr, sr = a x 10^n
+</code></pre></div>
+<p>This is basically because 2 x 5 = 10 : using a step of 5 we have a 10 modularity every 2 step, and, using a step of 2 we have a 10 modularity every 5 step.</p>
+
+<p>** 2 step:** 0 2 4 6 8 <strong>10</strong> 12 14 16 18 <strong>20</strong> …<br>
+** 5 step:** 0 5 <strong>10</strong> 15 <strong>20</strong> 25 <strong>30</strong> 35 <strong>40</strong> 45 …<br>
+<strong>10 step:</strong> <strong>0 10 20 30 40 50 60 70 80 90</strong> …</p>
+
+<p>For any dataset, we need to fallback on the closest step range in all of possible step ranges: … 0.002, 0.02, 0.2, 2, 20, 200, …, … 0.005, 0.05, 0.5, 5, 50, 500, …, and … 0.001, 0.01, 0.1, 1, 10, 100, …, </p>
+
+<h3>Calculate the pow of 10</h3>
+
+<p>To get the <strong>N</strong> value of the <strong>A x 10N</strong> form, we can use the log of 10:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">N</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+<h3>Calculate the value modulo 10</h3>
+
+<p>To get the <strong>A</strong> value of the <strong>A x 10N</strong> form, we can just divide the number by <strong>10N</strong>:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">A</span> <span class="o">=</span> <span class="nx">number</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nx">N</span><span class="p">)</span>
+</code></pre></div>
+<h3>‘Rounding’ the number</h3>
+
+<p>We know just need to change the value of <strong>A</strong> and make it more “readable”.<br>
+We can map the value as follow:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">if A ∈ [0, 1.5[ then A becomes 1  
+if A ∈ [1.5, 3.5[ then A becomes 2  
+if A ∈ [3.5, 7.5[ then A becomes 5  
+if A ∈ [7.5, 10[ then A becomes 10
+</code></pre></div>
+<p>Note that these rules may probably be improved, I would love if someone could improve this (because I use a arithmetic mean approach and it should probably be arithmetic).</p>
+
+<h2>Implementation</h2>
+
+<h3>Scala</h3>
+
+<script src="https://gist.github.com/1987311.js?file=GridUtils.scala"></script>
+
+<h3>Javascript</h3>
+
+<script src="https://gist.github.com/1987311.js?file=GridUtils.js"></script>
+
+<p><strong>Usage example:</strong></p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">GridUtils</span><span class="p">.</span><span class="nx">findNiceRoundStep</span> <span class="p">(</span><span class="nx">xMax</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+<p>where <em>xMax</em> is the scale of the axis, and <em>10</em> is the desired number of graduation split.</p>
+
+<h2>Conclusion</h2>
+
+<p>Finding the best grid step is finally a simple thing to implement but is an essential feature every chart libraries should have.</p>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/12/gl-react-v3/">gl-react v3</a>
+            </li>
+            
+            <li>
+              <a href="/2016/09/relay-scrolling-connections/">Relay, scrolling connections</a>
+            </li>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl/">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf/">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react/">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications/">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis/">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata/">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex/">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29/">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>

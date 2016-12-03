@@ -1,0 +1,709 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Gaëtan Renaudeau" />
+    <meta name="description" content="IBEX is my game made for js13kgames. This article explains how the game has been implemented with GLSL and cellular automata." />
+    <meta name="keywords" content="animation,canvas,javascript,bezier,gamedev,css,sass,playframework,transition,linux,html,mobile,library,navigation,sysadmin,templating,math,websocket,blender,color,GLSL,WebGL,audio,iteratee,hackday,float,reactive,unix,AWOP,promise,Q,MIDI,zound,fm,WebRTC,js13k,functional,rendering,ludumdare,js1k,phaser,webgl,react,vdom,gl-react,opengl," />
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@greweb">
+    <meta name="twitter:title" content="Cellular Automata in IBEX">
+    <meta name="twitter:description" content="IBEX is my game made for js13kgames. This article explains how the game has been implemented with GLSL and cellular automata.">
+    <meta name="twitter:creator" content="@greweb">
+    
+    <meta name="twitter:image:src" content="http://greweb.me/images/2014/09/ibex-2.png">
+    <link rel="image_src" href="http://greweb.me/images/2014/09/ibex-2.png">
+    
+
+    <title>@GreWeb - Cellular Automata in IBEX</title>
+    <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel='shortcut icon' href='/favicon.png' />
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://greweb.me/rss/index.xml" />
+  </head>
+  <body>
+
+    <header role="banner">
+      <h1><a href="http://greweb.me">@GreWeb</a></h1>
+      <h2></h2>
+      <nav>
+        <a href="mailto:renaudeau.gaetan@gmail.com">Mail</a>
+        <a href="http://github.com/gre" target="_blank">Github</a>
+        <a href="http://twitter.com/greweb" target="_blank">Twitter</a>
+        <a href="http://www.linkedin.com/pub/gaetan-renaudeau/21/258/620" target="_blank">LinkedIn</a>
+        <a href="https://soundcloud.com/greweb" target="_blank">SoundCloud</a>
+      </nav>
+    </header>
+
+    <div id="container">
+    <div id="main">
+      <div id="content">
+        <article>
+  
+  
+  <header>
+    <h1><a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a></h1>
+    <time class="date" datetime="2014-09-22">September 22, 2014</time>
+   <span class="tags">
+     <a class="tag" href="/tag/gamedev.html">gamedev</a>
+     <a class="tag" href="/tag/js13k.html">js13k</a>
+     <a class="tag" href="/tag/glsl.html">GLSL</a>
+     
+   </span>
+  </header>
+
+  <div class="entry-content">
+    <p><a href="/2014/09/ibex">
+  <img src="/images/2014/09/ibex-2.png" alt="" class="thumbnail-right" />
+</a></p>
+
+<p>Last week I finished my <a href="/2014/09/ibex">JS13K game called &quot;IBEX&quot;</a>,
+an apocalyptic game where you have to help some wild ibex to escape from the inferno.</p>
+
+<blockquote>
+<p>IBEX received the 16th place (out of 129 games) from the <a href="http://js13kgames.com/">js13kgames</a> jury.</p>
+</blockquote>
+
+<p>This article is a technical post-mortem about the development of this game in JavaScript / WebGL
+and how the world is just <strong>ruled with <a href="http://en.wikipedia.org/wiki/Cellular_automaton">cellular automata</a></strong>
+and computed efficiently in a GLSL shader.</p>
+
+<iframe width="50%" height="220" src="//www.youtube.com/embed/nqD2qIy4auU" frameborder="0" allowfullscreen></iframe>
+
+<!--more-->
+
+<h2>Cellular automata ruled world</h2>
+
+<p>A <strong>Cellular Automaton</strong> (plurial Cellular Automata) is an <strong>automaton</strong> <em>(in other words, a state machine)</em>
+based on <strong>a grid (an array) of cells</strong>.
+It has been discovered years ago and popularized by <a href="http://en.wikipedia.org/wiki/Stephen_Wolfram">Stephen Wolfram</a>
+in his interesting book <a href="https://www.wolframscience.com/">A new Kind of Science</a>.</p>
+
+<figure class="thumbnail-right">
+  <img src="/images/2014/09/elementary-automaton.png" />
+  <figcaption>
+    <a href="http://mathworld.wolfram.com/ElementaryCellularAutomaton.html">
+      elementary automata.
+    </a>
+  </figcaption>
+</figure>
+
+<p>The simplest possible cellular automaton is the one where, at each generation,
+the cell value is determined from the <strong>previous and the 2 adjacent cells</strong> (left and right)
+value and where the value can only be <strong>0 or 1</strong> (white or black / true or false).
+The way the cell value is determined is through a set of rules.</p>
+
+<blockquote>
+<p>In an elementary cellular automaton, there is a total of 8 rules, which means 256 possible cellular automata.</p>
+</blockquote>
+
+<h3>2D cellular automaton</h3>
+
+<figure class="thumbnail-left">
+  <img src="/images/2014/09/Gospers_glider_gun.gif" />
+  <figcaption>
+    <a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life">Conway's Game of Life</a>,
+    a well known 2D cellular automaton.
+  </figcaption>
+</figure>
+
+<p>The kind of Cellular Automaton I focused on for my game is <strong>2D cellular automaton</strong>:
+At each generation, the cell value is determined from <strong>the previous value and the 8 adjacent cells</strong>
+using a finite set of rules.</p>
+
+<p>It is important to understand that these rules are applied in parallel for <strong>all</strong> cells of the world.</p>
+
+<p><br /></p>
+
+<figure class="thumbnail-right">
+  <img src="/images/2014/09/ibex-experiment2.png" />
+  <figcaption>
+    Early version with 4 elements and simple rules:
+    Water falls in Air, Fire grows in Air, Water extinguishes Fire, Earth drops Water + creates Fire
+  </figcaption>
+</figure>
+
+<p><strong>A 2D cellular automaton rule:</strong></p>
+
+<p><img src="/images/2014/09/ibex-rule-2d.png" alt=""></p>
+
+<p>What I&#39;ve found is that
+<strong>the WebGL and the GLSL language works well to implement a cellular automaton</strong>.</p>
+
+<p>The GLSL paradigm is what I like to call <a href="/2013/11/functional-rendering/">functional rendering</a>:
+It is, to simplify, a function <strong><code>(x,y) =&gt; (r,g,b,a)</code></strong>:
+You fundamentally have to implement this function which <strong>gives a color for a given viewport position</strong>,
+and you implement it in a dedicated language which compiles to the GPU.</p>
+
+<p>So we can implement a 2D cellular automaton where each cell is a real (x,y) position in the Texture
+and where the (r,g,b,a) color is used to encode your possible cell states, and that&#39;s a lot of possible encoding!</p>
+
+<p>In my game, i&#39;ve chosen to only use the <code>&quot;r&quot;</code> component to implement the cell state.
+But imagine all the possibilities of encoding more data per cell (like the velocity, the amount of particle in the cells,...).</p>
+
+<p><strong>Here is a boilerplate of making a Cellular Automaton in GLSL:</strong></p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">state</span><span class="p">;</span> <span class="c1">// the previous world state texture.</span>
+<span class="k">uniform</span> <span class="k">vec2</span> <span class="n">size</span><span class="p">;</span> <span class="c1">// The world size (state texture width and height)</span>
+
+<span class="cm">/*</span>
+<span class="cm"> The decode / encode functions provide an example of encoding</span>
+<span class="cm"> an integer state in the &quot;r&quot; component over possible 16 values.</span>
+<span class="cm"> You can definitely implement your own. Also &quot;int&quot; could be something more complex</span>
+<span class="cm"> */</span>
+<span class="k">int</span> <span class="n">decode</span> <span class="p">(</span><span class="k">vec4</span> <span class="n">color</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="mf">.5</span> <span class="o">+</span> <span class="mf">16.0</span> <span class="o">*</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">uv</span><span class="p">).</span><span class="n">r</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="k">vec4</span> <span class="n">encode</span> <span class="p">(</span><span class="k">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">vec4</span><span class="p">(</span><span class="k">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="mf">16.0</span><span class="p">,</span>  <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">  get(x,y) is doing a lookup in the state texture to get the (previous) state value of a position.</span>
+<span class="cm"> */</span>
+<span class="k">int</span> <span class="n">get</span> <span class="p">(</span><span class="k">int</span> <span class="n">x</span><span class="p">,</span> <span class="k">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">vec2</span> <span class="n">uv</span> <span class="o">=</span> <span class="p">(</span><span class="n">gl_FragCoord</span><span class="p">.</span><span class="n">xy</span> <span class="o">+</span> <span class="k">vec2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="o">/</span> <span class="n">size</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">uv</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="o">||</span> <span class="n">uv</span><span class="p">.</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mf">1.0</span> <span class="o">||</span> <span class="n">uv</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="o">||</span> <span class="n">uv</span><span class="p">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">?</span> <span class="mo">0</span> <span class="o">:</span>
+    <span class="n">decode</span><span class="p">(</span><span class="n">texture2D</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">uv</span><span class="p">).</span><span class="n">r</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="n">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// We get all neighbors cell values from previous state</span>
+  <span class="k">int</span> <span class="n">NW</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">int</span> <span class="n">NN</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span> <span class="mo">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">int</span> <span class="n">NE</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">int</span> <span class="n">WW</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mo">0</span><span class="p">);</span>
+  <span class="k">int</span> <span class="n">CC</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span> <span class="mo">0</span><span class="p">,</span> <span class="mo">0</span><span class="p">);</span>
+  <span class="k">int</span> <span class="n">EE</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mo">0</span><span class="p">);</span>
+  <span class="k">int</span> <span class="n">SW</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">int</span> <span class="n">SS</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span> <span class="mo">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">int</span> <span class="n">SE</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">int</span> <span class="n">r</span><span class="p">;</span> <span class="c1">// r (for result) is the new cell value.</span>
+
+  <span class="c1">////////////////////////////</span>
+  <span class="c1">// NOW HERE IS THE COOL PART</span>
+  <span class="c1">// where you implement all your rules (from the 9 state values)</span>
+  <span class="c1">// and give a value to r.</span>
+  <span class="c1">////////////////////////////</span>
+
+  <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p><strong>The complete game rules are all implemented in a GLSL fragment shader:
+<a href="https://github.com/gre/js13k-2014/blob/master/src/shaders/logic.frag">logic.frag</a></strong>.
+It is important to understand that this fragment shader takes in input
+the previous world state (as an uniform texture)
+and computes a new state by applying the rules.</p>
+</blockquote>
+
+<p>On the JavaScript side, you need to <strong>give an initial state to the texture</strong>
+(so you need to also encode data the same way it is done in the shader).
+Alternatively you can also make a shader to do this job
+<em>(generating the terrain can be intense to do in JavaScript, like it is the case for my game...)</em>.</p>
+
+<p>Also if you want to <strong>query the world from JavaScript</strong>,
+<em>(e.g. you want to do physics or collision detection like it is also the case for my game)</em>,
+you need to use <code>gl.readPixels</code> and then decode data in JavaScript.</p>
+
+<p>I&#39;ll explain this a bit later in another article.
+Let&#39;s now go back to the Cellular Automaton used in IBEX.</p>
+
+<figure>
+  <img src="/images/2014/09/ibex-screenshot1.png" />
+  <figcaption>
+    The different elements gameplay.
+  </figcaption>
+</figure>
+
+<h3>The elements</h3>
+
+<p>The game theme was &quot;Four Elements: <strong>Water, Air, Earth, Fire</strong>&quot;, so I&#39;ve used
+these 4 elements as primary elements of the cellular automaton.</p>
+
+<p>Each elements also have secondary elements that can be created from each other interactions:
+<strong>Source, Volcano, Grass, WindLeft, WindRight</strong>.</p>
+
+<ul>
+<li>The <strong>Volcano</strong> is lava growing in the Earth. It creates Fire (when there is Air).</li>
+<li>The <strong>Source</strong> is water infiltrating in the Earth. It drops Water (when there is Air).</li>
+<li>The <strong>Grass</strong> (or Forest) grows on Earth with Water. It is a speed bonus for ibex but it propagates fire very fast. It also stop the water from flowing.</li>
+<li>The <strong>Wind</strong> (left or right wind) is created randomly in Air. It have effects on Water and Fire propagation and also on ibex speed.</li>
+</ul>
+
+<p><strong>Some constants...</strong></p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="c1">// Elements</span>
+<span class="k">int</span> <span class="n">A</span>  <span class="o">=</span> <span class="mo">0</span><span class="p">;</span> <span class="c1">// Air</span>
+<span class="k">int</span> <span class="n">E</span>  <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// Earth</span>
+<span class="k">int</span> <span class="n">F</span>  <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">// Fire</span>
+<span class="k">int</span> <span class="n">W</span>  <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">// Water</span>
+<span class="k">int</span> <span class="n">V</span>  <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">// Volcano</span>
+<span class="k">int</span> <span class="n">S</span>  <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">// Source</span>
+<span class="k">int</span> <span class="n">Al</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span> <span class="c1">// Air Left (wind)</span>
+<span class="k">int</span> <span class="n">Ar</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span> <span class="c1">// Air Right (wind)</span>
+<span class="k">int</span> <span class="n">G</span>  <span class="o">=</span> <span class="mi">8</span><span class="p">;</span> <span class="c1">// Grass (forest)</span>
+</code></pre></div>
+<figure class="thumbnail-right">
+  <img src="/images/2014/09/ibex-experiment1.png" />
+  <figcaption>
+    Fun and experimental result accidentally produced in an early development of the rules.
+  </figcaption>
+</figure>
+
+<p>To summary, there is 9 possible elements,
+and rules are determined from the 9 previous cells:
+This makes a LOT of possible rules.
+However, the rules involved here remain simple and with just a few rules.</p>
+
+<blockquote>
+<p>That is the big thing about cellular automata:
+very simple rules produce an incredible variety of results.</p>
+</blockquote>
+
+<p>In general, we can classify my game rules into 2 kind of rules:
+&quot;interaction&quot; rules and &quot;propagation&quot; rules.
+The first kind describes how two (or more!) elements interact each other.
+The second kind describes the way an element evolve.
+Some rules will also mix them both.</p>
+
+<h3>Some simple &quot;propagation rule&quot;</h3>
+
+<p><strong>Earth stays:</strong>
+an Earth is returned if there was an Earth before.</p>
+
+<p><img src="/images/2014/09/ibex-rule-earth.png" alt=""></p>
+
+<p><strong>Water falls in Air:</strong>
+a Water is created if there was a Water on top.</p>
+
+<p><img src="/images/2014/09/ibex-rule-water1.png" alt=""></p>
+
+<p><strong>Fire grows in Air:</strong>
+a Fire is created if there was a Fire on bottom.</p>
+
+<p><img src="/images/2014/09/ibex-rule-fire1.png" alt=""></p>
+
+<p>These rules produce very elementary result, we will now see how we can improve them.</p>
+
+<h3>Weights in rules</h3>
+
+<p><strong>More powerful rules can also be reached by using weights</strong>:
+you can affect a weight for each neighbor cell to give more or less importance to them.</p>
+
+<p>Let&#39;s take a look at a simple example:</p>
+
+<p><img src="/images/2014/09/ibex-rule-gencave-example.png" alt=""></p>
+
+<blockquote>
+<p>N.B.: only the &quot;sum&quot; is considered in the rule:
+if an element matches, we sum the weight of the cell, otherwise &quot;zero&quot;.</p>
+</blockquote>
+
+<p><strong>This example is actually a weighted version of <a href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">the cave rule you can find here</a>:</strong></p>
+
+<figure>
+  <figcaption>
+    Result of the rule, with (Air or Earth) random pick for each  initial cell value.
+  </figcaption>
+  <img src="/images/2014/09/ibex-gencaveresult.png" />
+</figure>
+
+<h3>Randomness in rules</h3>
+
+<p><strong>Combine Randomness and Weights and you get a very powerful simulation.</strong></p>
+
+<p>To avoid seeing some (well known) patterns in the simulation I added some randomness in my rules.
+<strong>With randomness, the results are incredibly powerful.</strong></p>
+
+<p>In the following video, notice how cool the fire propagation can result
+by varying the propagation randomness factor.</p>
+
+<iframe width="100%" height="420" src="//www.youtube.com/embed/mF-MNHk7u4s" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+
+<p><strong>The code:</strong></p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="cp">#define AnyADJ(e) (NW==e||SE==e||NE==e||SW==e||NN==e||SS==e||EE==e||WW==e)</span>
+<span class="c1">// ^^^^^^^^ MACRO !</span>
+<span class="k">if</span> <span class="p">(</span>
+  <span class="n">CC</span> <span class="o">==</span> <span class="n">G</span> <span class="o">&amp;&amp;</span>
+  <span class="n">RAND</span> <span class="o">&lt;</span> <span class="n">firePropagation</span> <span class="o">&amp;&amp;</span>
+  <span class="p">(</span> <span class="n">AnyADJ</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">||</span> <span class="n">AnyADJ</span><span class="p">(</span><span class="n">V</span><span class="p">)</span> <span class="p">))</span> <span class="p">{</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="n">F</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4>Randomness in GLSL ???</h4>
+
+<p>GLSL is fully stateless and there is <strong>NO WAY</strong> to have a <code>random()</code> function in the GPU.
+The trick to do randomness in GLSL is by invoking some math black magic:</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">float</span> <span class="n">rand</span><span class="p">(</span><span class="k">vec2</span> <span class="n">co</span><span class="p">){</span>
+  <span class="k">return</span> <span class="n">fract</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">co</span><span class="p">.</span><span class="n">xy</span> <span class="p">,</span><span class="k">vec2</span><span class="p">(</span><span class="mf">12.9898</span><span class="p">,</span><span class="mf">78.233</span><span class="p">)))</span> <span class="o">*</span> <span class="mf">43758.5453</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>rand</code></strong> is a <a href="http://stackoverflow.com/questions/4200224/random-noise-functions-for-glsl">popular</a>
+function which returns a pseudo-random value (from 0.0 to 1.0) for a given position.</p>
+
+<p>My personal <strong>black magic</strong> was to define a convenient macro to have a &quot;RAND&quot; word which would get me
+a new random number.</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="cp">#define RAND (S_=vec2(rand(S_), rand(S_+9.))).x</span>
+</code></pre></div>
+<p><code>S_</code> is a seed which is accumulated when calling this <code>RAND</code>.
+Because this macro will be inlined in the code, <code>S_</code> must be defined in a local variable
+(so in summary, <code>RAND</code> is doing local side-effect).</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">vec2</span> <span class="n">p</span> <span class="o">=</span> <span class="n">gl_FragCoord</span><span class="p">.</span><span class="n">xy</span><span class="p">;</span>
+<span class="k">vec2</span> <span class="n">S_</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">time</span><span class="p">;</span>
+</code></pre></div>
+<p>Note that <strong>the current pixel position</strong> itself AND <strong>the time</strong> are both used for initializing the seed.
+It produces <strong>variable randomness over time and for each pixel</strong>.</p>
+
+<p>Let&#39;s now see other examples where randomness can be very powerful.</p>
+
+<h3>The Water and Fire interactions</h3>
+
+<p><strong>Fire grows and diverges</strong>:</p>
+
+<p><img src="/images/2014/09/ibex-rule-fire2.png" alt=""></p>
+
+<ul>
+<li>the &quot;left&quot; and the &quot;right&quot; columns in this rule allows <strong>divergence</strong> in the way fire grows:
+Instead of growing straight up, <strong>the fire can also move a bit left or a bit right</strong>.
+A lower weight for these side columns make the fire diverge a bit less than a &quot;triangle&quot; propagation.</li>
+</ul>
+
+<p>Here is the GLSL code:</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="c1">// Fire grow / Fire + Water</span>
+<span class="k">if</span> <span class="p">(</span>
+  <span class="o">-</span><span class="mf">0.05</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NW</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="o">-</span><span class="mf">0.40</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NN</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="o">-</span><span class="mf">0.05</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NE</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="c1">// If water drop...</span>
+  <span class="o">-</span><span class="mf">0.50</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">WW</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="o">-</span><span class="mf">0.50</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">CC</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="o">-</span><span class="mf">0.50</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">EE</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="c1">// ...or water nearby.</span>
+   <span class="mf">0.35</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">SW</span><span class="o">==</span><span class="n">F</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">0.90</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">SS</span><span class="o">==</span><span class="n">F</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">0.35</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">SE</span><span class="o">==</span><span class="n">F</span><span class="p">)</span>   <span class="c1">// Fire will move up and expand a bit.</span>
+ <span class="o">&gt;=</span> <span class="mf">0.9</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">RAND</span> <span class="c1">// The sum of matched weights must be enough important, also with some randomness</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="n">F</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Water falls, diverges and creates holes</strong>:</p>
+
+<p><img src="/images/2014/09/ibex-rule-water2.png" alt=""></p>
+
+<figure class="thumbnail-right">
+  <img src="/images/2014/09/ibex-rain.png"/>
+  <figcaption>The rain in IBEX. Notice how Water diverges a bit and creates holes.</figcaption>
+</figure>
+
+<ul>
+<li>Same as the fire rule, we also have <strong>divergence</strong> in the water.</li>
+<li>However there is one more important thing in the rule:
+thanks to the <strong>double inequality</strong>,
+Water is created only if there is not already too much Water:
+it <strong>results of creating Air between the Water particules</strong>.
+This make Water elements to be less compact than Fire elements,
+the water does not visually &quot;expand&quot; contrary to the fire.</li>
+<li>The <strong>randomness</strong> helps a lot here to give <strong>no visible patterns</strong> in this job.</li>
+</ul>
+
+<p><br /></p>
+
+<p>Here are all rules which creates Water:
+in this rules you can also notice how <strong>the Water flows on Earth</strong> and how
+the <strong>occasional rain</strong> is implemented.</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">if</span> <span class="p">(</span>
+<span class="c1">// Water drop / Water + Fire</span>
+  <span class="n">between</span><span class="p">(</span>
+    <span class="mf">0.3</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NW</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">0.9</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NN</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">0.3</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NE</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span>
+    <span class="mf">0.1</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">WW</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="o">-</span><span class="mf">0.3</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">CC</span><span class="o">==</span><span class="n">F</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">0.1</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">EE</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span>
+                         <span class="o">-</span><span class="mf">0.3</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">SS</span><span class="o">==</span><span class="n">F</span><span class="p">)</span>  
+    <span class="p">,</span>
+    <span class="mf">0.9</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">RAND</span><span class="p">,</span>
+    <span class="mf">1.4</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">RAND</span>
+  <span class="p">)</span>
+
+  <span class="o">||</span> <span class="c1">// Water flow on earth rules</span>
+
+  <span class="o">!</span><span class="n">prevIsSolid</span> <span class="o">&amp;&amp;</span>
+  <span class="n">RAND</span> <span class="o">&lt;</span> <span class="mf">0.98</span> <span class="o">&amp;&amp;</span>
+  <span class="p">(</span> <span class="p">(</span><span class="n">WW</span><span class="o">==</span><span class="n">W</span><span class="o">||</span><span class="n">NW</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">SW</span><span class="o">==</span><span class="n">E</span> <span class="o">||</span> <span class="p">(</span><span class="n">EE</span><span class="o">==</span><span class="n">W</span><span class="o">||</span><span class="n">NE</span><span class="o">==</span><span class="n">W</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">SE</span><span class="o">==</span><span class="n">E</span> <span class="p">)</span>
+
+  <span class="o">||</span> <span class="c1">// Occasional rain</span>
+  <span class="o">!</span><span class="n">prevIsSolid</span> <span class="o">&amp;&amp;</span>
+  <span class="n">p</span><span class="p">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="n">SZ</span><span class="p">.</span><span class="n">y</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">&amp;&amp;</span>
+  <span class="n">rainRelativeTime</span> <span class="o">&lt;</span> <span class="mf">100.0</span> <span class="o">&amp;&amp;</span>
+  <span class="n">between</span><span class="p">(</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span>
+    <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="k">vec2</span><span class="p">(</span><span class="n">SD</span><span class="o">*</span><span class="mf">0.7</span> <span class="o">+</span> <span class="n">TI</span> <span class="o">-</span> <span class="n">rainRelativeTime</span><span class="p">))</span> <span class="o">*</span> <span class="n">SZ</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="c1">// Rain Start</span>
+    <span class="p">,</span>
+    <span class="mf">0.0</span><span class="p">,</span>
+    <span class="mf">100.0</span> <span class="o">*</span> <span class="n">rand</span><span class="p">(</span><span class="k">vec2</span><span class="p">(</span><span class="n">SD</span> <span class="o">+</span> <span class="n">TI</span> <span class="o">-</span> <span class="n">rainRelativeTime</span><span class="p">))</span> <span class="c1">// Rain Length</span>
+  <span class="p">)</span>
+
+  <span class="o">||</span> <span class="c1">// Source creates water</span>
+  <span class="o">!</span><span class="n">prevIsSolid</span> <span class="o">&amp;&amp;</span> <span class="p">(</span>
+    <span class="mf">0.9</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NW</span><span class="o">==</span><span class="n">S</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">1.0</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NN</span><span class="o">==</span><span class="n">S</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">0.9</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">NE</span><span class="o">==</span><span class="n">S</span><span class="p">)</span> <span class="o">+</span>
+    <span class="mf">0.7</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">WW</span><span class="o">==</span><span class="n">S</span><span class="p">)</span> <span class="o">+</span>                        <span class="mf">0.7</span> <span class="o">*</span> <span class="k">float</span><span class="p">(</span><span class="n">EE</span><span class="o">==</span><span class="n">S</span><span class="p">)</span>
+    <span class="o">&gt;=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">RAND</span>
+  <span class="p">)</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="n">W</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Source rules</strong></p>
+
+<p>The Source can be created in the Earth by two rules:
+Either there is enough water around,
+Or there is source on top.</p>
+
+<p>Note the important usage of randomness.</p>
+
+<p><img src="/images/2014/09/ibex-rule-source.png" alt=""></p>
+
+<h3>The grass propagation, Limiting the forest height</h3>
+
+<p>To finish, the grass needed a special extension to the so-far-used 2D cellular automaton,
+the grass cell value is not only being determined from the 8 adjacent cells:</p>
+
+<p>To have more complex structure, <strong>the grass is determined
+from the previous cell at position <code>(x, y-N)</code></strong>,
+where x and y is the cell position and N is a variable value (random but constant per cell position).
+In other word, a forest can grow if the cell at N step under it is not a forest.
+This extra rule just adds a constraint on the max height that a forest can have.</p>
+
+<figure>
+  <figcaption>A Grass can be created if the (x,y-N) cell is not a Grass.</figcaption>
+  <img src="/images/2014/09/ibex-rule-forest-specific.png" />
+</figure>
+
+<p>Here is a demo showing the forest propagation randomness:</p>
+
+<iframe width="100%" height="480" src="//www.youtube.com/embed/V_enCKx8XHA" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+
+<h3>Drawing into the world</h3>
+
+<p><strong>Drawing into the world is also done in GLSL: through uniforms.</strong>
+Another alternative way to do that would have be to use <code>gl.readPixels</code> to extract it out in JavaScript,
+to write into the Array and inject it back to the shader...
+but this solution is not optimal because <code>readPixels</code> is blocking and costy (CPU time).</p>
+<div class="highlight"><pre><code class="language-glsl" data-lang="glsl"><span class="k">uniform</span> <span class="k">bool</span> <span class="n">draw</span><span class="p">;</span> <span class="c1">// if true, we must draw for this tick.</span>
+<span class="k">uniform</span> <span class="k">ivec2</span> <span class="n">drawPosition</span><span class="p">;</span> <span class="c1">// The position of the drawing brush</span>
+<span class="k">uniform</span> <span class="k">float</span> <span class="n">drawRadius</span><span class="p">;</span> <span class="c1">// The radius of the drawing brush</span>
+<span class="k">uniform</span> <span class="k">int</span> <span class="n">drawObject</span><span class="p">;</span> <span class="c1">// The element to draw</span>
+
+
+<span class="k">void</span> <span class="n">main</span> <span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="k">bool</span> <span class="n">prevIsSolid</span> <span class="o">=</span> <span class="n">CC</span><span class="o">==</span><span class="n">E</span><span class="o">||</span><span class="n">CC</span><span class="o">==</span><span class="n">G</span><span class="o">||</span><span class="n">CC</span><span class="o">==</span><span class="n">V</span><span class="o">||</span><span class="n">CC</span><span class="o">==</span><span class="n">S</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">draw</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">vec2</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">distance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="k">vec2</span><span class="p">(</span><span class="n">drawPosition</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="n">drawRadius</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Inside the brush disc</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">drawObject</span> <span class="o">==</span> <span class="n">W</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Draw Water</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">prevIsSolid</span> <span class="o">&amp;&amp;</span> <span class="n">CC</span><span class="o">!=</span><span class="n">G</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// Source is drawn instead if there was a solid cell</span>
+          <span class="n">r</span> <span class="o">=</span> <span class="n">S</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">prevIsSolid</span> <span class="o">&amp;&amp;</span> <span class="n">mod</span><span class="p">(</span><span class="n">pos</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">pos</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span><span class="o">==</span><span class="mf">0.0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// We draw Water half of the time because Water is destroyed when surrounded by Water</span>
+          <span class="n">r</span> <span class="o">=</span> <span class="n">W</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">drawObject</span> <span class="o">==</span> <span class="n">F</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Draw fire or volcano if solid cell.</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">prevIsSolid</span> <span class="o">?</span> <span class="n">V</span> <span class="o">:</span> <span class="n">F</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// Draw any other element</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">drawObject</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2>World generation is also a Cellular automaton!</h2>
+
+<p>The world is generated on the fly when the ibex progress to the right. This is done chunk by chunk.</p>
+
+<blockquote>
+<p>More precisely, the world height is 256 pixels and a new part of the world is discovered each 128 pixels –
+In other words, the generation is divided into world chunks of <code>(128 x 256)</code> pixels.</p>
+</blockquote>
+
+<p>Each world chunk is generated using a cellular automaton (different from the simulation one).</p>
+
+<p>As shown in a previous example,
+we can easily generate &quot;cave like maps&quot; from <a href="http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">this technique</a>.
+I&#39;ve added to this a <a href="https://github.com/gre/js13k-2014/blob/master/src/index.js#L842">few improvments</a>:</p>
+
+<ul>
+<li>The <a href="https://github.com/gre/js13k-2014/blob/master/src/index.js#L881">initial random conditions</a> ensure
+that <strong>the bottom of the world is Earth</strong> and that <strong>the top of the world is Air</strong>.
+<em>(that with gradients of randomness)</em></li>
+<li><a href="https://github.com/gre/js13k-2014/blob/master/src/index.js#L896-L906">Randomness</a>
+has been added to the rules to make the terrain evolving a bit more
+<em>(otherwise it creates stable but small caves)</em>.</li>
+<li>The number of generation step is set to 26. the randomness of the rules is decreasing through steps to produce stable results.</li>
+<li>In an attempt to create <strong>seamless maps</strong>,
+the initial random state for x=0 is set to the values of x=127 of the previous world chunk.
+<a href="https://github.com/gre/js13k-2014/blob/master/src/index.js#L878">(code here)</a>
+It isn&#39;t perfect because you can still notice some edges.</li>
+<li>For <strong>more diversity in generated chunks</strong>, here are the parameters that can <a href="https://github.com/gre/js13k-2014/blob/master/src/index.js#L845-L848">randomly vary</a>:
+
+<ul>
+<li>The <strong>amount of Earth</strong> (can create dense areas VS floating platform areas)</li>
+<li>The <strong>chance of Water Source</strong> in the Earth (will creates a lot of forest)</li>
+<li>The <strong>chance of Volcano</strong> in the Earth (dangerous world chunk)</li>
+</ul></li>
+</ul>
+
+<p><img src="/images/2014/09/ibex-gen-variety.png" alt=""></p>
+
+<h2>More articles to come</h2>
+
+<p>Did you like this article?</p>
+
+<p>I&#39;ll try to write more about these subjects:</p>
+
+<ul>
+<li>The <strong>&quot;Pixels paradigm&quot;</strong>, Pixel as first class citizen: How to query and analyze the pixels world. How to do simple bitmap collision detection.</li>
+<li>The <strong>game rendering performed in a GLSL shader</strong> and all the graphics details I&#39;ve spent hours on.</li>
+<li><strong>things I&#39;ve learned from WebGL</strong>, how to solve the bad approaches I&#39;ve taken,
+and how I could have made a much more efficient game.</li>
+<li><strong>what could have made this game even more interesting</strong>,
+and some ideas that was not reachable in a 2 weeks deadline.</li>
+</ul>
+
+  </div>
+  <footer class="comments">
+    <div id="disqus_thread"></div>
+  </footer>
+
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+</article>
+
+      </div>
+
+      <aside id="sidebar">
+        <section class="latest_posts">
+          <h3>Last Posts</h3>
+          <ul>
+            
+            <li>
+              <a href="/2016/07/projectseptember-opengl">🎉 There are some OpenGL in the Project September fashion app!</a>
+            </li>
+            
+            <li>
+              <a href="/2016/06/glreactconf">Universal GL Effects for Web and Native</a>
+            </li>
+            
+            <li>
+              <a href="/2015/10/introducing-gl-react">Introducing gl-react</a>
+            </li>
+            
+            <li>
+              <a href="/2015/08/making-performant-react-applications">Making performant React applications</a>
+            </li>
+            
+            <li>
+              <a href="/2014/10/webglparis">[FR] webglparis talk: GLSL.io initiative and WebGL Transitions</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex-cellular-automata">Cellular Automata in IBEX</a>
+            </li>
+            
+            <li>
+              <a href="/2014/09/ibex">IBEX, my js13k game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/05/ld29">48 hours to prototype an Ant Sim Game</a>
+            </li>
+            
+            <li>
+              <a href="/2014/03/panzer-dragoon-1k">Panzer Dragoon 1k</a>
+            </li>
+            
+            <li>
+              <a href="/2014/01/promisify-your-games">Promisify your games</a>
+            </li>
+            
+          </ul>
+        </section>
+
+        <section class="about_me">
+          <h3>About the author</h3>
+          <p>My name is Gaëtan Renaudeau (<a href="https://twitter.com/greweb">@greweb</a>)</p>
+          <img style="float:left;margin-right:10px;margin-top:5px;width:80px" src="/images/avatar.jpg" alt="" />
+          <p>
+            I work at <a href="http://projectseptember.com/">ProjectSeptember</a>
+            where I've developed <a href="https://github.com/ProjectSeptemberInc/gl-react">gl-react</a>.
+            I enjoy hacking technology, experimenting with HTML5 techs like WebGL and WebAudio.
+            I develop HTML5 games for fun, usually in <a href="http://ludumdare.com/compo/author/gre/">ludumdare game jam</a>.
+          </p>
+          <p>I speak French, English and learn Chinese.</p>
+        </section>
+
+        <section class="twitter">
+          <h3>Last Tweets</h3>
+          <a class="twitter-timeline" href="https://twitter.com/greweb" data-widget-id="325600219960057857"></a>
+        </section>
+
+        <section class="lichess">
+          <h3>lichess TV</h3>
+          <script src="http://en.lichess.org/tv/embed?theme=brown&bg=light"></script>
+        </section>
+      </aside>
+    </div>
+    </div>
+
+    <footer role="contentinfo">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png"></a>
+      <span>Gaëtan Renaudeau</span>
+      <a href="https://twitter.com/greweb" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @greweb</a>
+    </footer>
+
+<script type='text/javascript' src='/javascripts/header.js'></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'greweb'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script type="text/javascript">//<![CDATA[
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-9919624-1']);
+_gaq.push(['_trackPageview']);
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+//]]></script>
+  </body>
+</html>
