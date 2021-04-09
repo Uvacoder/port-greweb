@@ -3,7 +3,7 @@ source "https://rubygems.org"
 
 # gem "rails"
 gem 'rake'
-gem 'jekyll', '3.1.2'
+gem 'jekyll', '3.6.3'
 gem 'jekyll-tagging'
 gem 'jekyll-less'
 gem 'jekyll-paginate'
